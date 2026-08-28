@@ -689,10 +689,14 @@ def load_data():
     # DB 미존재 시 Fallback 데이터셋
     all_records = []
     for r_date, m_list in ROUNDS_MATCHES.items():
-        for home, away, act_win, is_corr in m_list:
+        for home, away, act_win, _ in m_list:
             p = get_match_prediction(home, away)
+            is_corr = 1 if (p["winner"] == act_win) else (0 if act_win else None)
             all_records.append({
                 "date": r_date,
+                "uk_date": r_date,
+                "kst_date": r_date,
+                "round_name": r_date,
                 "home_team": home,
                 "visit_team": away,
                 "predicted_winner": p["winner"],
@@ -724,8 +728,8 @@ if total_stats > 0:
     status_suffix = " (⚡ 신계, 시장 왜곡급)" if total_acc >= 60 else ""
     
     with col_acc:
-        st.subheader(f"전체 예측률: `{total_acc:.2f}%`{status_suffix}")
-        st.markdown(f"**적중 경기 수:** {int(correct_total)} / **통산 경기 수:** {total_stats}")
+        st.subheader(f"전체 완료 경기 적중률: `{total_acc:.2f}%`{status_suffix}")
+        st.markdown(f"**적중 경기 수:** {int(correct_total)} / **완료 경기 수:** {total_stats} (전체 예정: {len(df)}경기)")
     
     with col_track:
         remaining = 100 - total_stats
@@ -815,11 +819,18 @@ else:
 if not filtered_df.empty:
     filtered_df['day_no'] = range(1, len(filtered_df) + 1)
     
+    completed_in_round = filtered_df[filtered_df['actual_winner'].notna() & (filtered_df['actual_winner'] != '')]
+    
     col1, col2, col3 = st.columns(3)
     col1.metric("해당 라운드 총 경기 수", f"{len(filtered_df)} 경기")
-    col2.metric("예측 완료 경기", f"{len(filtered_df)} 경기")
-    acc = (filtered_df['is_correct'].sum() / len(filtered_df)) * 100
-    col3.metric("일일/라운드 적중률", f"{acc:.1f}%")
+    col2.metric("경기 완료 수", f"{len(completed_in_round)} 경기")
+    
+    if not completed_in_round.empty:
+        corr_cnt = int(completed_in_round['is_correct'].sum())
+        acc = (corr_cnt / len(completed_in_round)) * 100
+        col3.metric("라운드 적중률", f"{acc:.1f}% ({corr_cnt}/{len(completed_in_round)})")
+    else:
+        col3.metric("라운드 적중률", "⏳ 진행 예정")
 
     # 대시보드 리포트용 데이터프레임
     display_df = pd.DataFrame()
@@ -831,9 +842,16 @@ if not filtered_df.empty:
     display_df['3-Way 확률 [홈%|무%|원정%]'] = filtered_df.apply(
         lambda r: f"[{r['prob_home']:.1f}% | {r['prob_draw']:.1f}% | {r['prob_away']:.1f}%]", axis=1
     )
-    display_df['예상 격차(ΔUV)'] = filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
-    display_df['실제 결과'] = filtered_df['actual_winner']
-    display_df['적중 여부'] = filtered_df['is_correct'].apply(lambda c: "✅ 정답" if c == 1 else "❌ 오답")
+    display_df['예상 격차(ΔUV)'] = filtered_gap_str if 'filtered_gap_str' in locals() else filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
+    display_df['실제 결과'] = filtered_df['actual_winner'].apply(lambda x: x if (pd.notna(x) and x != '') else "대기중")
+    
+    def get_status_tag(r):
+        act = r['actual_winner']
+        if not act or pd.isna(act) or act == '':
+            return "⏳ 경기 대기중"
+        return "✅ 정답" if r['is_correct'] == 1 else "❌ 오답"
+        
+    display_df['적중 여부'] = filtered_df.apply(get_status_tag, axis=1)
 
     st.dataframe(display_df, hide_index=True, use_container_width=True)
 
