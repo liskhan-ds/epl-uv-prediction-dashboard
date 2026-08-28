@@ -748,7 +748,7 @@ col_acc, col_track = st.columns([2, 1])
 
 if total_stats > 0:
     total_acc = (correct_total / total_stats) * 100
-    status_suffix = " (⚡ 신계, 시장 왜곡급)" if total_acc >= 60 else ""
+    status_suffix = " (⚡ 신계, 시장 왜곡급)" if total_acc >= 55 else ""
     
     with col_acc:
         st.subheader(f"전체 완료 경기 적중률: `{total_acc:.2f}%`{status_suffix}")
@@ -784,11 +784,11 @@ if not stats_df.empty:
     round_stats['accuracy'] = (round_stats['correct_games'] / round_stats['total_games']) * 100
     
     def get_bar_color(acc):
-        if acc >= 60: return '#A020F0'      # 보라 (신계)
-        elif acc >= 55: return '#FF0000'    # 빨강 (초고수/AI)
-        elif acc >= 52.4: return '#FFA500'  # 주황 (프로/고수)
-        elif acc >= 45: return '#1E90FF'    # 파랑 (노력하는 일반인)
-        elif acc >= 35: return '#008000'    # 녹색 (지극히 정상인)
+        if acc >= 55: return '#A020F0'      # 보라 (신계)
+        elif acc >= 50: return '#FF0000'    # 빨강 (초고수/AI)
+        elif acc >= 45: return '#FFA500'    # 주황 (프로/고수)
+        elif acc >= 38: return '#1E90FF'    # 파랑 (노력하는 일반인)
+        elif acc >= 30: return '#008000'    # 녹색 (지극히 정상인)
         else: return '#808080'             # 회색 (예측 금지)
 
     round_stats['bar_color'] = round_stats['accuracy'].apply(get_bar_color)
@@ -814,13 +814,13 @@ else:
 
 st.markdown("""
 <div style="text-align: center; padding: 12px; background-color: #f0f2f6; border-radius: 10px; line-height: 1.6;">
-    <span style="color: #A020F0;">●</span> <b>신계</b> (60%↑) &nbsp;&nbsp;
-    <span style="color: #FF0000;">●</span> <b>초고수/AI</b> (55%~60%) &nbsp;&nbsp;
-    <span style="color: #FFA500;">●</span> <b>프로/고수</b> (52.4%~55%) &nbsp;&nbsp;
-    <span style="color: #1E90FF;">●</span> <b>노력하는 일반인</b> (45%~52.4%) &nbsp;&nbsp;
-    <span style="color: #008000;">●</span> <b>지극히 정상인</b> (35%~45%) &nbsp;&nbsp;
-    <span style="color: #808080;">●</span> <b>예측 금지</b> (35%↓)
-    <br><small>* 52.4%는 통계적 손익분기점(Breakeven) 기준입니다.</small>
+    <span style="color: #A020F0;">●</span> <b>신계</b> (55%↑) &nbsp;&nbsp;
+    <span style="color: #FF0000;">●</span> <b>초고수/AI</b> (50%~55%) &nbsp;&nbsp;
+    <span style="color: #FFA500;">●</span> <b>프로/고수</b> (45%~50%) &nbsp;&nbsp;
+    <span style="color: #1E90FF;">●</span> <b>노력하는 일반인</b> (38%~45%) &nbsp;&nbsp;
+    <span style="color: #008000;">●</span> <b>지극히 정상인</b> (30%~38%) &nbsp;&nbsp;
+    <span style="color: #808080;">●</span> <b>예측 금지</b> (30%↓)
+    <br><small>* 3-Way(승/무/패) 특성상 평균 46%~48% 이상부터 통계적 손익분기점(Breakeven)을 달성합니다.</small>
 </div>
 """, unsafe_allow_html=True)
 
