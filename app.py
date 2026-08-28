@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import plotly.graph_objects as go
+import sqlite3
 import os
 from datetime import datetime
 
@@ -641,28 +642,63 @@ ROUNDS_MATCHES = {
 # -----------------------------------------------------------------------------
 # 5. [상단] 누적 예측 성적표 & 100경기 트래킹 (MLB/NBA 템플릿과 100% 동일)
 # -----------------------------------------------------------------------------
-# 전체 라운드 데이터 통합 계산
-all_records = []
-for r_date, m_list in ROUNDS_MATCHES.items():
-    for home, away, act_win, is_corr in m_list:
-        p = get_match_prediction(home, away)
-        all_records.append({
-            "date": r_date,
-            "home_team": home,
-            "visit_team": away,
-            "predicted_winner": p["winner"],
-            "predicted_gap": p["gap"],
-            "prob_home": p["p_home"],
-            "prob_draw": p["p_draw"],
-            "prob_away": p["p_away"],
-            "actual_winner": act_win,
-            "is_correct": is_corr,
-            "home_uv": p["h_total"],
-            "visit_uv": p["a_total"],
-            "res_obj": p
-        })
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
-df = pd.DataFrame(all_records)
+def load_data():
+    if os.path.exists(DB_PATH):
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            db_df = pd.read_sql("SELECT * FROM predictions ORDER BY date ASC, id ASC", conn)
+            conn.close()
+            if not db_df.empty:
+                records = []
+                for _, row in db_df.iterrows():
+                    h_team = row["home_team"]
+                    v_team = row["visit_team"]
+                    p = get_match_prediction(h_team, v_team)
+                    records.append({
+                        "date": row["date"],
+                        "home_team": h_team,
+                        "visit_team": v_team,
+                        "predicted_winner": row["predicted_winner"],
+                        "predicted_gap": row["predicted_gap"],
+                        "prob_home": row["prob_home"],
+                        "prob_draw": row["prob_draw"],
+                        "prob_away": row["prob_away"],
+                        "actual_winner": row["actual_winner"] if row["actual_winner"] else "",
+                        "is_correct": row["is_correct"] if pd.notna(row["is_correct"]) else None,
+                        "home_uv": row["home_uv"],
+                        "visit_uv": row["visit_uv"],
+                        "res_obj": p
+                    })
+                return pd.DataFrame(records)
+        except Exception:
+            pass
+
+    # DB 미존재 시 Fallback 데이터셋
+    all_records = []
+    for r_date, m_list in ROUNDS_MATCHES.items():
+        for home, away, act_win, is_corr in m_list:
+            p = get_match_prediction(home, away)
+            all_records.append({
+                "date": r_date,
+                "home_team": home,
+                "visit_team": away,
+                "predicted_winner": p["winner"],
+                "predicted_gap": p["gap"],
+                "prob_home": p["p_home"],
+                "prob_draw": p["p_draw"],
+                "prob_away": p["p_away"],
+                "actual_winner": act_win,
+                "is_correct": is_corr,
+                "home_uv": p["h_total"],
+                "visit_uv": p["a_total"],
+                "res_obj": p
+            })
+    return pd.DataFrame(all_records)
+
+df = load_data()
 
 df['total_no'] = range(1, len(df) + 1)
 stats_df = df[df['actual_winner'].notna() & (df['actual_winner'] != '')].copy()
