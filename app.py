@@ -838,7 +838,17 @@ def extract_round_num(text):
 
 if 'round_name' in df.columns:
     unique_dates = sorted(df['round_name'].unique(), key=extract_round_num, reverse=True)
-    selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=0)
+    
+    # 디폴트 라운드 자동 지정: 가장 최근에 완료된 라운드 '다음' 진행 예정 라운드 자동 선택
+    pending_df = df[df['actual_winner'].isna() | (df['actual_winner'] == '')]
+    default_idx = 0
+    if not pending_df.empty:
+        pending_rounds = sorted(pending_df['round_name'].unique(), key=extract_round_num, reverse=False)
+        target_round = pending_rounds[0]
+        if target_round in unique_dates:
+            default_idx = unique_dates.index(target_round)
+            
+    selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=default_idx)
     filtered_df = df[df['round_name'] == selected_date].copy().reset_index(drop=True)
 else:
     unique_dates = sorted(df['date'].unique(), reverse=True)
