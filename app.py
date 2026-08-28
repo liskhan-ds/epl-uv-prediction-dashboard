@@ -831,8 +831,13 @@ st.markdown("---")
 # -----------------------------------------------------------------------------
 st.header("📋 라운드별 경기 리포트 (10개 매치업 카드 리스트)")
 
+def extract_round_num(text):
+    import re
+    m = re.search(r'Round\s*(\d+)', str(text))
+    return int(m.group(1)) if m else 0
+
 if 'round_name' in df.columns:
-    unique_dates = sorted(df['round_name'].unique(), reverse=True)
+    unique_dates = sorted(df['round_name'].unique(), key=extract_round_num, reverse=True)
     selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=0)
     filtered_df = df[df['round_name'] == selected_date].copy().reset_index(drop=True)
 else:
