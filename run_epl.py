@@ -4,12 +4,11 @@ import os
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, timezone
-import zoneinfo
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
-# 팀명 매핑 영문 -> 한글 (EPL 20개 구단)
+# 팀명 매핑 영문 -> 한글 (2026-27 시즌 참가 구단 포함)
 TEAM_NAME_MAP = {
     "Manchester United": "맨체스터 유나이티드",
     "Arsenal": "아스널",
@@ -37,6 +36,10 @@ TEAM_NAME_MAP = {
     "Leicester City": "레스터 시티",
     "Ipswich Town": "입스위치 타운",
     "Southampton": "사우샘프턴",
+    "Leeds United": "리즈 유나이티드",
+    "Sunderland": "선덜랜드",
+    "Coventry City": "코번트리 시티",
+    "Hull City": "헐 시티",
 }
 
 from app import calculate_wuv, get_match_prediction, TEAMS_ROSTER
@@ -48,8 +51,8 @@ def normalize_team_name(raw_name):
     return raw_name
 
 def fetch_espn_epl_season_fixtures():
-    # 2024/25 EPL 정규 시즌 100경기 (1~10라운드)
-    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20240815-20241105"
+    # 2026-27 EPL 정규 시즌 
+    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260815-20261130"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
     }
@@ -58,7 +61,6 @@ def fetch_espn_epl_season_fixtures():
         res = requests.get(url, headers=headers, timeout=10)
         if res.status_code == 200:
             events = res.json().get("events", [])
-            # 일시 정렬
             events.sort(key=lambda x: x["date"])
             return events
     except Exception as e:
@@ -117,18 +119,41 @@ def parse_timezones(utc_iso_str):
     
     return dt_uk.strftime("%Y-%m-%d"), uk_date_str, kst_date_str, dt_uk
 
+def ensure_team_roster(team_name):
+    if team_name not in TEAMS_ROSTER:
+        TEAMS_ROSTER[team_name] = {
+            "starters": [
+                {"pos": "GK", "name": f"{team_name} GK", "att_uv": 0.15, "def_uv": 0.45},
+                {"pos": "DF", "name": f"{team_name} DF1", "att_uv": 0.30, "def_uv": 0.45},
+                {"pos": "DF", "name": f"{team_name} DF2", "att_uv": 0.25, "def_uv": 0.50},
+                {"pos": "DF", "name": f"{team_name} DF3", "att_uv": 0.25, "def_uv": 0.50},
+                {"pos": "DF", "name": f"{team_name} DF4", "att_uv": 0.35, "def_uv": 0.40},
+                {"pos": "MF", "name": f"{team_name} MF1", "att_uv": 0.40, "def_uv": 0.45},
+                {"pos": "MF", "name": f"{team_name} MF2", "att_uv": 0.40, "def_uv": 0.45},
+                {"pos": "MF", "name": f"{team_name} MF3", "att_uv": 0.55, "def_uv": 0.35},
+                {"pos": "FW", "name": f"{team_name} FW1", "att_uv": 0.60, "def_uv": 0.25},
+                {"pos": "FW", "name": f"{team_name} FW2", "att_uv": 0.60, "def_uv": 0.25},
+                {"pos": "FW", "name": f"{team_name} FW3", "att_uv": 0.65, "def_uv": 0.20},
+            ],
+            "subs": [
+                {"pos": "FW", "name": f"{team_name} Sub1", "att_uv": 0.50, "def_uv": 0.20},
+                {"pos": "MF", "name": f"{team_name} Sub2", "att_uv": 0.40, "def_uv": 0.30},
+                {"pos": "MF", "name": f"{team_name} Sub3", "att_uv": 0.35, "def_uv": 0.35},
+                {"pos": "DF", "name": f"{team_name} Sub4", "att_uv": 0.20, "def_uv": 0.40},
+                {"pos": "GK", "name": f"{team_name} Sub5", "att_uv": 0.10, "def_uv": 0.35},
+            ]
+        }
+
 def run_pipeline():
     init_db()
     
     events = fetch_espn_epl_season_fixtures()
-    print(f"📡 수집된 실제 2024/25 EPL 정규 경기 수: {len(events)} 경기")
+    print(f"📡 수집된 2026-27 EPL 시즌 경기 수: {len(events)} 경기")
     
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     synced_count = 0
-    
-    # 10경기씩 라운드 그룹핑
     total_rounds = len(events) // 10
     
     for r_idx in range(total_rounds):
@@ -141,7 +166,7 @@ def run_pipeline():
         
         for event in r_events:
             try:
-                status_type = event["status"]["type"]["name"] # STATUS_FULL_TIME, etc.
+                status_type = event["status"]["type"]["name"] # STATUS_FULL_TIME, STATUS_SCHEDULED, etc.
                 match_date_utc = event["date"]
                 
                 uk_day, uk_str, kst_str, _ = parse_timezones(match_date_utc)
@@ -158,9 +183,8 @@ def run_pipeline():
                 home_team = normalize_team_name(home_raw)
                 away_team = normalize_team_name(away_raw)
                 
-                if home_team not in TEAMS_ROSTER or away_team not in TEAMS_ROSTER:
-                    print(f"⏩ 지원되지 않는 팀 제외: {home_team} vs {away_team}")
-                    continue
+                ensure_team_roster(home_team)
+                ensure_team_roster(away_team)
                     
                 pred = get_match_prediction(home_team, away_team)
                 
@@ -218,15 +242,16 @@ def run_pipeline():
                 ))
                 
                 synced_count += 1
-                print(f"  ✓ [{round_title}] {home_team} ({actual_sc_h}) vs ({actual_sc_a}) {away_team} -> 예측: {pred['winner']} (실제: {actual_winner}) | 적중: {'✅' if is_correct==1 else '❌'}")
+                status_disp = f"실제: {actual_sc_h}-{actual_sc_a} {actual_winner}" if actual_winner else "대기중"
+                print(f"  ✓ [{round_title}] {home_team} vs {away_team} -> 예측: {pred['winner']} ({status_disp})")
                 
             except Exception as ex:
                 print(f"❌ 경기 동기화 실패: {ex}")
                 
     conn.commit()
     conn.close()
-    print(f"🎉 성공적으로 실제 EPL 2024/25 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!")
+    print(f"🎉 성공적으로 2026-27 EPL 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!")
 
 if __name__ == "__main__":
-    print(f"🚀 실제 EPL 2024/25 시즌 실시간 수집 및 예측 적재 시작")
+    print(f"🚀 2026-27 EPL 시즌 실시간 수집 및 예측 적재 시작")
     run_pipeline()
