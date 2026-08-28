@@ -666,9 +666,9 @@ def load_data():
                     p = get_match_prediction(h_team, v_team)
                     records.append({
                         "date": row["date"],
-                        "uk_date": row["uk_date"] if "uk_date" in row and pd.notna(row["uk_date"]) else row["date"],
-                        "kst_date": row["kst_date"] if "kst_date" in row and pd.notna(row["kst_date"]) else row["date"],
-                        "round_name": row["round_name"] if "round_name" in row and pd.notna(row["round_name"]) else row["date"],
+                        "uk_date": row["uk_date"] if ("uk_date" in db_df.columns and pd.notna(row["uk_date"])) else row["date"],
+                        "kst_date": row["kst_date"] if ("kst_date" in db_df.columns and pd.notna(row["kst_date"])) else row["date"],
+                        "round_name": row["round_name"] if ("round_name" in db_df.columns and pd.notna(row["round_name"])) else row["date"],
                         "home_team": h_team,
                         "visit_team": v_team,
                         "predicted_winner": row["predicted_winner"],
