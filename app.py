@@ -770,17 +770,18 @@ else:
 st.markdown("---")
 
 # -----------------------------------------------------------------------------
-# 6. [중단] 일별/라운드별 예측 성적표 (6단계 등급 및 Altair 바 차트)
+# 6. [중단] 라운드별 예측 성적표 (6단계 등급 및 Altair 바 차트)
 # -----------------------------------------------------------------------------
-st.header("📈 일별 예측 성적표 (최근 라운드)")
+st.header("📈 라운드별 예측 성적표 (EPL Gameweek)")
 
 if not stats_df.empty:
-    daily_stats = stats_df.groupby('date').agg(
+    group_col = 'round_name' if 'round_name' in stats_df.columns else 'date'
+    round_stats = stats_df.groupby(group_col, sort=False).agg(
         total_games=('home_team', 'count'),
         correct_games=('is_correct', 'sum')
     ).reset_index()
 
-    daily_stats['accuracy'] = (daily_stats['correct_games'] / daily_stats['total_games']) * 100
+    round_stats['accuracy'] = (round_stats['correct_games'] / round_stats['total_games']) * 100
     
     def get_bar_color(acc):
         if acc >= 60: return '#A020F0'      # 보라 (신계)
@@ -790,26 +791,26 @@ if not stats_df.empty:
         elif acc >= 35: return '#008000'    # 녹색 (지극히 정상인)
         else: return '#808080'             # 회색 (예측 금지)
 
-    daily_stats['bar_color'] = daily_stats['accuracy'].apply(get_bar_color)
-    daily_stats['label_text'] = daily_stats.apply(
+    round_stats['bar_color'] = round_stats['accuracy'].apply(get_bar_color)
+    round_stats['label_text'] = round_stats.apply(
         lambda x: f"{int(x['correct_games'])}/{int(x['total_games'])}", 
         axis=1
     )
 
-    daily_stats_7d = daily_stats.sort_values('date', ascending=True).tail(7)
+    round_stats_7d = round_stats.tail(7)
 
-    base = alt.Chart(daily_stats_7d).encode(x=alt.X('date', title='라운드 / 경기일자'))
+    base = alt.Chart(round_stats_7d).encode(x=alt.X(group_col, title='EPL 라운드 (Gameweek)', sort=None))
     bars = base.mark_bar().encode(
         y=alt.Y('accuracy', title='적중률(%)', scale=alt.Scale(domain=[0, 110])),
         color=alt.Color('bar_color', scale=None),
-        tooltip=['date', 'accuracy', 'total_games']
+        tooltip=[group_col, 'accuracy', 'total_games', 'correct_games']
     )
     text = base.mark_text(align='center', baseline='bottom', dy=-5, fontSize=14, fontWeight='bold').encode(
         y='accuracy', text='label_text'
     )
     st.altair_chart((bars + text).properties(height=320), use_container_width=True)
 else:
-    st.info("💡 예정 경기 예측 완료! (경기가 종료되는 대로 실시간 적중률이 집계됩니다.)")
+    st.info("💡 예정 경기 예측 완료! (경기가 종료되는 대로 라운드별 실시간 적중률이 집계됩니다.)")
 
 st.markdown("""
 <div style="text-align: center; padding: 12px; background-color: #f0f2f6; border-radius: 10px; line-height: 1.6;">
