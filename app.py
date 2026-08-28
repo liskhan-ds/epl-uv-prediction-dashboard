@@ -29,7 +29,11 @@ with nav_col2:
         "https://mlb-uv-prediction.streamlit.app/"
     )
 with nav_col3:
-    st.button("⚽ EPL 대시보드 (현재)", disabled=True)
+    st.link_button(
+        "⚽ EPL 대시보드 (현재)", 
+        "https://epl-uv-prediction.streamlit.app/", 
+        disabled=True
+    )
 
 st.divider()
 
