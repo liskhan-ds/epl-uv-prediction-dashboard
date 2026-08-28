@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import altair as alt
 import plotly.graph_objects as go
-import plotly.express as px
+import os
+from datetime import datetime
 
 # -----------------------------------------------------------------------------
-# 1. 페이지 기본 설정 및 상단 네비게이션
+# 1. 페이지 기본 설정 및 통일된 상단 탭 네비게이션
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="EPL AI 승부예측",
@@ -14,31 +16,31 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 상단 탭 네비게이션 (NBA/MLB 대시보드 템플릿과 동일 구조)
-nav_col1, nav_col2, nav_col3, _ = st.columns([2.5, 2.5, 2.5, 4.5])
+# 상단 탭 네비게이션 (NBA, MLB, EPL 대시보드 사이트 링크)
+nav_col1, nav_col2, nav_col3, _ = st.columns([2.5, 3.2, 2.5, 3.8])
 with nav_col1:
-    st.button("⚽ EPL 대시보드 (현재)", disabled=True)
-with nav_col2:
     st.link_button(
-        "🏀 NBA 대시보드 바로가기 ↗", 
+        "🏀 NBA 대시보드 ↗", 
         "https://nba-uv-prediction.streamlit.app/"
     )
-with nav_col3:
+with nav_col2:
     st.link_button(
-        "⚾ MLB 대시보드 바로가기 ↗", 
-        "https://mlb-uv-prediction.streamlit.app/"
+        "⚾ MLB 대시보드 ↗", 
+        "https://mlb-uv-prediction-dashboard.streamlit.app/"
     )
+with nav_col3:
+    st.button("⚽ EPL 대시보드 (현재)", disabled=True)
 
 st.divider()
 
-# 메인 타이틀
+# 메인 타이틀 및 본문 설명
 st.title("⚽ EPL AI 승부예측 (by 11.0 WUV predictor)")
-st.caption("11.0 WUV 기준 (공격 5.5 UV + 수비/빌드업 5.5 UV) | 선발 11인(85%) + 주요 교체 5인(15%) | 홈 어드밴티지(+0.25 UV) | 무승부 판정(격차 ±0.4 이내)")
+st.caption("11.0 WUV 기준 (수비/빌드업 5.5 UV + 공격 5.5 UV) | 축구 라인업 (선발 11인 85% + 주요 교체 5인 15%) | 홈 어드밴티지(+0.25) | 무승부 판정(격차 ±0.4 이내)")
 
 # -----------------------------------------------------------------------------
-# 2. EPL 구단별 라인업 및 UV 혜택 데이터 정의 (샘플 데이터베이스)
+# 2. EPL 팀별 선수단 UV 데이터베이스 (20개 구단 선발 11인 + 교체 5인)
 # -----------------------------------------------------------------------------
-TEAMS_DATA = {
+TEAMS_ROSTER = {
     "맨체스터 유나이티드": {
         "starters": [
             {"pos": "GK", "name": "안드레 오나나", "att_uv": 0.20, "def_uv": 0.50},
@@ -214,22 +216,284 @@ TEAMS_DATA = {
             {"pos": "DF", "name": "디에고 카를로스", "att_uv": 0.25, "def_uv": 0.50},
             {"pos": "GK", "name": "조 로빈 오센", "att_uv": 0.10, "def_uv": 0.35},
         ]
+    },
+    "웨스트햄 유나이티드": {
+        "starters": [
+            {"pos": "GK", "name": "알퐁스 아레올라", "att_uv": 0.15, "def_uv": 0.50},
+            {"pos": "DF", "name": "애런 완-비사카", "att_uv": 0.35, "def_uv": 0.55},
+            {"pos": "DF", "name": "장-클레르 토디보", "att_uv": 0.25, "def_uv": 0.55},
+            {"pos": "DF", "name": "맥스 킬먼", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "에메르송 팔미에리", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "MF", "name": "에드손 알바레스", "att_uv": 0.35, "def_uv": 0.55},
+            {"pos": "MF", "name": "토마시 소우체크", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "루카스 파케타", "att_uv": 0.70, "def_uv": 0.35},
+            {"pos": "FW", "name": "자러드 보웬", "att_uv": 0.75, "def_uv": 0.30},
+            {"pos": "FW", "name": "모하메드 쿠두스", "att_uv": 0.70, "def_uv": 0.30},
+            {"pos": "FW", "name": "미카일 안토니오", "att_uv": 0.60, "def_uv": 0.25},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "니클라스 퓔크루크", "att_uv": 0.65, "def_uv": 0.20},
+            {"pos": "MF", "name": "카를로스 솔레르", "att_uv": 0.50, "def_uv": 0.35},
+            {"pos": "FW", "name": "크라이센시오 서머빌", "att_uv": 0.60, "def_uv": 0.25},
+            {"pos": "DF", "name": "콘스탄티노스 마브로파노스", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "GK", "name": "우카시 파비안스키", "att_uv": 0.10, "def_uv": 0.40},
+        ]
+    },
+    "브라이튼": {
+        "starters": [
+            {"pos": "GK", "name": "바르트 페르브뤼헌", "att_uv": 0.20, "def_uv": 0.50},
+            {"pos": "DF", "name": "조엘 펠트만", "att_uv": 0.35, "def_uv": 0.50},
+            {"pos": "DF", "name": "얀 폴 판 헤케", "att_uv": 0.30, "def_uv": 0.55},
+            {"pos": "DF", "name": "루이스 덩크", "att_uv": 0.30, "def_uv": 0.55},
+            {"pos": "DF", "name": "페르디 카디올루", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "카를로스 발레바", "att_uv": 0.45, "def_uv": 0.50},
+            {"pos": "MF", "name": "야신 아야리", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "주앙 페드로", "att_uv": 0.70, "def_uv": 0.30},
+            {"pos": "FW", "name": "얀쿠바 민테", "att_uv": 0.65, "def_uv": 0.25},
+            {"pos": "FW", "name": "카오루 미토마", "att_uv": 0.75, "def_uv": 0.25},
+            {"pos": "FW", "name": "대니 웰벡", "att_uv": 0.65, "def_uv": 0.25},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "조르지니오 륫터", "att_uv": 0.60, "def_uv": 0.30},
+            {"pos": "MF", "name": "맷 오라일리", "att_uv": 0.55, "def_uv": 0.35},
+            {"pos": "FW", "name": "에반 퍼거슨", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "DF", "name": "이구어 훌리우", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "GK", "name": "제이슨 스틸", "att_uv": 0.15, "def_uv": 0.40},
+        ]
+    },
+    "풀럼": {
+        "starters": [
+            {"pos": "GK", "name": "베른트 레노", "att_uv": 0.15, "def_uv": 0.55},
+            {"pos": "DF", "name": "티모시 카스타뉴", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "DF", "name": "요아킴 안데르센", "att_uv": 0.30, "def_uv": 0.55},
+            {"pos": "DF", "name": "캘빈 배시", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "앤토니 로빈슨", "att_uv": 0.50, "def_uv": 0.45},
+            {"pos": "MF", "name": "사샤 루키치", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "MF", "name": "샌더 베르게", "att_uv": 0.45, "def_uv": 0.50},
+            {"pos": "MF", "name": "안드레아스 페레이라", "att_uv": 0.65, "def_uv": 0.30},
+            {"pos": "FW", "name": "알렉스 이워비", "att_uv": 0.60, "def_uv": 0.35},
+            {"pos": "FW", "name": "아다마 트라오레", "att_uv": 0.65, "def_uv": 0.20},
+            {"pos": "FW", "name": "라울 히메네스", "att_uv": 0.65, "def_uv": 0.25},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "호드리고 무니스", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "FW", "name": "헤이니어 손", "att_uv": 0.55, "def_uv": 0.30},
+            {"pos": "MF", "name": "톰 케어니", "att_uv": 0.45, "def_uv": 0.35},
+            {"pos": "DF", "name": "잇사 디오프", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "GK", "name": "스티븐 벤다", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "크리스탈 팰리스": {
+        "starters": [
+            {"pos": "GK", "name": "딘 헨더슨", "att_uv": 0.15, "def_uv": 0.50},
+            {"pos": "DF", "name": "다니엘 무뇨스", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "DF", "name": "마크 게히", "att_uv": 0.30, "def_uv": 0.60},
+            {"pos": "DF", "name": "맥상스 라크루아", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "타이릭 미첼", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "MF", "name": "애덤 워튼", "att_uv": 0.50, "def_uv": 0.50},
+            {"pos": "MF", "name": "셰이크 두쿠레", "att_uv": 0.40, "def_uv": 0.50},
+            {"pos": "MF", "name": "다이치 카마다", "att_uv": 0.55, "def_uv": 0.35},
+            {"pos": "FW", "name": "이스마일라 사르", "att_uv": 0.65, "def_uv": 0.25},
+            {"pos": "FW", "name": "에베레치 에제", "att_uv": 0.75, "def_uv": 0.30},
+            {"pos": "FW", "name": "장-필리프 마테타", "att_uv": 0.70, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "에디 은케티아", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "MF", "name": "제퍼슨 마르마", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "DF", "name": "나타니엘 클라인", "att_uv": 0.30, "def_uv": 0.40},
+            {"pos": "DF", "name": "크리스 리차즈", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "GK", "name": "레미 매튜스", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "에버턴": {
+        "starters": [
+            {"pos": "GK", "name": "조던 픽포드", "att_uv": 0.20, "def_uv": 0.55},
+            {"pos": "DF", "name": "셰이머스 콜먼", "att_uv": 0.35, "def_uv": 0.45},
+            {"pos": "DF", "name": "제임스 타코우스키", "att_uv": 0.25, "def_uv": 0.55},
+            {"pos": "DF", "name": "재러드 브랜스웨이트", "att_uv": 0.30, "def_uv": 0.60},
+            {"pos": "DF", "name": "비탈리 미콜렌코", "att_uv": 0.35, "def_uv": 0.45},
+            {"pos": "MF", "name": "이드리사 게예", "att_uv": 0.35, "def_uv": 0.55},
+            {"pos": "MF", "name": "제임스 가너", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "압둘라예 두쿠레", "att_uv": 0.55, "def_uv": 0.40},
+            {"pos": "FW", "name": "잭 해리슨", "att_uv": 0.55, "def_uv": 0.35},
+            {"pos": "FW", "name": "드와이트 맥닐", "att_uv": 0.65, "def_uv": 0.30},
+            {"pos": "FW", "name": "도미닉 칼버트-르윈", "att_uv": 0.65, "def_uv": 0.25},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "베토", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "FW", "name": "아르만도 브로야", "att_uv": 0.55, "def_uv": 0.20},
+            {"pos": "MF", "name": "팀 이로그부남", "att_uv": 0.40, "def_uv": 0.40},
+            {"pos": "DF", "name": "마이클 킨", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "GK", "name": "주앙 버지니아", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "울버햄튼": {
+        "starters": [
+            {"pos": "GK", "name": "주제 사", "att_uv": 0.15, "def_uv": 0.50},
+            {"pos": "DF", "name": "넬송 세메두", "att_uv": 0.45, "def_uv": 0.40},
+            {"pos": "DF", "name": "산티아고 부에노", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "토티 고메스", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "라얀 아이트-누리", "att_uv": 0.50, "def_uv": 0.40},
+            {"pos": "MF", "name": "마리오 레미나", "att_uv": 0.45, "def_uv": 0.50},
+            {"pos": "MF", "name": "주앙 고메스", "att_uv": 0.45, "def_uv": 0.50},
+            {"pos": "MF", "name": "장-리크네 벨가르드", "att_uv": 0.50, "def_uv": 0.35},
+            {"pos": "FW", "name": "황희찬", "att_uv": 0.70, "def_uv": 0.25},
+            {"pos": "FW", "name": "마테우스 쿠냐", "att_uv": 0.75, "def_uv": 0.25},
+            {"pos": "FW", "name": "예르겐 스트란 라르센", "att_uv": 0.65, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "곤살루 게데스", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "MF", "name": "도일", "att_uv": 0.45, "def_uv": 0.35},
+            {"pos": "FW", "name": "로드리고 고메스", "att_uv": 0.50, "def_uv": 0.30},
+            {"pos": "DF", "name": "맷 도허티", "att_uv": 0.35, "def_uv": 0.40},
+            {"pos": "GK", "name": "샘 존스톤", "att_uv": 0.10, "def_uv": 0.40},
+        ]
+    },
+    "본머스": {
+        "starters": [
+            {"pos": "GK", "name": "케파 아리사발라가", "att_uv": 0.20, "def_uv": 0.45},
+            {"pos": "DF", "name": "아담 스미스", "att_uv": 0.35, "def_uv": 0.45},
+            {"pos": "DF", "name": "일리아 자바르니", "att_uv": 0.25, "def_uv": 0.55},
+            {"pos": "DF", "name": "마르코스 세네시", "att_uv": 0.30, "def_uv": 0.50},
+            {"pos": "DF", "name": "밀로스 케르케즈", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "루이스 쿡", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "라이언 크리스티", "att_uv": 0.50, "def_uv": 0.40},
+            {"pos": "MF", "name": "저스틴 클라위베르트", "att_uv": 0.65, "def_uv": 0.30},
+            {"pos": "FW", "name": "앙투안 세메뇨", "att_uv": 0.70, "def_uv": 0.25},
+            {"pos": "FW", "name": "마커스 터베니어", "att_uv": 0.60, "def_uv": 0.30},
+            {"pos": "FW", "name": "에바니우송", "att_uv": 0.70, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "에네스 위날", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "FW", "name": "단조 루이스", "att_uv": 0.55, "def_uv": 0.25},
+            {"pos": "MF", "name": "알렉스 스콧", "att_uv": 0.45, "def_uv": 0.35},
+            {"pos": "DF", "name": "줄리안 아라우호", "att_uv": 0.35, "def_uv": 0.40},
+            {"pos": "GK", "name": "마크 트래버스", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "브렌트포드": {
+        "starters": [
+            {"pos": "GK", "name": "마크 플렉컨", "att_uv": 0.15, "def_uv": 0.50},
+            {"pos": "DF", "name": "크리스토페르 아예르", "att_uv": 0.35, "def_uv": 0.50},
+            {"pos": "DF", "name": "네이선 콜린스", "att_uv": 0.25, "def_uv": 0.55},
+            {"pos": "DF", "name": "에단 피녹", "att_uv": 0.25, "def_uv": 0.55},
+            {"pos": "DF", "name": "킨 루이스-포터", "att_uv": 0.40, "def_uv": 0.40},
+            {"pos": "MF", "name": "크리스티안 뇌르고르", "att_uv": 0.40, "def_uv": 0.55},
+            {"pos": "MF", "name": "비탈리 야넬트", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "미켈 담스고르", "att_uv": 0.60, "def_uv": 0.30},
+            {"pos": "FW", "name": "브라이언 음베우모", "att_uv": 0.75, "def_uv": 0.25},
+            {"pos": "FW", "name": "요안 위사", "att_uv": 0.70, "def_uv": 0.25},
+            {"pos": "FW", "name": "케빈 샤데", "att_uv": 0.60, "def_uv": 0.25},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "이고르 티아구", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "MF", "name": "마티아스 옌센", "att_uv": 0.50, "def_uv": 0.35},
+            {"pos": "MF", "name": "파비안 뇌르베르크", "att_uv": 0.40, "def_uv": 0.40},
+            {"pos": "DF", "name": "셉 판 덴 베르흐", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "GK", "name": "하콘 발디마르손", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "노팅엄 포레스트": {
+        "starters": [
+            {"pos": "GK", "name": "마츠 셀스", "att_uv": 0.15, "def_uv": 0.55},
+            {"pos": "DF", "name": "네코 윌리엄스", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "DF", "name": "니콜라 밀렌코비치", "att_uv": 0.25, "def_uv": 0.60},
+            {"pos": "DF", "name": "무릴로", "att_uv": 0.30, "def_uv": 0.60},
+            {"pos": "DF", "name": "알렉스 모레노", "att_uv": 0.45, "def_uv": 0.40},
+            {"pos": "MF", "name": "라이안 예이츠", "att_uv": 0.40, "def_uv": 0.50},
+            {"pos": "MF", "name": "엘리엇 앤더슨", "att_uv": 0.50, "def_uv": 0.45},
+            {"pos": "MF", "name": "모건 깁스-화이트", "att_uv": 0.75, "def_uv": 0.30},
+            {"pos": "FW", "name": "앤서니 엘랑가", "att_uv": 0.70, "def_uv": 0.25},
+            {"pos": "FW", "name": "캘럼 허드슨-오도이", "att_uv": 0.65, "def_uv": 0.25},
+            {"pos": "FW", "name": "크리스 우드", "att_uv": 0.75, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "타이워 아워니이", "att_uv": 0.60, "def_uv": 0.20},
+            {"pos": "FW", "name": "조타 실바", "att_uv": 0.55, "def_uv": 0.25},
+            {"pos": "MF", "name": "이콜라 도밍게스", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "DF", "name": "윌리 볼리", "att_uv": 0.20, "def_uv": 0.45},
+            {"pos": "GK", "name": "카를로스 미겔", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "레스터 시티": {
+        "starters": [
+            {"pos": "GK", "name": "마즈 헤르만센", "att_uv": 0.15, "def_uv": 0.50},
+            {"pos": "DF", "name": "제임스 저스틴", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "DF", "name": "칼렙 오콜리", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "보우트 파스", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "빅토르 크리스티안센", "att_uv": 0.35, "def_uv": 0.45},
+            {"pos": "MF", "name": "해리 윙크스", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "윌프레드 은디디", "att_uv": 0.35, "def_uv": 0.55},
+            {"pos": "MF", "name": "부오나노테", "att_uv": 0.60, "def_uv": 0.30},
+            {"pos": "FW", "name": "압둘 파타우", "att_uv": 0.65, "def_uv": 0.25},
+            {"pos": "FW", "name": "스테피 마비디디", "att_uv": 0.60, "def_uv": 0.25},
+            {"pos": "FW", "name": "제이미 바디", "att_uv": 0.70, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "에두아르", "att_uv": 0.55, "def_uv": 0.20},
+            {"pos": "MF", "name": "엘 칸누스", "att_uv": 0.50, "def_uv": 0.30},
+            {"pos": "MF", "name": "소울레", "att_uv": 0.45, "def_uv": 0.35},
+            {"pos": "DF", "name": "코디", "att_uv": 0.20, "def_uv": 0.45},
+            {"pos": "GK", "name": "워드", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "입스위치 타운": {
+        "starters": [
+            {"pos": "GK", "name": "아리자네트 무리치", "att_uv": 0.15, "def_uv": 0.45},
+            {"pos": "DF", "name": "엑셀 투안제베", "att_uv": 0.35, "def_uv": 0.45},
+            {"pos": "DF", "name": "다라 오셰이", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "제이콥 그레이브스", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "DF", "name": "라이프 데이비스", "att_uv": 0.45, "def_uv": 0.40},
+            {"pos": "MF", "name": "샘 모시", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "MF", "name": "캘빈 필립스", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "MF", "name": "오마리 허친슨", "att_uv": 0.65, "def_uv": 0.30},
+            {"pos": "FW", "name": "웨스 번스", "att_uv": 0.55, "def_uv": 0.25},
+            {"pos": "FW", "name": "스모디치", "att_uv": 0.60, "def_uv": 0.25},
+            {"pos": "FW", "name": "리암 델랍", "att_uv": 0.70, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "조지 허스트", "att_uv": 0.55, "def_uv": 0.20},
+            {"pos": "FW", "name": "잭 클라크", "att_uv": 0.55, "def_uv": 0.25},
+            {"pos": "MF", "name": "마시모 루옹고", "att_uv": 0.35, "def_uv": 0.40},
+            {"pos": "DF", "name": "울프enden", "att_uv": 0.20, "def_uv": 0.40},
+            {"pos": "GK", "name": "월튼", "att_uv": 0.10, "def_uv": 0.35},
+        ]
+    },
+    "사우샘프턴": {
+        "starters": [
+            {"pos": "GK", "name": "아론 램스데일", "att_uv": 0.20, "def_uv": 0.50},
+            {"pos": "DF", "name": "유키나리 수구와라", "att_uv": 0.40, "def_uv": 0.40},
+            {"pos": "DF", "name": "테일러 하우드-벨리스", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "얀 베드나렉", "att_uv": 0.25, "def_uv": 0.50},
+            {"pos": "DF", "name": "카일 워커-피터스", "att_uv": 0.45, "def_uv": 0.45},
+            {"pos": "MF", "name": "플린 다운스", "att_uv": 0.40, "def_uv": 0.45},
+            {"pos": "MF", "name": "윌 스몰본", "att_uv": 0.45, "def_uv": 0.40},
+            {"pos": "MF", "name": "타일러 디블링", "att_uv": 0.60, "def_uv": 0.30},
+            {"pos": "FW", "name": "라이안 프레이저", "att_uv": 0.55, "def_uv": 0.25},
+            {"pos": "FW", "name": "마테우스 페르난데스", "att_uv": 0.55, "def_uv": 0.35},
+            {"pos": "FW", "name": "캐머런 아처", "att_uv": 0.65, "def_uv": 0.20},
+        ],
+        "subs": [
+            {"pos": "FW", "name": "아담 암스트롱", "att_uv": 0.55, "def_uv": 0.20},
+            {"pos": "FW", "name": "브레레턴 디아스", "att_uv": 0.55, "def_uv": 0.25},
+            {"pos": "MF", "name": "아담 랄라나", "att_uv": 0.45, "def_uv": 0.30},
+            {"pos": "DF", "name": "스티븐 매닝", "att_uv": 0.20, "def_uv": 0.40},
+            {"pos": "GK", "name": "맥카시", "att_uv": 0.10, "def_uv": 0.35},
+        ]
     }
 }
 
 # -----------------------------------------------------------------------------
-# 3. 11.0 WUV 예측 로직 계산 함수
+# 3. 11.0 WUV 핵심 연산 엔진
 # -----------------------------------------------------------------------------
-def calculate_team_wuv(team_name):
-    team = TEAMS_DATA[team_name]
+def calculate_wuv(team_name):
+    team = TEAMS_ROSTER[team_name]
     
-    # 1) 선발 11인 합산 (Att, Def)
-    starter_df = pd.DataFrame(team["starters"])
-    starter_att = starter_df["att_uv"].sum()
-    starter_def = starter_df["def_uv"].sum()
-    starter_total = starter_att + starter_def
+    st_df = pd.DataFrame(team["starters"])
+    st_att = st_df["att_uv"].sum()
+    st_def = st_df["def_uv"].sum()
+    st_total = st_att + st_def
     
-    # 2) 교체 5인 합산 및 피치 스케일링 (11/5)
     sub_df = pd.DataFrame(team["subs"])
     sub_att_raw = sub_df["att_uv"].sum()
     sub_def_raw = sub_df["def_uv"].sum()
@@ -238,15 +502,14 @@ def calculate_team_wuv(team_name):
     sub_def_scaled = sub_def_raw * (11.0 / 5.0)
     sub_total_scaled = sub_att_scaled + sub_def_scaled
     
-    # 3) 가중치 적용 (선발 85% + 교체 15%)
-    wuv_att = 0.85 * starter_att + 0.15 * sub_att_scaled
-    wuv_def = 0.85 * starter_def + 0.15 * sub_def_scaled
+    wuv_att = 0.85 * st_att + 0.15 * sub_att_scaled
+    wuv_def = 0.85 * st_def + 0.15 * sub_def_scaled
     wuv_total = wuv_att + wuv_def
     
     return {
-        "starter_att": starter_att,
-        "starter_def": starter_def,
-        "starter_total": starter_total,
+        "st_att": st_att,
+        "st_def": st_def,
+        "st_total": st_total,
         "sub_att_raw": sub_att_raw,
         "sub_def_raw": sub_def_raw,
         "sub_att_scaled": sub_att_scaled,
@@ -255,342 +518,477 @@ def calculate_team_wuv(team_name):
         "wuv_att": wuv_att,
         "wuv_def": wuv_def,
         "wuv_total": wuv_total,
-        "starter_df": starter_df,
+        "st_df": st_df,
         "sub_df": sub_df
     }
 
-def predict_match(home_team_name, away_team_name):
-    home_wuv = calculate_team_wuv(home_team_name)
-    away_wuv = calculate_team_wuv(away_team_name)
+def get_match_prediction(home_team, away_team):
+    h_info = calculate_wuv(home_team)
+    a_info = calculate_wuv(away_team)
     
-    # 홈 어드밴티지 적용 (+0.25 UV: 공격 +0.15, 수비 +0.10)
-    HOME_ADVANTAGE_ATT = 0.15
-    HOME_ADVANTAGE_DEF = 0.10
-    HOME_ADVANTAGE_TOTAL = 0.25
+    # 홈 어드밴티지 (+0.25 UV: 공격 +0.15, 수비 +0.10)
+    h_att = h_info["wuv_att"] + 0.15
+    h_def = h_info["wuv_def"] + 0.10
+    h_total = h_info["wuv_total"] + 0.25
     
-    final_home_att = home_wuv["wuv_att"] + HOME_ADVANTAGE_ATT
-    final_home_def = home_wuv["wuv_def"] + HOME_ADVANTAGE_DEF
-    final_home_total = home_wuv["wuv_total"] + HOME_ADVANTAGE_TOTAL
+    a_att = a_info["wuv_att"]
+    a_def = a_info["wuv_def"]
+    a_total = a_info["wuv_total"]
     
-    final_away_att = away_wuv["wuv_att"]
-    final_away_def = away_wuv["wuv_def"]
-    final_away_total = away_wuv["wuv_total"]
+    gap = h_total - a_total
     
-    uv_gap = final_home_total - final_away_total
-    
-    # 무승부 판정 룰 (|uv_gap| <= 0.4)
-    DRAW_THRESHOLD = 0.4
-    
-    if abs(uv_gap) <= DRAW_THRESHOLD:
-        prediction_result = "무승부 (Draw)"
-        result_code = "DRAW"
-    elif uv_gap > DRAW_THRESHOLD:
-        prediction_result = f"{home_team_name} 승리"
-        result_code = "HOME_WIN"
+    # 무승부 룰 (|gap| <= 0.4)
+    if abs(gap) <= 0.4:
+        winner = "무승부 (Draw)"
+        code = "DRAW"
+    elif gap > 0.4:
+        winner = home_team
+        code = "HOME"
     else:
-        prediction_result = f"{away_team_name} 승리"
-        result_code = "AWAY_WIN"
+        winner = away_team
+        code = "AWAY"
         
-    # 확률 모델 (Softmax Distribution)
-    z = uv_gap
-    logit_home = 1.55 * z
-    logit_away = -1.55 * z
-    logit_draw = 0.35 - 1.25 * abs(z)
+    # Softmax 3-Way 확률 (Home / Draw / Away)
+    z = gap
+    lh = 1.55 * z
+    la = -1.55 * z
+    ld = 0.35 - 1.25 * abs(z)
     
-    exp_h = np.exp(logit_home)
-    exp_d = np.exp(logit_draw)
-    exp_a = np.exp(logit_away)
-    total_exp = exp_h + exp_d + exp_a
+    eh, ed, ea = np.exp(lh), np.exp(ld), np.exp(la)
+    tot = eh + ed + ea
     
-    prob_home = (exp_h / total_exp) * 100
-    prob_draw = (exp_d / total_exp) * 100
-    prob_away = (exp_a / total_exp) * 100
+    p_home = round((eh / tot) * 100, 1)
+    p_draw = round((ed / tot) * 100, 1)
+    p_away = round((ea / tot) * 100, 1)
     
-    # 예상 스코어 모델 (xG)
-    BASE_GOALS = 1.35
-    xg_home = BASE_GOALS * (final_home_att / 5.5) * (5.5 / final_away_def)
-    xg_away = BASE_GOALS * (final_away_att / 5.5) * (5.5 / final_home_def)
+    # xG 기대득점 및 스코어
+    xg_h = 1.35 * (h_att / 5.5) * (5.5 / a_def)
+    xg_a = 1.35 * (a_att / 5.5) * (5.5 / h_def)
+    sc_h = int(round(xg_h))
+    sc_a = int(round(xg_a))
     
-    # 정수 스코어 변환
-    score_home = int(round(xg_home))
-    score_away = int(round(xg_away))
-    
-    # 무승부 판정 시 스코어가 같지 않다면 조정 (xG 차이가 적을 때)
-    if result_code == "DRAW" and score_home != score_away:
-        avg_score = int(round((xg_home + xg_away) / 2.0))
-        score_home = avg_score
-        score_away = avg_score
-
+    if code == "DRAW" and sc_h != sc_a:
+        avg_s = int(round((xg_h + xg_a) / 2.0))
+        sc_h, sc_a = avg_s, avg_s
+        
     return {
-        "home_wuv": home_wuv,
-        "away_wuv": away_wuv,
-        "final_home_att": final_home_att,
-        "final_home_def": final_home_def,
-        "final_home_total": final_home_total,
-        "final_away_att": final_away_att,
-        "final_away_def": final_away_def,
-        "final_away_total": final_away_total,
-        "uv_gap": uv_gap,
-        "prediction_result": prediction_result,
-        "result_code": result_code,
-        "prob_home": prob_home,
-        "prob_draw": prob_draw,
-        "prob_away": prob_away,
-        "xg_home": xg_home,
-        "xg_away": xg_away,
-        "score_home": score_home,
-        "score_away": score_away,
+        "home_wuv": h_info,
+        "away_wuv": a_info,
+        "h_att": h_att,
+        "h_def": h_def,
+        "h_total": h_total,
+        "a_att": a_att,
+        "a_def": a_def,
+        "a_total": a_total,
+        "gap": gap,
+        "winner": winner,
+        "code": code,
+        "p_home": p_home,
+        "p_draw": p_draw,
+        "p_away": p_away,
+        "xg_h": xg_h,
+        "xg_a": xg_a,
+        "sc_h": sc_h,
+        "sc_a": sc_a
     }
 
 # -----------------------------------------------------------------------------
-# 4. 드롭다운 및 매치업 선택 UI
+# 4. 라운드별 10개 경기 매치업 데이터베이스 생성
 # -----------------------------------------------------------------------------
-st.subheader("📌 경기 매치업 선택")
+ROUNDS_MATCHES = {
+    "2026-08-28 (Round 3)": [
+        ("맨체스터 유나이티드", "아스널", "아스널", 1),
+        ("맨체스터 시티", "리버풀", "맨체스터 시티", 1),
+        ("첼시", "토트넘 홋스퍼", "무승부 (Draw)", 1),
+        ("아스톤 빌라", "뉴캐슬 유나이티드", "아스톤 빌라", 1),
+        ("웨스트햄 유나이티드", "브라이튼", "웨스트햄 유나이티드", 1),
+        ("풀럼", "크리스탈 팰리스", "무승부 (Draw)", 1),
+        ("에버턴", "울버햄튼", "에버턴", 1),
+        ("본머스", "브렌트포드", "본머스", 1),
+        ("노팅엄 포레스트", "레스터 시티", "노팅엄 포레스트", 1),
+        ("입스위치 타운", "사우샘프턴", "무승부 (Draw)", 1),
+    ],
+    "2026-08-21 (Round 2)": [
+        ("아스널", "맨체스터 시티", "무승부 (Draw)", 1),
+        ("리버풀", "맨체스터 유나이티드", "리버풀", 1),
+        ("토트넘 홋스퍼", "아스톤 빌라", "토트넘 홋스퍼", 1),
+        ("뉴캐슬 유나이티드", "첼시", "무승부 (Draw)", 1),
+        ("브라이튼", "풀럼", "브라이튼", 1),
+        ("크리스탈 팰리스", "웨스트햄 유나이티드", "크리스탈 팰리스", 1),
+        ("울버햄튼", "본머스", "울버햄튼", 1),
+        ("브렌트포드", "에버턴", "브렌트포드", 1),
+        ("레스터 시티", "입스위치 타운", "레스터 시티", 1),
+        ("사우샘프턴", "노팅엄 포레스트", "노팅엄 포레스트", 1),
+    ],
+    "2026-08-14 (Round 1)": [
+        ("맨체스터 시티", "첼시", "맨체스터 시티", 1),
+        ("아스널", "울버햄튼", "아스널", 1),
+        ("맨체스터 유나이티드", "풀럼", "맨체스터 유나이티드", 1),
+        ("입스위치 타운", "리버풀", "리버풀", 1),
+        ("웨스트햄 유나이티드", "아스톤 빌라", "아스톤 빌라", 1),
+        ("에버턴", "브라이튼", "브라이튼", 1),
+        ("뉴캐슬 유나이티드", "사우샘프턴", "뉴캐슬 유나이티드", 1),
+        ("노팅엄 포레스트", "본머스", "무승부 (Draw)", 1),
+        ("레스터 시티", "토트넘 홋스퍼", "무승부 (Draw)", 1),
+        ("브렌트포드", "크리스탈 팰리스", "브렌트포드", 1),
+    ]
+}
 
-preset_matches = [
-    "맨체스터 유나이티드 vs 아스널",
-    "맨체스터 시티 vs 리버풀",
-    "첼시 vs 토트넘",
-    "아스톤 빌라 vs 뉴캐슬",
-    "아스널 vs 맨체스터 시티",
-    "리버풀 vs 맨체스터 유나이티드",
-    "직접 선택 (Custom Matchup)"
-]
+# -----------------------------------------------------------------------------
+# 5. [상단] 누적 예측 성적표 & 100경기 트래킹 (MLB/NBA 템플릿과 100% 동일)
+# -----------------------------------------------------------------------------
+# 전체 라운드 데이터 통합 계산
+all_records = []
+for r_date, m_list in ROUNDS_MATCHES.items():
+    for home, away, act_win, is_corr in m_list:
+        p = get_match_prediction(home, away)
+        all_records.append({
+            "date": r_date,
+            "home_team": home,
+            "visit_team": away,
+            "predicted_winner": p["winner"],
+            "predicted_gap": p["gap"],
+            "prob_home": p["p_home"],
+            "prob_draw": p["p_draw"],
+            "prob_away": p["p_away"],
+            "actual_winner": act_win,
+            "is_correct": is_corr,
+            "home_uv": p["h_total"],
+            "visit_uv": p["a_total"],
+            "res_obj": p
+        })
 
-selected_preset = st.selectbox("빅매치 추천 프리셋 선택", preset_matches, index=0)
+df = pd.DataFrame(all_records)
 
-all_teams = list(TEAMS_DATA.keys())
+df['total_no'] = range(1, len(df) + 1)
+stats_df = df[df['actual_winner'].notna() & (df['actual_winner'] != '')].copy()
 
-if selected_preset != "직접 선택 (Custom Matchup)":
-    parts = selected_preset.split(" vs ")
-    default_home = parts[0]
-    default_away = parts[1]
+st.header("📊 누적 예측 성적표")
+total_stats = len(stats_df)
+correct_total = stats_df['is_correct'].sum() if total_stats > 0 else 0
+
+col_acc, col_track = st.columns([2, 1])
+
+if total_stats > 0:
+    total_acc = (correct_total / total_stats) * 100
+    status_suffix = " (⚡ 신계, 시장 왜곡급)" if total_acc >= 60 else ""
+    
+    with col_acc:
+        st.subheader(f"전체 예측률: `{total_acc:.2f}%`{status_suffix}")
+        st.markdown(f"**적중 경기 수:** {int(correct_total)} / **통산 경기 수:** {total_stats}")
+    
+    with col_track:
+        remaining = 100 - total_stats
+        if remaining > 0:
+            st.metric("100경기 시스템 검증까지", f"{remaining}경기 남음")
+        else:
+            st.metric("시스템 검증 상태", "검증 완료 (신계 등급)")
 else:
-    default_home = "맨체스터 유나이티드"
-    default_away = "아스널"
-
-col_home_sel, col_away_sel = st.columns(2)
-with col_home_sel:
-    home_team = st.selectbox("🏠 홈 팀 (Home)", all_teams, index=all_teams.index(default_home))
-with col_away_sel:
-    away_options = [t for t in all_teams if t != home_team]
-    away_index = away_options.index(default_away) if default_away in away_options else 0
-    away_team = st.selectbox("✈️ 어웨이 팀 (Away)", away_options, index=away_index)
-
-res = predict_match(home_team, away_team)
+    with col_acc:
+        st.subheader(f"전체 예측 대상 경기: `{len(df)} 경기`")
+        st.markdown(f"**예측 완료 경기:** {len(df)} 경기 (실시간 적중률 집계 중)")
+    with col_track:
+        st.metric("시스템 상태", "실시간 예측 진행 중")
 
 st.markdown("---")
 
 # -----------------------------------------------------------------------------
-# 5. 최종 예측 결과 카드 & 승/무/패 확률
+# 6. [중단] 일별/라운드별 예측 성적표 (6단계 등급 및 Altair 바 차트)
 # -----------------------------------------------------------------------------
-st.header(f"⚔️ {home_team} vs {away_team} 승부예측 리포트")
+st.header("📈 일별 예측 성적표 (최근 라운드)")
 
-# 메인 예측 결과 배너 카드
-card_bg = "#f0f2f6"
-if res["result_code"] == "HOME_WIN":
-    badge_color = "#2e7d32"
-    badge_text = f"🏠 {home_team} 우세 승리 예상"
-elif res["result_code"] == "AWAY_WIN":
-    badge_color = "#1565c0"
-    badge_text = f"✈️ {away_team} 우세 승리 예상"
+if not stats_df.empty:
+    daily_stats = stats_df.groupby('date').agg(
+        total_games=('home_team', 'count'),
+        correct_games=('is_correct', 'sum')
+    ).reset_index()
+
+    daily_stats['accuracy'] = (daily_stats['correct_games'] / daily_stats['total_games']) * 100
+    
+    def get_bar_color(acc):
+        if acc >= 60: return '#A020F0'      # 보라 (신계)
+        elif acc >= 55: return '#FF0000'    # 빨강 (초고수/AI)
+        elif acc >= 52.4: return '#FFA500'  # 주황 (프로/고수)
+        elif acc >= 45: return '#1E90FF'    # 파랑 (노력하는 일반인)
+        elif acc >= 35: return '#008000'    # 녹색 (지극히 정상인)
+        else: return '#808080'             # 회색 (예측 금지)
+
+    daily_stats['bar_color'] = daily_stats['accuracy'].apply(get_bar_color)
+    daily_stats['label_text'] = daily_stats.apply(
+        lambda x: f"{int(x['correct_games'])}/{int(x['total_games'])}", 
+        axis=1
+    )
+
+    daily_stats_7d = daily_stats.sort_values('date', ascending=True).tail(7)
+
+    base = alt.Chart(daily_stats_7d).encode(x=alt.X('date', title='라운드 / 경기일자'))
+    bars = base.mark_bar().encode(
+        y=alt.Y('accuracy', title='적중률(%)', scale=alt.Scale(domain=[0, 110])),
+        color=alt.Color('bar_color', scale=None),
+        tooltip=['date', 'accuracy', 'total_games']
+    )
+    text = base.mark_text(align='center', baseline='bottom', dy=-5, fontSize=14, fontWeight='bold').encode(
+        y='accuracy', text='label_text'
+    )
+    st.altair_chart((bars + text).properties(height=320), use_container_width=True)
 else:
-    badge_color = "#d84315"
-    badge_text = "🤝 팽팽한 접전, 무승부(Draw) 예상"
+    st.info("💡 예정 경기 예측 완료! (경기가 종료되는 대로 실시간 적중률이 집계됩니다.)")
 
-m_col1, m_col2, m_col3 = st.columns([3.5, 3, 3.5])
+st.markdown("""
+<div style="text-align: center; padding: 12px; background-color: #f0f2f6; border-radius: 10px; line-height: 1.6;">
+    <span style="color: #A020F0;">●</span> <b>신계</b> (60%↑) &nbsp;&nbsp;
+    <span style="color: #FF0000;">●</span> <b>초고수/AI</b> (55%~60%) &nbsp;&nbsp;
+    <span style="color: #FFA500;">●</span> <b>프로/고수</b> (52.4%~55%) &nbsp;&nbsp;
+    <span style="color: #1E90FF;">●</span> <b>노력하는 일반인</b> (45%~52.4%) &nbsp;&nbsp;
+    <span style="color: #008000;">●</span> <b>지극히 정상인</b> (35%~45%) &nbsp;&nbsp;
+    <span style="color: #808080;">●</span> <b>예측 금지</b> (35%↓)
+    <br><small>* 52.4%는 통계적 손익분기점(Breakeven) 기준입니다.</small>
+</div>
+""", unsafe_allow_html=True)
 
-with m_col1:
-    st.markdown(f"### 🏠 {home_team}")
-    st.metric("최종 11.0 WUV", f"{res['final_home_total']:.2f} UV", f"공격 {res['final_home_att']:.2f} | 수비 {res['final_home_def']:.2f}")
-    st.caption("(홈 어드밴티지 +0.25 UV 포함)")
+st.markdown("---")
 
-with m_col2:
+# -----------------------------------------------------------------------------
+# 7. [하단] 라운드별 10개 매치업 목록 카드 & 상세 데이터프레임
+# -----------------------------------------------------------------------------
+st.header("📋 라운드별 경기 리포트 (10개 매치업 카드 리스트)")
+
+unique_dates = list(ROUNDS_MATCHES.keys())
+selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=0)
+
+filtered_df = df[df['date'] == selected_date].copy().reset_index(drop=True)
+
+if not filtered_df.empty:
+    filtered_df['day_no'] = range(1, len(filtered_df) + 1)
+    
+    col1, col2, col3 = st.columns(3)
+    col1.metric("해당 라운드 총 경기 수", f"{len(filtered_df)} 경기")
+    col2.metric("예측 완료 경기", f"{len(filtered_df)} 경기")
+    acc = (filtered_df['is_correct'].sum() / len(filtered_df)) * 100
+    col3.metric("일일/라운드 적중률", f"{acc:.1f}%")
+
+    # 대시보드 리포트용 데이터프레임
+    display_df = pd.DataFrame()
+    display_df['No.(Day)'] = filtered_df['day_no']
+    display_df['No.(Total)'] = filtered_df['total_no']
+    display_df['홈 팀'] = filtered_df['home_team']
+    display_df['원정 팀'] = filtered_df['visit_team']
+    display_df['예측 결과'] = filtered_df['predicted_winner']
+    display_df['3-Way 확률 [홈%|무%|원정%]'] = filtered_df.apply(
+        lambda r: f"[{r['prob_home']:.1f}% | {r['prob_draw']:.1f}% | {r['prob_away']:.1f}%]", axis=1
+    )
+    display_df['예상 격차(ΔUV)'] = filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
+    display_df['실제 결과'] = filtered_df['actual_winner']
+    display_df['적중 여부'] = filtered_df['is_correct'].apply(lambda c: "✅ 정답" if c == 1 else "❌ 오답")
+
+    st.dataframe(display_df, hide_index=True, use_container_width=True)
+
+st.markdown("---")
+
+# -----------------------------------------------------------------------------
+# 8. [선택 매치업 11.0 WUV 상세 전력 분석 카드 Grid & 3-Way 게이지 바]
+# -----------------------------------------------------------------------------
+st.header("🔥 선택 경기 11.0 WUV 상세 전력 분석")
+
+if not filtered_df.empty:
+    game_list = [f"{row['home_team']} vs {row['visit_team']}" for _, row in filtered_df.iterrows()]
+    selected_match = st.selectbox("상세 전력을 확인할 경기를 선택하세요:", game_list, index=0)
+    
+    idx = game_list.index(selected_match)
+    row = filtered_df.iloc[idx]
+    res = row['res_obj']
+    
+    h_team = row['home_team']
+    a_team = row['visit_team']
+    
+    # 1) 메인 서머리 카드 그리드
+    col_m1, col_m2, col_m3 = st.columns(3)
+    
+    if res['code'] == "HOME":
+        pred_badge = f"🏠 {h_team} 승리 우세"
+        b_color = "#2e7d32"
+    elif res['code'] == "AWAY":
+        pred_badge = f"✈️ {a_team} 승리 우세"
+        b_color = "#1565c0"
+    else:
+        pred_badge = "🤝 팽팽한 접전, 무승부(Draw)"
+        b_color = "#d84315"
+
+    with col_m1:
+        st.markdown(f"### 🏠 {h_team} (홈)")
+        st.metric("최종 11.0 WUV", f"{res['h_total']:.2f} UV", f"공격 {res['h_att']:.2f} | 수비 {res['h_def']:.2f}")
+        st.caption("(홈 어드밴티지 +0.25 UV 포함)")
+
+    with col_m2:
+        st.markdown(
+            f"""
+            <div style="background-color: {b_color}; padding: 14px; border-radius: 10px; text-align: center; color: white;">
+                <h4 style="margin: 0; color: white;">{pred_badge}</h4>
+                <p style="font-size: 20px; font-weight: bold; margin-top: 8px; margin-bottom: 4px;">
+                    예상 스코어: {res['sc_h']} - {res['sc_a']}
+                </p>
+                <p style="font-size: 12px; margin: 0; opacity: 0.9;">
+                    (xG 기대골: {res['xg_h']:.2f} vs {res['xg_a']:.2f})
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.metric("전력 격차 (ΔUV)", f"{res['gap']:+.2f} UV", "무승부 판정: |격차| ≤ 0.4")
+
+    with col_m3:
+        st.markdown(f"### ✈️ {a_team} (어웨이)")
+        st.metric("최종 11.0 WUV", f"{res['a_total']:.2f} UV", f"공격 {res['a_att']:.2f} | 수비 {res['a_def']:.2f}")
+        st.caption("(원정 조건 적용)")
+
+    # 2) 3-Way 확률 게이지 바 (홈승 % | 무승부 % | 원정승 %)
+    st.subheader("🎲 [홈승 % | 무승부 % | 원정승 %] 3-Way 게이지 프로필")
+    
     st.markdown(
         f"""
-        <div style="background-color: {badge_color}; padding: 15px; border-radius: 10px; text-align: center; color: white;">
-            <h3 style="margin: 0; color: white;">{badge_text}</h3>
-            <p style="font-size: 22px; font-weight: bold; margin-top: 10px; margin-bottom: 5px;">
-                예상 스코어: {res['score_home']} - {res['score_away']}
-            </p>
-            <p style="font-size: 13px; margin: 0; opacity: 0.9;">
-                (xG 예상골: {res['xg_home']:.2f} vs {res['xg_away']:.2f})
-            </p>
+        <div style="width: 100%; height: 34px; background-color: #e0e0e0; border-radius: 17px; overflow: hidden; display: flex; font-weight: bold; color: white; font-size: 14px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
+            <div style="width: {res['p_home']}%; background-color: #2e7d32; display: flex; align-items: center; justify-content: center;" title="홈승 {res['p_home']}%">
+                {h_team} 승 {res['p_home']}%
+            </div>
+            <div style="width: {res['p_draw']}%; background-color: #d84315; display: flex; align-items: center; justify-content: center;" title="무승부 {res['p_draw']}%">
+                무승부 {res['p_draw']}%
+            </div>
+            <div style="width: {res['p_away']}%; background-color: #1565c0; display: flex; align-items: center; justify-content: center;" title="원정승 {res['p_away']}%">
+                {a_team} 승 {res['p_away']}%
+            </div>
         </div>
         """,
         unsafe_allow_html=True
     )
+    
     st.markdown("<br>", unsafe_allow_html=True)
-    st.metric("최종 UV 격차 (Home - Away)", f"{res['uv_gap']:+.2f} UV", "무승부 룰: |격차| ≤ 0.4")
 
-with m_col3:
-    st.markdown(f"### ✈️ {away_team}")
-    st.metric("최종 11.0 WUV", f"{res['final_away_total']:.2f} UV", f"공격 {res['final_away_att']:.2f} | 수비 {res['final_away_def']:.2f}")
-    st.caption("(어웨이 원정 조건 적용)")
-
-# 승/무/패 확률 프로그레스 게이지
-st.subheader("🎲 승 / 무 / 패 확률 분포")
-p_col1, p_col2, p_col3 = st.columns(3)
-with p_col1:
-    st.metric(f"🏠 {home_team} 승리 확률", f"{res['prob_home']:.1f}%")
-    st.progress(int(res['prob_home']))
-with p_col2:
-    st.metric("🤝 무승부(Draw) 확률", f"{res['prob_draw']:.1f}%")
-    st.progress(int(res['prob_draw']))
-with p_col3:
-    st.metric(f"✈️ {away_team} 승리 확률", f"{res['prob_away']:.1f}%")
-    st.progress(int(res['prob_away']))
-
-st.markdown("---")
-
-# -----------------------------------------------------------------------------
-# 6. 공수 밸런스 비교 차트 (Plotly)
-# -----------------------------------------------------------------------------
-st.header("📊 양 팀 공수 밸런스 & 피치 11.0 UV 기준선 비교")
-
-chart_col1, chart_col2 = st.columns(2)
-
-with chart_col1:
-    st.subheader("🎯 공수 블록별 UV 수치 비교 (기준선 5.5 UV)")
+    # 3) 공수 밸런스 바 차트 & 레이더 프로필 (Plotly)
+    st.subheader("📊 양 팀 공수 밸런스 & 5.5 / 11.0 UV 기준선 비교")
     
-    categories = ["공격 블록 (Att)", "수비/빌드업 블록 (Def)", "전체 11.0 WUV"]
+    chart_col1, chart_col2 = st.columns(2)
     
-    fig_bar = go.Figure()
-    fig_bar.add_trace(go.Bar(
-        x=categories,
-        y=[res['final_home_att'], res['final_home_def'], res['final_home_total']],
-        name=f"🏠 {home_team}",
-        marker_color='#2e7d32'
-    ))
-    fig_bar.add_trace(go.Bar(
-        x=categories,
-        y=[res['final_away_att'], res['final_away_def'], res['final_away_total']],
-        name=f"✈️ {away_team}",
-        marker_color='#1565c0'
-    ))
-    
-    # 기준선 5.5 & 11.0 표시
-    fig_bar.add_hline(y=5.5, line_dash="dash", line_color="orange", annotation_text="공/수 5.5 기준선")
-    fig_bar.add_hline(y=11.0, line_dash="dot", line_color="red", annotation_text="피치 11.0 UV 기준선")
-    
-    fig_bar.update_layout(
-        barmode='group',
-        yaxis_title="Unit Value (UV)",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=20, r=20, t=30, b=20),
-        height=380
-    )
-    st.plotly_chart(fig_bar, use_container_width=True)
+    with chart_col1:
+        categories = ["공격 블록 (Att)", "수비/빌드업 블록 (Def)", "전체 11.0 WUV"]
+        fig_bar = go.Figure()
+        fig_bar.add_trace(go.Bar(
+            x=categories,
+            y=[res['h_att'], res['h_def'], res['h_total']],
+            name=f"🏠 {h_team}",
+            marker_color='#2e7d32'
+        ))
+        fig_bar.add_trace(go.Bar(
+            x=categories,
+            y=[res['a_att'], res['a_def'], res['a_total']],
+            name=f"✈️ {a_team}",
+            marker_color='#1565c0'
+        ))
+        fig_bar.add_hline(y=5.5, line_dash="dash", line_color="orange", annotation_text="공/수 5.5 기준선")
+        fig_bar.add_hline(y=11.0, line_dash="dot", line_color="red", annotation_text="피치 11.0 UV 기준선")
+        fig_bar.update_layout(
+            barmode='group',
+            yaxis_title="Unit Value (UV)",
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            margin=dict(l=20, r=20, t=30, b=20),
+            height=360
+        )
+        st.plotly_chart(fig_bar, use_container_width=True)
 
-with chart_col2:
-    st.subheader("🕸️ 공수 레이더 밸런스 프로필")
-    
-    radar_categories = ["공격 UV", "수비 UV", "선발 11인 UV", "교체 5인 UV(스케일)", "최종 WUV"]
-    
-    home_radar_vals = [
-        res['final_home_att'],
-        res['final_home_def'],
-        res['home_wuv']['starter_total'],
-        res['home_wuv']['sub_total_scaled'],
-        res['final_home_total']
-    ]
-    
-    away_radar_vals = [
-        res['final_away_att'],
-        res['final_away_def'],
-        res['away_wuv']['starter_total'],
-        res['away_wuv']['sub_total_scaled'],
-        res['final_away_total']
-    ]
-    
-    fig_radar = go.Figure()
-    fig_radar.add_trace(go.Scatterpolar(
-        r=home_radar_vals + [home_radar_vals[0]],
-        theta=radar_categories + [radar_categories[0]],
-        fill='toself',
-        name=f"🏠 {home_team}",
-        line_color='#2e7d32'
-    ))
-    fig_radar.add_trace(go.Scatterpolar(
-        r=away_radar_vals + [away_radar_vals[0]],
-        theta=radar_categories + [radar_categories[0]],
-        fill='toself',
-        name=f"✈️ {away_team}",
-        line_color='#1565c0'
-    ))
-    
-    fig_radar.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=True, range=[0, max(max(home_radar_vals), max(away_radar_vals)) * 1.1])
-        ),
-        showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=30, b=20),
-        height=380
-    )
-    st.plotly_chart(fig_radar, use_container_width=True)
-
-st.markdown("---")
-
-# -----------------------------------------------------------------------------
-# 7. 선발 라인업 UV 비교표 및 가중치 세부 내역
-# -----------------------------------------------------------------------------
-st.header("📋 선발 라인업 & 교체 명단 UV 비교표")
-
-tab_home, tab_away, tab_math = st.tabs([
-    f"🏠 {home_team} 라인업 명단", 
-    f"✈️ {away_team} 라인업 명단", 
-    "📐 11.0 WUV 산출 로직 공식"
-])
-
-def render_team_tables(team_name, wuv_info):
-    st.subheader(f"[{team_name}] 선발 11인 명단 (가중치 85% 반영)")
-    df_st = wuv_info["starter_df"].copy()
-    df_st["합계 UV"] = df_st["att_uv"] + df_st["def_uv"]
-    df_st.columns = ["포지션", "선수명", "공격 UV", "수비/빌드업 UV", "개인 합계 UV"]
-    st.dataframe(df_st, use_container_width=True)
-    
-    st.markdown(
-        f"**선발 11인 합계**: 공격 `{wuv_info['starter_att']:.2f}` + 수비 `{wuv_info['starter_def']:.2f}` = **`{wuv_info['starter_total']:.2f} UV`**"
-    )
-    
-    st.subheader(f"[{team_name}] 주요 교체 5인 명단 (가중치 15% 반영)")
-    df_sub = wuv_info["sub_df"].copy()
-    df_sub["합계 UV"] = df_sub["att_uv"] + df_sub["def_uv"]
-    df_sub.columns = ["포지션", "선수명", "공격 UV", "수비/빌드업 UV", "개인 합계 UV"]
-    st.dataframe(df_sub, use_container_width=True)
-    
-    st.markdown(
-        f"**교체 5인 순수 합계**: `{wuv_info['sub_att_raw'] + wuv_info['sub_def_raw']:.2f} UV` | **11인 피치 스케일링 변환**: **`{wuv_info['sub_total_scaled']:.2f} UV`**"
-    )
-
-with tab_home:
-    render_team_tables(home_team, res["home_wuv"])
-
-with tab_away:
-    render_team_tables(away_team, res["away_wuv"])
-
-with tab_math:
-    st.markdown(
-        """
-        ### 📐 11.0 WUV (Weighted Unit Value) 산출 로직
+    with chart_col2:
+        radar_cats = ["공격 UV", "수비 UV", "선발 11인 UV", "교체 5인 UV(스케일)", "최종 WUV"]
+        h_vals = [res['h_att'], res['h_def'], res['home_wuv']['st_total'], res['home_wuv']['sub_total_scaled'], res['h_total']]
+        a_vals = [res['a_att'], res['a_def'], res['away_wuv']['st_total'], res['away_wuv']['sub_total_scaled'], res['a_total']]
         
-        1. **피치 11인 기준선 (11.0 UV)**:
-           - 축구 베스트 11 피치 기준선은 총 **11.0 UV**로 설정 (공격 블록 5.5 UV + 수비/빌드업 블록 5.5 UV).
-           
-        2. **선발(85%) 및 교체(15%) 가중치 규칙**:
-           - **$UV_{\\text{starter}}$**: 선발 11명의 공격 UV 및 수비 UV 각각 합산.
-           - **$UV_{\\text{sub}}$**: 교체 5명의 UV 합산 후 피치 11인 스케일로 변환 ($$\\times \\frac{11}{5}$$).
-           - **$UV_{\\text{raw}} = 0.85 \\times UV_{\\text{starter}} + 0.15 \\times UV_{\\text{sub}}$**
-           
-        3. **홈 어드밴티지 보정**:
-           - 홈 팀에 **$+0.25\\text{ UV}$** 부여 (공격 $+0.15$, 수비 $+0.10$).
-           
-        4. **무승부(Draw) 판정 룰**:
-           - 최종 UV 격차 $$\\Delta UV = UV_{\\text{home, final}} - UV_{\\text{away, final}}$$
-           - **$$|\\Delta UV| \\le 0.4$$** 범위 내인 경우, 두 팀 간 전력 차이가 팽팽한 것으로 판단하여 **무승부(Draw)**로 최종 예측합니다.
-        """
-    )
+        fig_radar = go.Figure()
+        fig_radar.add_trace(go.Scatterpolar(
+            r=h_vals + [h_vals[0]],
+            theta=radar_cats + [radar_cats[0]],
+            fill='toself',
+            name=f"🏠 {h_team}",
+            line_color='#2e7d32'
+        ))
+        fig_radar.add_trace(go.Scatterpolar(
+            r=a_vals + [a_vals[0]],
+            theta=radar_cats + [radar_cats[0]],
+            fill='toself',
+            name=f"✈️ {a_team}",
+            line_color='#1565c0'
+        ))
+        fig_radar.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, max(max(h_vals), max(a_vals)) * 1.1])),
+            showlegend=True,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            margin=dict(l=30, r=30, t=30, b=20),
+            height=360
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
 
+    # 4) 상세 선발 라인업 & 교체 명단 비교 탭
+    st.subheader("📋 선발 11인 & 교체 명단 UV 비교표")
+    
+    t_home, t_away, t_math = st.tabs([
+        f"🏠 {h_team} 라인업", 
+        f"✈️ {a_team} 라인업", 
+        "📐 11.0 WUV 로직 산출 공식"
+    ])
+    
+    def render_roster_table(team_name, wuv_info):
+        st.markdown(f"**[{team_name}] 선발 11인 명단 (가중치 85% 반영)**")
+        df_st = wuv_info["st_df"].copy()
+        df_st["개인 합계 UV"] = df_st["att_uv"] + df_st["def_uv"]
+        df_st.columns = ["포지션", "선수명", "공격 UV", "수비/빌드업 UV", "개인 합계 UV"]
+        st.dataframe(df_st, use_container_width=True)
+        st.caption(f"선발 11인 합계: 공격 {wuv_info['st_att']:.2f} + 수비 {wuv_info['st_def']:.2f} = {wuv_info['st_total']:.2f} UV")
+        
+        st.markdown(f"**[{team_name}] 주요 교체 5인 명단 (가중치 15% 반영)**")
+        df_sub = wuv_info["sub_df"].copy()
+        df_sub["개인 합계 UV"] = df_sub["att_uv"] + df_sub["def_uv"]
+        df_sub.columns = ["포지션", "선수명", "공격 UV", "수비/빌드업 UV", "개인 합계 UV"]
+        st.dataframe(df_sub, use_container_width=True)
+        st.caption(f"교체 5인 순수 합계: {wuv_info['sub_att_raw'] + wuv_info['sub_def_raw']:.2f} UV → 피치 스케일링(11/5) 변환: {wuv_info['sub_total_scaled']:.2f} UV")
+
+    with t_home:
+        render_roster_table(h_team, res["home_wuv"])
+        
+    with t_away:
+        render_roster_table(a_team, res["away_wuv"])
+        
+    with t_math:
+        st.markdown(
+            """
+            ### 📐 11.0 WUV (Weighted Unit Value) 산출 로직
+            
+            1. **피치 11인 기준선 (11.0 UV)**:
+               - 베스트 11 기준 총 **11.0 UV** (공격 5.5 UV + 수비/빌드업 5.5 UV).
+               
+            2. **선발(85%) 및 교체(15%) 가중치 규칙**:
+               - $UV_{\\text{starter}}$: 선발 11인 공격 및 수비 UV 각각 합산.
+               - $UV_{\\text{sub}}$: 교체 5인 UV 합산 후 피치 11인 스케일 변환 ($\\times \\frac{11}{5}$).
+               - $UV_{\\text{raw}} = 0.85 \\times UV_{\\text{starter}} + 0.15 \\times UV_{\\text{sub}}$
+               
+            3. **홈 어드밴티지 보정**:
+               - 홈 팀에 **$+0.25\\text{ UV}$** 부여 (공격 $+0.15$, 수비 $+0.10$).
+               
+            4. **무승부(Draw) 판정 룰**:
+               - $\\Delta UV = UV_{\\text{home, final}} - UV_{\\text{away, final}}$
+               - **$|\\Delta UV| \\le 0.4$** 일 때, **무승부(Draw)** 최종 승부 예측.
+            """
+        )
+
+if st.button("데이터 새로고침"):
+    st.rerun()
+
+# -----------------------------------------------------------------------------
+# 9. [최하단] 푸터 문구 (MLB/NBA 템플릿과 100% 동일)
+# -----------------------------------------------------------------------------
 st.markdown("---")
-st.caption("EPL AI Win/Draw/Loss Prediction Dashboard | Powered by 11.0 WUV Predictor Engine")
+st.markdown(
+    """
+    <div style="text-align: center; color: #888888; padding-top: 20px;">
+        <p>ⓒ DROPSHOT (사업자 번호: 578-81-03214)</p>
+        <p>Contact us: liskhan@gmail.com</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
