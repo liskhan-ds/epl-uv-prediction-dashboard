@@ -646,6 +646,13 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
 def load_data():
+    if not os.path.exists(DB_PATH):
+        try:
+            from run_epl import run_pipeline
+            run_pipeline()
+        except Exception:
+            pass
+
     if os.path.exists(DB_PATH):
         try:
             conn = sqlite3.connect(DB_PATH)
