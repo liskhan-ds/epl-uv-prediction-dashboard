@@ -3,12 +3,12 @@ import requests
 import os
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
-# 팀명 매핑 영문 -> 한글 (EPL 20개 구단)
+# 팀명 매핑 영문 -> 한글
 TEAM_NAME_MAP = {
     "Manchester United": "맨체스터 유나이티드",
     "Arsenal": "아스널",
@@ -36,6 +36,10 @@ TEAM_NAME_MAP = {
     "Leicester City": "레스터 시티",
     "Ipswich Town": "입스위치 타운",
     "Southampton": "사우샘프턴",
+    "Leeds United": "리즈 유나이티드",
+    "Sunderland": "선덜랜드",
+    "Coventry City": "코번트리 시티",
+    "Hull City": "헐 시티",
 }
 
 from app import calculate_wuv, get_match_prediction, TEAMS_ROSTER
@@ -71,6 +75,9 @@ def init_db():
     CREATE TABLE IF NOT EXISTS predictions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL,
+        uk_date TEXT,
+        kst_date TEXT,
+        round_name TEXT,
         home_team TEXT NOT NULL,
         visit_team TEXT NOT NULL,
         predicted_winner TEXT NOT NULL,
@@ -90,8 +97,60 @@ def init_db():
         UNIQUE(date, home_team, visit_team) ON CONFLICT REPLACE
     )
     """)
+    cursor.execute("PRAGMA table_info(predictions)")
+    cols = [col[1] for col in cursor.fetchall()]
+    for c in ["uk_date", "kst_date", "round_name"]:
+        if c not in cols:
+            cursor.execute(f"ALTER TABLE predictions ADD COLUMN {c} TEXT")
     conn.commit()
     conn.close()
+
+def parse_timezones(utc_iso_str):
+    # e.g., "2026-08-28T19:00Z"
+    dt_utc = datetime.fromisoformat(utc_iso_str.replace("Z", "+00:00"))
+    
+    # 영국 현지 시각 (BST UTC+1 / GMT UTC+0)
+    # 3월 마지막 일요일~10월 마지막 일요일은 BST (UTC+1)
+    month = dt_utc.month
+    uk_offset = 1 if 4 <= month <= 10 else 0
+    dt_uk = dt_utc + timedelta(hours=uk_offset)
+    
+    # 한국 시각 (KST UTC+9)
+    dt_kst = dt_utc + timedelta(hours=9)
+    
+    uk_date_str = dt_uk.strftime("%Y-%m-%d %H:%M (영국)")
+    kst_date_str = dt_kst.strftime("%Y-%m-%d %H:%M (KST)")
+    
+    # EPL 라운드 명칭 그룹핑 (주차 기준)
+    week_num = dt_uk.isocalendar()[1]
+    round_label = f"Round (W{week_num}) [{dt_uk.strftime('%m-%d')} 주말 라운드]"
+    
+    return dt_uk.strftime("%Y-%m-%d"), uk_date_str, kst_date_str, round_label
+
+def ensure_team_roster(team_name):
+    if team_name not in TEAMS_ROSTER:
+        TEAMS_ROSTER[team_name] = {
+            "starters": [
+                {"pos": "GK", "name": f"{team_name} GK", "att_uv": 0.15, "def_uv": 0.45},
+                {"pos": "DF", "name": f"{team_name} DF1", "att_uv": 0.30, "def_uv": 0.45},
+                {"pos": "DF", "name": f"{team_name} DF2", "att_uv": 0.25, "def_uv": 0.50},
+                {"pos": "DF", "name": f"{team_name} DF3", "att_uv": 0.25, "def_uv": 0.50},
+                {"pos": "DF", "name": f"{team_name} DF4", "att_uv": 0.35, "def_uv": 0.40},
+                {"pos": "MF", "name": f"{team_name} MF1", "att_uv": 0.40, "def_uv": 0.45},
+                {"pos": "MF", "name": f"{team_name} MF2", "att_uv": 0.40, "def_uv": 0.45},
+                {"pos": "MF", "name": f"{team_name} MF3", "att_uv": 0.55, "def_uv": 0.35},
+                {"pos": "FW", "name": f"{team_name} FW1", "att_uv": 0.60, "def_uv": 0.25},
+                {"pos": "FW", "name": f"{team_name} FW2", "att_uv": 0.60, "def_uv": 0.25},
+                {"pos": "FW", "name": f"{team_name} FW3", "att_uv": 0.65, "def_uv": 0.20},
+            ],
+            "subs": [
+                {"pos": "FW", "name": f"{team_name} Sub1", "att_uv": 0.50, "def_uv": 0.20},
+                {"pos": "MF", "name": f"{team_name} Sub2", "att_uv": 0.40, "def_uv": 0.30},
+                {"pos": "MF", "name": f"{team_name} Sub3", "att_uv": 0.35, "def_uv": 0.35},
+                {"pos": "DF", "name": f"{team_name} Sub4", "att_uv": 0.20, "def_uv": 0.40},
+                {"pos": "GK", "name": f"{team_name} Sub5", "att_uv": 0.10, "def_uv": 0.35},
+            ]
+        }
 
 def run_pipeline(date_range_str=None):
     init_db()
@@ -106,9 +165,10 @@ def run_pipeline(date_range_str=None):
     
     for event in events:
         try:
-            status_type = event["status"]["type"]["name"] # STATUS_FULL_TIME, STATUS_SCHEDULED, STATUS_POSTPONED, etc.
-            match_date_utc = event["date"] # e.g. "2026-08-28T19:00Z"
-            date_str = match_date_utc.split("T")[0]
+            status_type = event["status"]["type"]["name"] # STATUS_FULL_TIME, STATUS_SCHEDULED, etc.
+            match_date_utc = event["date"]
+            
+            uk_day, uk_str, kst_str, round_label = parse_timezones(match_date_utc)
             
             competition = event["competitions"][0]
             competitors = competition["competitors"]
@@ -122,11 +182,9 @@ def run_pipeline(date_range_str=None):
             home_team = normalize_team_name(home_raw)
             away_team = normalize_team_name(away_raw)
             
-            if home_team not in TEAMS_ROSTER or away_team not in TEAMS_ROSTER:
-                print(f"⏩ 지원되지 않는 팀 제외: {home_team} vs {away_team}")
-                continue
+            ensure_team_roster(home_team)
+            ensure_team_roster(away_team)
                 
-            # 11.0 WUV 예측 수행
             pred = get_match_prediction(home_team, away_team)
             
             actual_winner = ""
@@ -153,12 +211,15 @@ def run_pipeline(date_range_str=None):
                 
             cursor.execute("""
             INSERT INTO predictions (
-                date, home_team, visit_team, predicted_winner, predicted_gap,
-                prob_home, prob_draw, prob_away, home_uv, visit_uv,
-                score_home, score_away, actual_winner, actual_score_home,
-                actual_score_away, is_correct
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                date, uk_date, kst_date, round_name, home_team, visit_team,
+                predicted_winner, predicted_gap, prob_home, prob_draw, prob_away,
+                home_uv, visit_uv, score_home, score_away, actual_winner,
+                actual_score_home, actual_score_away, is_correct
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(date, home_team, visit_team) DO UPDATE SET
+                uk_date=excluded.uk_date,
+                kst_date=excluded.kst_date,
+                round_name=excluded.round_name,
                 predicted_winner=excluded.predicted_winner,
                 predicted_gap=excluded.predicted_gap,
                 prob_home=excluded.prob_home,
@@ -173,15 +234,14 @@ def run_pipeline(date_range_str=None):
                 actual_score_away=excluded.actual_score_away,
                 is_correct=excluded.is_correct
             """, (
-                date_str, home_team, away_team, pred["winner"], pred["gap"],
-                pred["p_home"], pred["p_draw"], pred["p_away"],
-                pred["h_total"], pred["a_total"],
-                pred["sc_h"], pred["sc_a"],
+                uk_day, uk_str, kst_str, round_label, home_team, away_team,
+                pred["winner"], pred["gap"], pred["p_home"], pred["p_draw"], pred["p_away"],
+                pred["h_total"], pred["a_total"], pred["sc_h"], pred["sc_a"],
                 actual_winner, actual_sc_h, actual_sc_a, is_correct
             ))
             
             synced_count += 1
-            print(f"  ✓ [{date_str}] {home_team} vs {away_team} -> 예측: {pred['winner']} (실제: {actual_winner or '대기중'})")
+            print(f"  ✓ [{uk_str}] {home_team} vs {away_team} -> 예측: {pred['winner']} (실제: {actual_winner or '대기중'})")
             
         except Exception as ex:
             print(f"❌ 경기 동기화 실패: {ex}")
@@ -196,5 +256,5 @@ if __name__ == "__main__":
     end_date = (today + timedelta(days=14)).strftime("%Y%m%d")
     range_param = f"{start_date}-{end_date}"
     
-    print(f"🚀 EPL 실시간 수집 파이프라인 시작 (기간: {start_date} ~ {end_date})")
+    print(f"🚀 EPL 타임존 변환 실시간 수집 파이프라인 시작 (기간: {start_date} ~ {end_date})")
     run_pipeline(range_param)

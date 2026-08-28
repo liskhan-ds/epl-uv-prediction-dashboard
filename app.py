@@ -666,6 +666,9 @@ def load_data():
                     p = get_match_prediction(h_team, v_team)
                     records.append({
                         "date": row["date"],
+                        "uk_date": row["uk_date"] if "uk_date" in row and pd.notna(row["uk_date"]) else row["date"],
+                        "kst_date": row["kst_date"] if "kst_date" in row and pd.notna(row["kst_date"]) else row["date"],
+                        "round_name": row["round_name"] if "round_name" in row and pd.notna(row["round_name"]) else row["date"],
                         "home_team": h_team,
                         "visit_team": v_team,
                         "predicted_winner": row["predicted_winner"],
@@ -800,10 +803,14 @@ st.markdown("---")
 # -----------------------------------------------------------------------------
 st.header("📋 라운드별 경기 리포트 (10개 매치업 카드 리스트)")
 
-unique_dates = list(ROUNDS_MATCHES.keys())
-selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=0)
-
-filtered_df = df[df['date'] == selected_date].copy().reset_index(drop=True)
+if 'round_name' in df.columns:
+    unique_dates = sorted(df['round_name'].unique(), reverse=True)
+    selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=0)
+    filtered_df = df[df['round_name'] == selected_date].copy().reset_index(drop=True)
+else:
+    unique_dates = sorted(df['date'].unique(), reverse=True)
+    selected_date = st.selectbox("확인하고 싶은 라운드를 선택하세요:", unique_dates, index=0)
+    filtered_df = df[df['date'] == selected_date].copy().reset_index(drop=True)
 
 if not filtered_df.empty:
     filtered_df['day_no'] = range(1, len(filtered_df) + 1)
