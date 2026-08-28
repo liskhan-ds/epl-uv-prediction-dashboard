@@ -857,15 +857,16 @@ if not filtered_df.empty:
 
     # 대시보드 리포트용 데이터프레임
     display_df = pd.DataFrame()
-    display_df['No.(Day)'] = filtered_df['day_no']
-    display_df['No.(Total)'] = filtered_df['total_no']
+    display_df['No.'] = filtered_df['day_no']
+    display_df['경기 일시 (영국 현지)'] = filtered_df['uk_date']
+    display_df['한국 시각 (KST)'] = filtered_df['kst_date']
     display_df['홈 팀'] = filtered_df['home_team']
     display_df['원정 팀'] = filtered_df['visit_team']
     display_df['예측 결과'] = filtered_df['predicted_winner']
     display_df['3-Way 확률 [홈%|무%|원정%]'] = filtered_df.apply(
         lambda r: f"[{r['prob_home']:.1f}% | {r['prob_draw']:.1f}% | {r['prob_away']:.1f}%]", axis=1
     )
-    display_df['예상 격차(ΔUV)'] = filtered_gap_str if 'filtered_gap_str' in locals() else filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
+    display_df['예상 격차(ΔUV)'] = filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
     display_df['실제 결과'] = filtered_df['actual_winner'].apply(lambda x: x if (pd.notna(x) and x != '') else "대기중")
     
     def get_status_tag(r):
