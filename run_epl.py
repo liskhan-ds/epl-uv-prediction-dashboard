@@ -147,7 +147,6 @@ def ensure_team_roster(team_name):
 def run_pipeline():
     init_db()
     
-    # 1. 2026-27 시즌 일정표 확인
     events = fetch_espn_epl_season_fixtures()
     print(f"📡 수집된 2026-27 EPL 시즌 정규 경기 수: {len(events)} 경기")
     
@@ -163,11 +162,12 @@ def run_pipeline():
         _, first_uk_str, _, dt_first_uk = parse_timezones(r_events[0]["date"])
         _, last_uk_str, _, dt_last_uk = parse_timezones(r_events[-1]["date"])
         
-        round_title = f"Round {r_idx+1} ({dt_first_uk.strftime('%Y-%m-%d')} ~ {dt_last_uk.strftime('%m-%d')})"
+        # 2자리 패딩 적용 (Round 01, Round 02 ... Round 10)
+        round_title = f"Round {r_idx+1:02d} ({dt_first_uk.strftime('%Y-%m-%d')} ~ {dt_last_uk.strftime('%m-%d')})"
         
         for event in r_events:
             try:
-                status_type = event["status"]["type"]["name"] # STATUS_FULL_TIME, etc.
+                status_type = event["status"]["type"]["name"]
                 match_date_utc = event["date"]
                 
                 uk_day, uk_str, kst_str, _ = parse_timezones(match_date_utc)
@@ -187,7 +187,6 @@ def run_pipeline():
                 ensure_team_roster(home_team)
                 ensure_team_roster(away_team)
                 
-                # 2. 경기 예측 (WUV 모델)
                 pred = get_match_prediction(home_team, away_team)
                 
                 actual_winner = ""
@@ -195,7 +194,6 @@ def run_pipeline():
                 actual_sc_a = None
                 is_correct = None
                 
-                # 3. 실제 경기 결과 (종료 시)
                 if status_type in ["STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_AFTER_EXTRA_TIME"]:
                     actual_sc_h = int(home_comp.get("score", 0))
                     actual_sc_a = int(away_comp.get("score", 0))
@@ -207,7 +205,6 @@ def run_pipeline():
                     else:
                         actual_winner = "무승부 (Draw)"
                         
-                    # 4. 예측률 검증 (정답 1, 오답 0)
                     is_correct = 1 if (pred["winner"] == actual_winner) else 0
                     
                 cursor.execute("""
@@ -253,5 +250,5 @@ def run_pipeline():
     print(f"🎉 성공적으로 2026-27 EPL 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!")
 
 if __name__ == "__main__":
-    print(f"🚀 2026-27 EPL 시즌 파이프라인 (일정표 확인 -> 경기 예측 -> 실제 결과 -> 예측률) 시작")
+    print(f"🚀 2026-27 EPL 시즌 파이프라인 시작 (Round 01 ~ Round 10 2자리 표기 적용)")
     run_pipeline()
