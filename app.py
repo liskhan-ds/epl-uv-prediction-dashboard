@@ -59,66 +59,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Fraser Forster",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Adam Smith",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Max Aarons",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "James Hill",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Julián Araujo",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "David Brooks",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Ryan Christie",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Tyler Adams",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Evanilson",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Justin Kluivert",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Amine Adli",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -127,31 +127,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Michele Di Gregorio",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Bafodé Diakité",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Adrien Truffert",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Lewis Cook",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Marcus Tavernier",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -161,13 +161,13 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "케파 아리사발라가",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Ezri Konsa",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -179,7 +179,7 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "벤 화이트",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -191,7 +191,7 @@ TEAMS_ROSTER = {
                 "pos": "MF",
                 "name": "Fabio Vieira",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
@@ -203,18 +203,18 @@ TEAMS_ROSTER = {
                 "pos": "MF",
                 "name": "미켈 메리노",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "가브리엘 제수스",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "카이 하베르츠",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
@@ -241,13 +241,13 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "Piero Hincapié",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "브루노 기마랑이스",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
@@ -263,66 +263,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Marco Bizot",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Tyrone Mings",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Victor Lindelöf",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Matty Cash",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Aaron Wan-Bissaka",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Ross Barkley",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "John McGinn",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Leon Goretzka",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Ollie Watkins",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Leon Bailey",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Tammy Abraham",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -331,31 +331,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Emiliano Martínez",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Pau Torres",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Ian Maatsen",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Emiliano Buendía",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Boubacar Kamara",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -365,66 +365,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Ellery Balcombe",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Kristoffer Ajer",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Rico Henry",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Sepp van den Berg",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Nathan Collins",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Vitaly Janelt",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Mathias Jensen",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Mamadou Sangare",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Callum Wilson",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Keane Lewis-Potter",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Igor Thiago",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -433,31 +433,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Caoimhín Kelleher",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Aaron Hickey",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jayden Meghoma",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Fábio Carvalho",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Josh Dasilva",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -467,66 +467,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Jason Steele",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Lewis Dunk",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Olivier Boscagli",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Igor Julio",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Ferdi Kadioglu",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Pascal Gross",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Diego Gómez",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Matt O'Riley",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Georginio Rutter",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Evan Ferguson",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Promise David",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -535,31 +535,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Tom McGill",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Pascal Struijk",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Costinha",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Kaoru Mitoma",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Mats Wieffer",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -569,7 +569,7 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "로베르트 산체스",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
@@ -581,31 +581,31 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "Tosin Adarabioyo",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Maxence Lacroix",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "웨슬리 포파나",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Jordan Henderson",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Morgan Rogers",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
@@ -616,19 +616,19 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "Danny Welbeck",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "페드로 네투",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "주앙 페드로",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -637,19 +637,19 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Gaga Slonina",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "리바이 콜윌",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Pep Chavarría",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
@@ -670,100 +670,100 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "Daniel Bentley",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jake Bidwell",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jay Da Silva",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Ethan Pinnock",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Joel Latibeaudiere",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Matt Grimes",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Gustavo Hamer",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Ephron Mason-Clark",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Taiwo Awoniyi",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Haji Wright",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Brandon Thomas-Asante",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             }
         ],
         "subs": [
             {
                 "pos": "GK",
                 "name": "Ben Wilson",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Luke Woolfenden",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Liam Kitching",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Victor Torp",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Frank Onyeka",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             }
         ]
     },
@@ -773,66 +773,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Walter Benítez",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Daniel Muñoz",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Borna Sosa",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Axel Disasi",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Takehiro Tomiyasu",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Will Hughes",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Jefferson Lerma",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Daichi Kamada",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Ismaïla Sarr",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Jean-Philippe Mateta",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Jørgen Strand Larsen",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -841,31 +841,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Remi Matthews",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Chris Richards",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Óscar Mingueza",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Cheick Doucouré",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Justin Devenny",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -875,66 +875,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Mark Travers",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Michael Keane",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "James Tarkowski",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Vitaliy Mykolenko",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Nathan Patterson",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Christian Nørgaard",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Kiernan Dewsbury-Hall",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "James Garner",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Iliman Ndiaye",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Beto",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Brennan Johnson",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -943,31 +943,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Tom King",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Jake O'Brien",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jarrad Branthwaite",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Hayden Hackney",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Charly Alcaraz",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -977,66 +977,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Benjamin Lecomte",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Kenny Tete",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Joachim Andersen",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Timothy Castagne",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Antonee Robinson",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "César Palacios",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Tom Cairney",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Harrison Reed",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Gonzalo García",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Alex Iwobi",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Rodrigo Muniz",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -1045,31 +1045,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Bernd Leno",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Jorge Cuenca",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Calvin Bassey",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Sander Berge",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Ryan Sessegnon",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -1078,100 +1078,100 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "Jack Butland",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "John Egan",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Semi Ajayi",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Matt Targett",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Paddy McNair",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Matt Crooks",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Kieran Dowell",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Abdülkadir Ömür",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Oliver McBurnie",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Babajide David",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Liam Millar",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             }
         ],
         "subs": [
             {
                 "pos": "GK",
                 "name": "Dillon Phillips",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Lewie Coyle",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Ryan Giles",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Regan Slater",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Hidemasa Morita",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             }
         ]
     },
@@ -1180,100 +1180,100 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "David Button",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Darnell Furlong",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Issa Diop",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Dara O'Shea",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Cedric Kipre",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Julio Enciso",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Jack Taylor",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Cameron Humphreys",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Chuba Akpom",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Chiedozie Ogbene",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Jack Clarke",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             }
         ],
         "subs": [
             {
                 "pos": "GK",
                 "name": "Christian Walton",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Leif Davis",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jacob Greaves",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Sasa Lukic",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Exequiel Palacios",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             }
         ]
     },
@@ -1282,100 +1282,100 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "Alex Cairns",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Nico Elvedi",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "James Justin",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Joe Rodon",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jayden Bogle",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Ilia Gruev",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Ethan Ampadu",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Sean Longstaff",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Harry Wilson",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Dominic Calvert-Lewin",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Daniel James",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             }
         ],
         "subs": [
             {
                 "pos": "GK",
                 "name": "Lucas Perri",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Gabriel Gudmundsson",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jaka Bijol",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Ao Tanaka",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Brenden Aaronson",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             }
         ]
     },
@@ -1391,7 +1391,7 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "조 고메스",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -1403,19 +1403,19 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "Kostas Tsimikas",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Conor Bradley",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Wataru Endo",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
@@ -1432,7 +1432,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "페데리코 키에사",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
@@ -1444,7 +1444,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "코디 각포",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -1453,31 +1453,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Freddie Woodman",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "로날드 아라우호",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "제레미 프림퐁",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "라이언 흐라번베르흐",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Harvey Elliott",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -1487,7 +1487,7 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "헤로니모 룰리",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
@@ -1505,7 +1505,7 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "라얀 아이트-누리",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -1529,7 +1529,7 @@ TEAMS_ROSTER = {
                 "pos": "MF",
                 "name": "Elliot Anderson",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
@@ -1555,19 +1555,19 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Marcus Bettinelli",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Josh Wilson-Esbrand",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "리코 루이스",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
@@ -1579,7 +1579,7 @@ TEAMS_ROSTER = {
                 "pos": "MF",
                 "name": "라얀 체르키",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -1589,19 +1589,19 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Tom Heaton",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "해리 매과이어",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "루크 쇼",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -1613,7 +1613,7 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "디오구 달롯",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
@@ -1625,30 +1625,30 @@ TEAMS_ROSTER = {
                 "pos": "MF",
                 "name": "유리 틸레만스",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Jack Fletcher",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "마커스 래시포드",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "마테우스 쿠냐",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "브라이언 음베우모",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -1657,7 +1657,7 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "칼 다를로우",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
@@ -1669,19 +1669,19 @@ TEAMS_ROSTER = {
                 "pos": "DF",
                 "name": "누사이르 마즈라위",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "메이슨 마운트",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "마누엘 우가르테",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -1691,66 +1691,66 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Mark Gillespie",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Lewis Hall",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Fabian Schär",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Dan Burn",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Sven Botman",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Jacob Murphy",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Joelinton",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Harvey Barnes",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Yoane Wissa",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Anthony Elanga",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "Nick Woltemade",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -1759,31 +1759,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Nick Pope",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "Tino Livramento",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Malick Thiaw",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Joe Willock",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Jacob Ramsey",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     },
@@ -1792,100 +1792,100 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "Matz Sels",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Morato",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Ola Aina",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Nikola Milenkovic",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Neco Williams",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Ibrahim Sangaré",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Xaver Schlager",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Ryan Yates",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Chris Wood",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Callum Hudson-Odoi",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Dan Ndoye",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             }
         ],
         "subs": [
             {
                 "pos": "GK",
                 "name": "John Victor",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Luca Netz",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jair Paula",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Morgan Gibbs-White",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Nicolás Domínguez",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             }
         ]
     },
@@ -1894,100 +1894,100 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "Simon Moore",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Thomas Meunier",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Nordi Mukiele",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Omar Alderete",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Reinildo Mandava",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Abdoullah Ba",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Granit Xhaka",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Luke O'Nien",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "Wilson Isidor",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Brian Brobbey",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
                 "name": "Simon Adingra",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "att_uv": 0.7,
+                "def_uv": 0.25
             }
         ],
         "subs": [
             {
                 "pos": "GK",
                 "name": "Robin Roefs",
-                "att_uv": 0.25,
-                "def_uv": 0.65
+                "att_uv": 0.2,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Ajibola Alese",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Danny Ballard",
-                "att_uv": 0.45,
-                "def_uv": 0.6
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "Alan Browne",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "Enzo Le Fée",
-                "att_uv": 0.55,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             }
         ]
     },
@@ -1997,31 +1997,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "마르틴 두브라브카",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "벤 데이비스",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "앤디 로버트슨",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "마르코스 세네시",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Kevin Danso",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
@@ -2033,18 +2033,18 @@ TEAMS_ROSTER = {
                 "pos": "MF",
                 "name": "로드리고 벤탕쿠르",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "산드로 토날리",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "히샤를리송",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             },
             {
@@ -2056,7 +2056,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "오마르 마르무시",
-                "att_uv": 0.8,
+                "att_uv": 0.75,
                 "def_uv": 0.3
             }
         ],
@@ -2065,31 +2065,31 @@ TEAMS_ROSTER = {
                 "pos": "GK",
                 "name": "Brandon Austin",
                 "att_uv": 0.25,
-                "def_uv": 0.65
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
                 "name": "페드로 포로",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "Jan Paul van Hecke",
                 "att_uv": 0.45,
-                "def_uv": 0.6
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
                 "name": "모하메드 쿠두스",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "코너 갤러거",
                 "att_uv": 0.55,
-                "def_uv": 0.5
+                "def_uv": 0.45
             }
         ]
     }
