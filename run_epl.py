@@ -102,7 +102,7 @@ PLAYER_UV_LOOKUP = {
     "Ederson": {"att_uv": 0.30, "def_uv": 0.50},
 }
 
-TEAMS_ROSTER = {}
+from app import TEAMS_ROSTER
 
 def normalize_team_name(raw_name):
     for key, val in TEAM_NAME_MAP.items():
@@ -377,17 +377,8 @@ def run_pipeline():
                 home_team = normalize_team_name(home_raw)
                 away_team = normalize_team_name(away_raw)
                 
-                # ESPN Live Official Roster API 동적 동기화
-                live_rosters = fetch_official_match_roster(event_id)
-                if home_team in live_rosters:
-                    TEAMS_ROSTER[home_team] = live_rosters[home_team]
-                else:
-                    ensure_team_roster(home_team)
-
-                if away_team in live_rosters:
-                    TEAMS_ROSTER[away_team] = live_rosters[away_team]
-                else:
-                    ensure_team_roster(away_team)
+                ensure_team_roster(home_team)
+                ensure_team_roster(away_team)
                 
                 pred = get_match_prediction(home_team, away_team)
                 
