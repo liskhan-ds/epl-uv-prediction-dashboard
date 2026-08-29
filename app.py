@@ -48,7 +48,7 @@ st.divider()
 
 # 메인 타이틀 및 본문 설명
 st.title("⚽ EPL AI 승부예측 (by 11.0 WUV predictor)")
-st.caption("11.0 WUV 기준 (수비/빌드업 5.5 UV + 공격 5.5 UV) | 축구 라인업 (선발 11인 85% + 주요 교체 5인 15%) | 홈 어드밴티지(+0.25) | 무승부 판정(격차 ±0.4 이내)")
+st.caption("11.0 WUV 기준 | 축구 라인업 (선발 11인 + 주요 교체 5인) | 홈 어드밴티지(+0.25) | 무승부 판정(격차 ±0.4 이내)")
 
 # -----------------------------------------------------------------------------
 # 2. EPL 팀별 선수단 UV 데이터베이스 (20개 구단 선발 11인 + 교체 5인)
@@ -936,7 +936,7 @@ if not filtered_df.empty:
 
     with col_m1:
         st.markdown(f"### 🏠 {h_team} (홈)")
-        st.metric("최종 11.0 WUV", f"{res['h_total']:.2f} UV", f"공격 {res['h_att']:.2f} | 수비 {res['h_def']:.2f}")
+        st.metric("최종 11.0 WUV", f"{res['h_total']:.2f} UV")
         st.caption("(홈 어드밴티지 +0.25 UV 포함)")
 
     with col_m2:
@@ -959,7 +959,7 @@ if not filtered_df.empty:
 
     with col_m3:
         st.markdown(f"### ✈️ {a_team} (어웨이)")
-        st.metric("최종 11.0 WUV", f"{res['a_total']:.2f} UV", f"공격 {res['a_att']:.2f} | 수비 {res['a_def']:.2f}")
+        st.metric("최종 11.0 WUV", f"{res['a_total']:.2f} UV")
         st.caption("(원정 조건 적용)")
 
     # 2) 3-Way 확률 게이지 바 (홈승 % | 무승부 % | 원정승 %)
@@ -1053,19 +1053,21 @@ if not filtered_df.empty:
     ])
     
     def render_roster_table(team_name, wuv_info):
-        st.markdown(f"**[{team_name}] 선발 11인 명단 (가중치 85% 반영)**")
+        st.markdown(f"**[{team_name}] 선발 11인 명단**")
         df_st = wuv_info["st_df"].copy()
         df_st["개인 합계 UV"] = df_st["att_uv"] + df_st["def_uv"]
-        df_st.columns = ["포지션", "선수명", "공격 UV", "수비/빌드업 UV", "개인 합계 UV"]
-        st.dataframe(df_st, use_container_width=True)
-        st.caption(f"선발 11인 합계: 공격 {wuv_info['st_att']:.2f} + 수비 {wuv_info['st_def']:.2f} = {wuv_info['st_total']:.2f} UV")
+        df_st_disp = df_st[["pos", "name", "개인 합계 UV"]].copy()
+        df_st_disp.columns = ["포지션", "선수명", "개인 합계 UV"]
+        st.dataframe(df_st_disp, use_container_width=True)
+        st.caption(f"선발 11인 합계: {wuv_info['st_total']:.2f} UV")
         
-        st.markdown(f"**[{team_name}] 주요 교체 5인 명단 (가중치 15% 반영)**")
+        st.markdown(f"**[{team_name}] 주요 교체 5인 명단**")
         df_sub = wuv_info["sub_df"].copy()
         df_sub["개인 합계 UV"] = df_sub["att_uv"] + df_sub["def_uv"]
-        df_sub.columns = ["포지션", "선수명", "공격 UV", "수비/빌드업 UV", "개인 합계 UV"]
-        st.dataframe(df_sub, use_container_width=True)
-        st.caption(f"교체 5인 순수 합계: {wuv_info['sub_att_raw'] + wuv_info['sub_def_raw']:.2f} UV → 피치 스케일링(11/5) 변환: {wuv_info['sub_total_scaled']:.2f} UV")
+        df_sub_disp = df_sub[["pos", "name", "개인 합계 UV"]].copy()
+        df_sub_disp.columns = ["포지션", "선수명", "개인 합계 UV"]
+        st.dataframe(df_sub_disp, use_container_width=True)
+        st.caption(f"교체 5인 합계 스케일 변환: {wuv_info['sub_total_scaled']:.2f} UV")
 
     with t_home:
         render_roster_table(h_team, res["home_wuv"])
