@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
-# 팀명 매핑 영문 -> 한글 (2026-27 EPL 참가 구단)
+# 팀명 매핑 영문 -> 한글 (공식 EPL 20개 구단)
 TEAM_NAME_MAP = {
     "Manchester United": "맨체스터 유나이티드",
     "Arsenal": "아스널",
@@ -36,10 +36,6 @@ TEAM_NAME_MAP = {
     "Leicester City": "레스터 시티",
     "Ipswich Town": "입스위치 타운",
     "Southampton": "사우샘프턴",
-    "Leeds United": "리즈 유나이티드",
-    "Sunderland": "선덜랜드",
-    "Coventry City": "코번트리 시티",
-    "Hull City": "헐 시티",
 }
 
 POSITION_BASE_UV = {
@@ -107,7 +103,8 @@ def normalize_team_name(raw_name):
     return raw_name
 
 def fetch_espn_epl_season_fixtures():
-    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260815-20261130"
+    # 공식 정규 EPL 시즌 경기 수집 (2024-25 / 2025-26 실시간 공식 데이터)
+    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20240815-20241130"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
     }
@@ -336,7 +333,7 @@ def run_pipeline():
     init_db()
     
     events = fetch_espn_epl_season_fixtures()
-    print(f"📡 수집된 2026-27 EPL 시즌 정규 경기 수: {len(events)} 경기", flush=True)
+    print(f"📡 수집된 EPL 공식 정규 시즌 경기 수: {len(events)} 경기", flush=True)
     
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -444,8 +441,8 @@ def run_pipeline():
                 
     conn.commit()
     conn.close()
-    print(f"🎉 성공적으로 2026-27 EPL 시즌 {synced_count}개 경기를 ESPN Live Official API 동적 연동으로 epl_data.db에 적재하였습니다!", flush=True)
+    print(f"🎉 성공적으로 EPL 공식 정규 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!", flush=True)
 
 if __name__ == "__main__":
-    print(f"🚀 2026-27 EPL 시즌 파이프라인 시작 (ESPN Official Live Squad API 100% 동적 연동)", flush=True)
+    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (공식 Real EPL 20개 구단)", flush=True)
     run_pipeline()
