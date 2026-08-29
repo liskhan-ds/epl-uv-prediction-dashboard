@@ -2125,34 +2125,56 @@ def calculate_wuv(team_name):
     team = TEAMS_ROSTER[team_name]
     
     st_df = pd.DataFrame(team["starters"])
-    st_att = st_df["att_uv"].sum()
-    st_def = st_df["def_uv"].sum()
-    st_total = st_att + st_def
-    
     sub_df = pd.DataFrame(team["subs"])
-    sub_att_raw = sub_df["att_uv"].sum()
-    sub_def_raw = sub_df["def_uv"].sum()
     
-    sub_att_scaled = sub_att_raw * (11.0 / 5.0)
-    sub_def_scaled = sub_def_raw * (11.0 / 5.0)
-    sub_total_scaled = sub_att_scaled + sub_def_scaled
+    POS_WEIGHT = {"GK": 0.90, "DF": 1.00, "MF": 1.05, "FW": 1.10}
     
+    lines = {}
+    st_att, st_def = 0.0, 0.0
+    sub_att_raw, sub_def_raw = 0.0, 0.0
+    sub_att_scaled, sub_def_scaled = 0.0, 0.0
+    
+    for pos in ["GK", "DF", "MF", "FW"]:
+        st_p = st_df[st_df["pos"] == pos]
+        sub_p = sub_df[sub_df["pos"] == pos]
+        
+        st_a = st_p["att_uv"].sum()
+        st_d = st_p["def_uv"].sum()
+        st_att += st_a
+        st_def += st_d
+        
+        sub_a = sub_p["att_uv"].sum()
+        sub_d = sub_p["def_uv"].sum()
+        sub_att_raw += sub_a
+        sub_def_raw += sub_d
+        
+        st_cnt = len(st_p)
+        sub_cnt = len(sub_p)
+        sub_a_sc = sub_a * (st_cnt / sub_cnt) if sub_cnt > 0 else 0.0
+        sub_d_sc = sub_d * (st_cnt / sub_cnt) if sub_cnt > 0 else 0.0
+        sub_att_scaled += sub_a_sc
+        sub_def_scaled += sub_d_sc
+        
+        line_raw = 0.85 * (st_a + st_d) + 0.15 * (sub_a_sc + sub_d_sc)
+        lines[pos] = line_raw * POS_WEIGHT[pos]
+        
     wuv_att = 0.85 * st_att + 0.15 * sub_att_scaled
     wuv_def = 0.85 * st_def + 0.15 * sub_def_scaled
-    wuv_total = wuv_att + wuv_def
+    wuv_total = sum(lines.values())
     
     return {
         "st_att": st_att,
         "st_def": st_def,
-        "st_total": st_total,
+        "st_total": st_att + st_def,
         "sub_att_raw": sub_att_raw,
         "sub_def_raw": sub_def_raw,
         "sub_att_scaled": sub_att_scaled,
         "sub_def_scaled": sub_def_scaled,
-        "sub_total_scaled": sub_total_scaled,
+        "sub_total_scaled": sub_att_scaled + sub_def_scaled,
         "wuv_att": wuv_att,
         "wuv_def": wuv_def,
         "wuv_total": wuv_total,
+        "lines": lines,
         "st_df": st_df,
         "sub_df": sub_df
     }
