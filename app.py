@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 상단 탭 네비게이션 (NBA, MLB, EPL, NHL 4대 종목)
+# 상단 탭 네비게이션 (NBA, MLB, EPL, NHL 4대 종목 균등 와이드 배치)
 nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 2.5, 2.5, 2.5])
 with nav_col1:
     st.link_button(
