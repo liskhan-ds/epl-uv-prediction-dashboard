@@ -56,12 +56,12 @@ st.caption("11.0 WUV 기준 | 축구 라인업 (선발 11인 + 주요 교체 5�
 TEAMS_ROSTER = {
     "맨체스터 유나이티드": {
         "starters": [
-            {"pos": "GK", "name": "안드레 오나나", "att_uv": 0.20, "def_uv": 0.50},
+            {"pos": "GK", "name": "지오구 코스타", "att_uv": 0.25, "def_uv": 0.55},
             {"pos": "DF", "name": "디오구 달롯", "att_uv": 0.40, "def_uv": 0.45},
             {"pos": "DF", "name": "마테이스 더 리흐트", "att_uv": 0.25, "def_uv": 0.55},
             {"pos": "DF", "name": "리산드로 마르티네스", "att_uv": 0.30, "def_uv": 0.55},
             {"pos": "DF", "name": "누사이르 마즈라위", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "MF", "name": "카세미루", "att_uv": 0.35, "def_uv": 0.55},
+            {"pos": "MF", "name": "마누엘 우가르테", "att_uv": 0.35, "def_uv": 0.55},
             {"pos": "MF", "name": "코비 메이누", "att_uv": 0.45, "def_uv": 0.50},
             {"pos": "MF", "name": "브루노 페르난데스", "att_uv": 0.70, "def_uv": 0.35},
             {"pos": "FW", "name": "알레한드로 가르나초", "att_uv": 0.60, "def_uv": 0.30},
@@ -70,9 +70,9 @@ TEAMS_ROSTER = {
         ],
         "subs": [
             {"pos": "FW", "name": "조슈아 지르크지", "att_uv": 0.50, "def_uv": 0.25},
-            {"pos": "MF", "name": "크리스티안 에릭센", "att_uv": 0.45, "def_uv": 0.30},
-            {"pos": "MF", "name": "마누엘 우가르테", "att_uv": 0.30, "def_uv": 0.50},
-            {"pos": "DF", "name": "해리 매과이어", "att_uv": 0.25, "def_uv": 0.45},
+            {"pos": "MF", "name": "메이슨 마운트", "att_uv": 0.45, "def_uv": 0.35},
+            {"pos": "FW", "name": "아마드 디알로", "att_uv": 0.50, "def_uv": 0.25},
+            {"pos": "DF", "name": "레니 요로", "att_uv": 0.25, "def_uv": 0.50},
             {"pos": "GK", "name": "알타이 바인디르", "att_uv": 0.10, "def_uv": 0.40},
         ]
     },
