@@ -2483,8 +2483,8 @@ if not filtered_df.empty:
     display_df['No.'] = filtered_df['day_no']
     display_df['경기 일시 (영국 현지)'] = filtered_df['uk_date']
     display_df['한국 시각 (KST)'] = filtered_df['kst_date']
-    display_df['홈 팀'] = filtered_df['home_team']
-    display_df['원정 팀'] = filtered_df['visit_team']
+    display_df['홈 팀'] = filtered_df.apply(lambda r: f"{r['home_team']} ({r['home_uv']:.2f} WUV)" if pd.notna(r.get('home_uv')) else r['home_team'], axis=1)
+    display_df['원정 팀'] = filtered_df.apply(lambda r: f"{r['visit_team']} ({r['visit_uv']:.2f} WUV)" if pd.notna(r.get('visit_uv')) else r['visit_team'], axis=1)
     display_df['예측 결과'] = filtered_df['predicted_winner']
     display_df['3-Way 확률 [홈%|무%|원정%]'] = filtered_df.apply(
         lambda r: f"[{r['prob_home']:.1f}% | {r['prob_draw']:.1f}% | {r['prob_away']:.1f}%]", axis=1
