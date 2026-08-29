@@ -172,7 +172,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "가브리엘 마갈량이스",
-                "att_uv": 0.35,
+                "att_uv": 0.45,
                 "def_uv": 0.6
             },
             {
@@ -184,7 +184,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "윌리엄 살리바",
-                "att_uv": 0.3,
+                "att_uv": 0.45,
                 "def_uv": 0.65
             },
             {
@@ -202,20 +202,20 @@ TEAMS_ROSTER = {
             {
                 "pos": "MF",
                 "name": "미켈 메리노",
-                "att_uv": 0.5,
+                "att_uv": 0.55,
                 "def_uv": 0.45
             },
             {
                 "pos": "FW",
                 "name": "가브리엘 제수스",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "카이 하베르츠",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
@@ -228,14 +228,14 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "다비드 라야",
-                "att_uv": 0.15,
-                "def_uv": 0.45
+                "att_uv": 0.25,
+                "def_uv": 0.65
             },
             {
                 "pos": "DF",
                 "name": "율리엔 팀버",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "att_uv": 0.45,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -574,8 +574,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "리스 제임스",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
@@ -592,8 +592,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "웨슬리 포파나",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "MF",
@@ -610,7 +610,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "MF",
                 "name": "엔초 페르난데스",
-                "att_uv": 0.55,
+                "att_uv": 0.6,
                 "def_uv": 0.45
             },
             {
@@ -622,14 +622,14 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "페드로 네투",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "주앙 페드로",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             }
         ],
         "subs": [
@@ -654,7 +654,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "MF",
                 "name": "모이세스 카이세도",
-                "att_uv": 0.4,
+                "att_uv": 0.45,
                 "def_uv": 0.6
             },
             {
@@ -1384,8 +1384,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "GK",
                 "name": "알리송 베케르",
-                "att_uv": 0.25,
-                "def_uv": 0.6
+                "att_uv": 0.3,
+                "def_uv": 0.65
             },
             {
                 "pos": "DF",
@@ -1396,8 +1396,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "버질 반 다이크",
-                "att_uv": 0.35,
-                "def_uv": 0.65
+                "att_uv": 0.4,
+                "def_uv": 0.7
             },
             {
                 "pos": "DF",
@@ -1420,14 +1420,14 @@ TEAMS_ROSTER = {
             {
                 "pos": "MF",
                 "name": "알렉시스 맥 알리스터",
-                "att_uv": 0.5,
-                "def_uv": 0.45
+                "att_uv": 0.55,
+                "def_uv": 0.5
             },
             {
                 "pos": "MF",
                 "name": "도미니크 소보슬라이",
-                "att_uv": 0.5,
-                "def_uv": 0.45
+                "att_uv": 0.55,
+                "def_uv": 0.5
             },
             {
                 "pos": "FW",
@@ -1444,7 +1444,7 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "코디 각포",
-                "att_uv": 0.65,
+                "att_uv": 0.7,
                 "def_uv": 0.25
             }
         ],
@@ -1470,8 +1470,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "MF",
                 "name": "라이언 흐라번베르흐",
-                "att_uv": 0.5,
-                "def_uv": 0.45
+                "att_uv": 0.55,
+                "def_uv": 0.5
             },
             {
                 "pos": "MF",
@@ -1492,14 +1492,14 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "후벵 디아스",
-                "att_uv": 0.3,
-                "def_uv": 0.65
+                "att_uv": 0.4,
+                "def_uv": 0.7
             },
             {
                 "pos": "DF",
                 "name": "마크 게히",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "att_uv": 0.4,
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
@@ -1510,20 +1510,20 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "요슈코 그바르디올",
-                "att_uv": 0.45,
-                "def_uv": 0.55
+                "att_uv": 0.5,
+                "def_uv": 0.6
             },
             {
                 "pos": "MF",
                 "name": "마테오 코바치치",
-                "att_uv": 0.5,
+                "att_uv": 0.55,
                 "def_uv": 0.45
             },
             {
                 "pos": "MF",
                 "name": "잭 그릴리시",
-                "att_uv": 0.5,
-                "def_uv": 0.45
+                "att_uv": 0.6,
+                "def_uv": 0.4
             },
             {
                 "pos": "MF",
@@ -1540,14 +1540,14 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "앙투안 세메뇨",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "제레미 도쿠",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.75,
+                "def_uv": 0.3
             }
         ],
         "subs": [
@@ -1566,13 +1566,13 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "리코 루이스",
-                "att_uv": 0.35,
+                "att_uv": 0.45,
                 "def_uv": 0.5
             },
             {
                 "pos": "MF",
                 "name": "필 포든",
-                "att_uv": 0.75,
+                "att_uv": 0.8,
                 "def_uv": 0.35
             },
             {
@@ -1606,19 +1606,19 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "리산드로 마르티네스",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "att_uv": 0.4,
+                "def_uv": 0.55
             },
             {
                 "pos": "DF",
                 "name": "디오구 달롯",
-                "att_uv": 0.35,
+                "att_uv": 0.45,
                 "def_uv": 0.5
             },
             {
                 "pos": "MF",
                 "name": "브루노 페르난데스",
-                "att_uv": 0.7,
+                "att_uv": 0.75,
                 "def_uv": 0.35
             },
             {
@@ -1636,14 +1636,14 @@ TEAMS_ROSTER = {
             {
                 "pos": "FW",
                 "name": "마커스 래시포드",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
                 "name": "마테우스 쿠냐",
-                "att_uv": 0.65,
-                "def_uv": 0.25
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
@@ -1662,8 +1662,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "마테이스 더 리흐트",
-                "att_uv": 0.25,
-                "def_uv": 0.55
+                "att_uv": 0.35,
+                "def_uv": 0.6
             },
             {
                 "pos": "DF",
@@ -2070,8 +2070,8 @@ TEAMS_ROSTER = {
             {
                 "pos": "DF",
                 "name": "페드로 포로",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "att_uv": 0.5,
+                "def_uv": 0.45
             },
             {
                 "pos": "DF",
