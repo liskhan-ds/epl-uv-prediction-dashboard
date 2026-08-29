@@ -1389,9 +1389,9 @@ TEAMS_ROSTER = {
             },
             {
                 "pos": "DF",
-                "name": "조 고메스",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "name": "트렌트 알렉산더-아놀드",
+                "att_uv": 0.65,
+                "def_uv": 0.4
             },
             {
                 "pos": "DF",
@@ -1401,21 +1401,15 @@ TEAMS_ROSTER = {
             },
             {
                 "pos": "DF",
-                "name": "코스타스 치미카스",
+                "name": "조 고메스",
                 "att_uv": 0.35,
                 "def_uv": 0.5
             },
             {
                 "pos": "DF",
-                "name": "코너 브래들리",
+                "name": "코스타스 치미카스",
                 "att_uv": 0.35,
                 "def_uv": 0.5
-            },
-            {
-                "pos": "MF",
-                "name": "엔도 와타루",
-                "att_uv": 0.5,
-                "def_uv": 0.45
             },
             {
                 "pos": "MF",
@@ -1430,16 +1424,22 @@ TEAMS_ROSTER = {
                 "def_uv": 0.45
             },
             {
+                "pos": "MF",
+                "name": "라이언 흐라번베르흐",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
                 "pos": "FW",
-                "name": "페데리코 키에사",
-                "att_uv": 0.65,
+                "name": "모하메드 살라",
+                "att_uv": 0.85,
                 "def_uv": 0.25
             },
             {
                 "pos": "FW",
-                "name": "알렉산데르 이삭",
-                "att_uv": 0.8,
-                "def_uv": 0.2
+                "name": "루이스 디아스",
+                "att_uv": 0.7,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
@@ -1451,9 +1451,15 @@ TEAMS_ROSTER = {
         "subs": [
             {
                 "pos": "GK",
-                "name": "프레디 우드맨",
-                "att_uv": 0.15,
-                "def_uv": 0.45
+                "name": "기오르기 마마르다슈빌리",
+                "att_uv": 0.2,
+                "def_uv": 0.55
+            },
+            {
+                "pos": "DF",
+                "name": "제레미 프림퐁",
+                "att_uv": 0.45,
+                "def_uv": 0.4
             },
             {
                 "pos": "DF",
@@ -1462,22 +1468,16 @@ TEAMS_ROSTER = {
                 "def_uv": 0.5
             },
             {
-                "pos": "DF",
-                "name": "제레미 프림퐁",
-                "att_uv": 0.35,
-                "def_uv": 0.5
+                "pos": "MF",
+                "name": "플로리안 비르츠",
+                "att_uv": 0.8,
+                "def_uv": 0.3
             },
             {
-                "pos": "MF",
-                "name": "라이언 흐라번베르흐",
-                "att_uv": 0.5,
-                "def_uv": 0.45
-            },
-            {
-                "pos": "MF",
-                "name": "하비 엘리엇",
-                "att_uv": 0.5,
-                "def_uv": 0.45
+                "pos": "FW",
+                "name": "알렉산데르 이삭",
+                "att_uv": 0.8,
+                "def_uv": 0.2
             }
         ]
     },
