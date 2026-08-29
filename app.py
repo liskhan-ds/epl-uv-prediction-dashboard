@@ -1431,9 +1431,9 @@ TEAMS_ROSTER = {
             },
             {
                 "pos": "FW",
-                "name": "모하메드 살라",
-                "att_uv": 0.85,
-                "def_uv": 0.25
+                "name": "플로리안 비르츠",
+                "att_uv": 0.8,
+                "def_uv": 0.3
             },
             {
                 "pos": "FW",
@@ -1468,10 +1468,10 @@ TEAMS_ROSTER = {
                 "def_uv": 0.5
             },
             {
-                "pos": "MF",
-                "name": "플로리안 비르츠",
-                "att_uv": 0.8,
-                "def_uv": 0.3
+                "pos": "FW",
+                "name": "페데리코 키에사",
+                "att_uv": 0.65,
+                "def_uv": 0.25
             },
             {
                 "pos": "FW",
