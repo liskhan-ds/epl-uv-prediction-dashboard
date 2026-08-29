@@ -36,6 +36,10 @@ TEAM_NAME_MAP = {
     "Leicester City": "레스터 시티",
     "Ipswich Town": "입스위치 타운",
     "Southampton": "사우샘프턴",
+    "Sunderland": "선덜랜드",
+    "Burnley": "번리",
+    "Leeds United": "리즈 유나이티드",
+    "Leeds": "리즈 유나이티드",
 }
 
 POSITION_BASE_UV = {
@@ -103,8 +107,8 @@ def normalize_team_name(raw_name):
     return raw_name
 
 def fetch_espn_epl_season_fixtures():
-    # 공식 정규 EPL 시즌 경기 수집 (2024-25 / 2025-26 실시간 공식 데이터)
-    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20240815-20241130"
+    # 공식 정규 EPL 시즌 경기 수집 (2025-26 실시간 공식 데이터)
+    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20250815-20251130"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
     }
