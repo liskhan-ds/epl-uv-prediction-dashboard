@@ -174,15 +174,15 @@ TEAMS_ROSTER = {
             {"pos": "MF", "name": "파페 사르", "att_uv": 0.45, "def_uv": 0.45},
             {"pos": "MF", "name": "제임스 매디슨", "att_uv": 0.70, "def_uv": 0.30},
             {"pos": "FW", "name": "브레넌 존슨", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "손흥민", "att_uv": 0.80, "def_uv": 0.30},
+            {"pos": "FW", "name": "데얀 쿨루셰프스키", "att_uv": 0.65, "def_uv": 0.35},
             {"pos": "FW", "name": "도미닉 솔랑케", "att_uv": 0.65, "def_uv": 0.25},
         ],
         "subs": [
-            {"pos": "FW", "name": "데얀 쿨루셰프스키", "att_uv": 0.65, "def_uv": 0.35},
+            {"pos": "FW", "name": "양민혁", "att_uv": 0.55, "def_uv": 0.30},
+            {"pos": "FW", "name": "윌손 오도베르", "att_uv": 0.60, "def_uv": 0.30},
             {"pos": "FW", "name": "히샤를리송", "att_uv": 0.60, "def_uv": 0.25},
             {"pos": "MF", "name": "로드리고 벤탕쿠르", "att_uv": 0.40, "def_uv": 0.45},
             {"pos": "DF", "name": "라두 드라구신", "att_uv": 0.20, "def_uv": 0.50},
-            {"pos": "GK", "name": "프레이저 포스터", "att_uv": 0.10, "def_uv": 0.35},
         ]
     },
     "뉴캐슬 유나이티드": {
