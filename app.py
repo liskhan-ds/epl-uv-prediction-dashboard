@@ -53,444 +53,2044 @@ st.title("⚽ EPL AI 승부예측")
 # 2. EPL 팀별 선수단 UV 데이터베이스 (20개 구단 선발 11인 + 교체 5인)
 # -----------------------------------------------------------------------------
 TEAMS_ROSTER = {
-    "맨체스터 유나이티드": {
+    "본머스": {
         "starters": [
-            {"pos": "GK", "name": "지오구 코스타", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "디오구 달롯", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "DF", "name": "마테이스 더 리흐트", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "리산드로 마르티네스", "att_uv": 0.30, "def_uv": 0.55},
-            {"pos": "DF", "name": "누사이르 마즈라위", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "MF", "name": "마누엘 우가르테", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "MF", "name": "코비 메이누", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "브루노 페르난데스", "att_uv": 0.70, "def_uv": 0.35},
-            {"pos": "FW", "name": "알레한드로 가르나초", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "마커스 래시포드", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "라스무스 호일룬", "att_uv": 0.60, "def_uv": 0.25},
+            {
+                "pos": "GK",
+                "name": "Fraser Forster",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Adam Smith",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Max Aarons",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "James Hill",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Julián Araujo",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "David Brooks",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Ryan Christie",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Tyler Adams",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Evanilson",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Justin Kluivert",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Amine Adli",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "조슈아 지르크지", "att_uv": 0.50, "def_uv": 0.25},
-            {"pos": "MF", "name": "메이슨 마운트", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "FW", "name": "아마드 디알로", "att_uv": 0.50, "def_uv": 0.25},
-            {"pos": "DF", "name": "레니 요로", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "GK", "name": "알타이 바인디르", "att_uv": 0.10, "def_uv": 0.40},
+            {
+                "pos": "GK",
+                "name": "Michele Di Gregorio",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Bafodé Diakité",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Adrien Truffert",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Lewis Cook",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Marcus Tavernier",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     },
     "아스널": {
         "starters": [
-            {"pos": "GK", "name": "다비드 라야", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "벤 화이트", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "DF", "name": "윌리엄 살리바", "att_uv": 0.30, "def_uv": 0.65},
-            {"pos": "DF", "name": "가브리엘 마갈량이스", "att_uv": 0.35, "def_uv": 0.60},
-            {"pos": "DF", "name": "율리엔 팀버", "att_uv": 0.40, "def_uv": 0.50},
-            {"pos": "MF", "name": "데클런 라이스", "att_uv": 0.50, "def_uv": 0.60},
-            {"pos": "MF", "name": "토마스 파티", "att_uv": 0.40, "def_uv": 0.50},
-            {"pos": "MF", "name": "마르틴 외데고르", "att_uv": 0.75, "def_uv": 0.35},
-            {"pos": "FW", "name": "부카요 사카", "att_uv": 0.80, "def_uv": 0.35},
-            {"pos": "FW", "name": "가브리엘 마르티넬리", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "가브리엘 제수스", "att_uv": 0.60, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "케파 아리사발라가",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Ezri Konsa",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "가브리엘 마갈량이스",
+                "att_uv": 0.35,
+                "def_uv": 0.6
+            },
+            {
+                "pos": "DF",
+                "name": "벤 화이트",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "윌리엄 살리바",
+                "att_uv": 0.3,
+                "def_uv": 0.65
+            },
+            {
+                "pos": "MF",
+                "name": "Fabio Vieira",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "마르틴 외데고르",
+                "att_uv": 0.75,
+                "def_uv": 0.35
+            },
+            {
+                "pos": "MF",
+                "name": "미켈 메리노",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "가브리엘 제수스",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "카이 하베르츠",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "빅토르 예케레스",
+                "att_uv": 0.8,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "레안드로 트로사르", "att_uv": 0.60, "def_uv": 0.25},
-            {"pos": "MF", "name": "미켈 메리노", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "DF", "name": "리카르도 칼라피오리", "att_uv": 0.35, "def_uv": 0.50},
-            {"pos": "FW", "name": "카이 하베르츠", "att_uv": 0.60, "def_uv": 0.35},
-            {"pos": "GK", "name": "네투", "att_uv": 0.10, "def_uv": 0.40},
-        ]
-    },
-    "맨체스터 시티": {
-        "starters": [
-            {"pos": "GK", "name": "에데르송", "att_uv": 0.30, "def_uv": 0.50},
-            {"pos": "DF", "name": "카일 워커", "att_uv": 0.40, "def_uv": 0.55},
-            {"pos": "DF", "name": "후벵 디아스", "att_uv": 0.30, "def_uv": 0.65},
-            {"pos": "DF", "name": "마누엘 아칸지", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "DF", "name": "요슈코 그바르디올", "att_uv": 0.45, "def_uv": 0.55},
-            {"pos": "MF", "name": "로드리", "att_uv": 0.55, "def_uv": 0.65},
-            {"pos": "MF", "name": "마테오 코바치치", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "베르나르두 실바", "att_uv": 0.65, "def_uv": 0.45},
-            {"pos": "FW", "name": "필 포든", "att_uv": 0.75, "def_uv": 0.35},
-            {"pos": "FW", "name": "사비뉴", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "엘링 홀란드", "att_uv": 0.90, "def_uv": 0.20},
-        ],
-        "subs": [
-            {"pos": "MF", "name": "일카이 귄도안", "att_uv": 0.55, "def_uv": 0.40},
-            {"pos": "FW", "name": "잭 그릴리시", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "MF", "name": "마테우스 누네스", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "DF", "name": "존 스톤스", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "GK", "name": "스테판 오르테가", "att_uv": 0.15, "def_uv": 0.45},
-        ]
-    },
-    "리버풀": {
-        "starters": [
-            {"pos": "GK", "name": "알리송 베케르", "att_uv": 0.25, "def_uv": 0.60},
-            {"pos": "DF", "name": "트렌트 알렉산더-아놀드", "att_uv": 0.65, "def_uv": 0.40},
-            {"pos": "DF", "name": "버질 반 다이크", "att_uv": 0.35, "def_uv": 0.65},
-            {"pos": "DF", "name": "이브라히마 코나테", "att_uv": 0.25, "def_uv": 0.60},
-            {"pos": "DF", "name": "앤디 로버트슨", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "라이언 흐라번베르흐", "att_uv": 0.50, "def_uv": 0.50},
-            {"pos": "MF", "name": "알렉시스 맥 알리스터", "att_uv": 0.55, "def_uv": 0.45},
-            {"pos": "MF", "name": "도미니크 소보슬라이", "att_uv": 0.60, "def_uv": 0.40},
-            {"pos": "FW", "name": "모하메드 살라", "att_uv": 0.85, "def_uv": 0.25},
-            {"pos": "FW", "name": "루이스 디아스", "att_uv": 0.70, "def_uv": 0.30},
-            {"pos": "FW", "name": "다윈 누녜스", "att_uv": 0.65, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "디오구 조타", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "코디 각포", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "MF", "name": "커티스 존스", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "DF", "name": "코스타스 치미카스", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "GK", "name": "퀴빈 켈러허", "att_uv": 0.10, "def_uv": 0.45},
-        ]
-    },
-    "첼시": {
-        "starters": [
-            {"pos": "GK", "name": "로베르트 산체스", "att_uv": 0.20, "def_uv": 0.45},
-            {"pos": "DF", "name": "말로 쥐스토", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "DF", "name": "웨슬리 포파나", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "리바이 콜윌", "att_uv": 0.30, "def_uv": 0.55},
-            {"pos": "DF", "name": "마르크 쿠쿠렐라", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "모이세스 카이세도", "att_uv": 0.40, "def_uv": 0.60},
-            {"pos": "MF", "name": "엔초 페르난데스", "att_uv": 0.55, "def_uv": 0.45},
-            {"pos": "MF", "name": "콜 파머", "att_uv": 0.85, "def_uv": 0.30},
-            {"pos": "FW", "name": "노니 마두에케", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "페드로 네투", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "니콜라 잭슨", "att_uv": 0.65, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "크리스토퍼 은쿤쿠", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "MF", "name": "로메오 라비아", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "FW", "name": "제이든 산초", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "DF", "name": "악셀 디사시", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "필립 요르겐센", "att_uv": 0.10, "def_uv": 0.40},
-        ]
-    },
-    "토트넘 홋스퍼": {
-        "starters": [
-            {"pos": "GK", "name": "굴리엘모 비카리오", "att_uv": 0.20, "def_uv": 0.55},
-            {"pos": "DF", "name": "페드로 포로", "att_uv": 0.55, "def_uv": 0.40},
-            {"pos": "DF", "name": "크리스티안 로메로", "att_uv": 0.35, "def_uv": 0.60},
-            {"pos": "DF", "name": "미키 판 더 펜", "att_uv": 0.35, "def_uv": 0.60},
-            {"pos": "DF", "name": "데스티니 우도기", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "이브 비수마", "att_uv": 0.35, "def_uv": 0.50},
-            {"pos": "MF", "name": "파페 사르", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "제임스 매디슨", "att_uv": 0.70, "def_uv": 0.30},
-            {"pos": "FW", "name": "브레넌 존슨", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "데얀 쿨루셰프스키", "att_uv": 0.65, "def_uv": 0.35},
-            {"pos": "FW", "name": "도미닉 솔랑케", "att_uv": 0.65, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "양민혁", "att_uv": 0.55, "def_uv": 0.30},
-            {"pos": "FW", "name": "윌손 오도베르", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "히샤를리송", "att_uv": 0.60, "def_uv": 0.25},
-            {"pos": "MF", "name": "로드리고 벤탕쿠르", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "DF", "name": "라두 드라구신", "att_uv": 0.20, "def_uv": 0.50},
-        ]
-    },
-    "뉴캐슬 유나이티드": {
-        "starters": [
-            {"pos": "GK", "name": "닉 포프", "att_uv": 0.15, "def_uv": 0.55},
-            {"pos": "DF", "name": "키에런 트리피어", "att_uv": 0.55, "def_uv": 0.45},
-            {"pos": "DF", "name": "파비안 셰어", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "DF", "name": "댄 번", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "티노 리브라멘토", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "브루노 기마랑이스", "att_uv": 0.55, "def_uv": 0.55},
-            {"pos": "MF", "name": "산드로 토날리", "att_uv": 0.50, "def_uv": 0.50},
-            {"pos": "MF", "name": "조엘린톤", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "FW", "name": "앤서니 고든", "att_uv": 0.70, "def_uv": 0.30},
-            {"pos": "FW", "name": "제이콥 머피", "att_uv": 0.55, "def_uv": 0.30},
-            {"pos": "FW", "name": "알렉산데르 이삭", "att_uv": 0.80, "def_uv": 0.20},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "하비 반스", "att_uv": 0.60, "def_uv": 0.25},
-            {"pos": "MF", "name": "조 윌록", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "MF", "name": "숀롱스태프", "att_uv": 0.35, "def_uv": 0.40},
-            {"pos": "DF", "name": "스벤 보트만", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "GK", "name": "마틴 두브라브카", "att_uv": 0.10, "def_uv": 0.40},
+            {
+                "pos": "GK",
+                "name": "다비드 라야",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "율리엔 팀버",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Piero Hincapié",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "브루노 기마랑이스",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "데클런 라이스",
+                "att_uv": 0.5,
+                "def_uv": 0.6
+            }
         ]
     },
     "아스톤 빌라": {
         "starters": [
-            {"pos": "GK", "name": "에밀리아노 마르티네스", "att_uv": 0.20, "def_uv": 0.60},
-            {"pos": "DF", "name": "매티 캐시", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "DF", "name": "에즈리 콘사", "att_uv": 0.30, "def_uv": 0.55},
-            {"pos": "DF", "name": "파우 토레스", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "DF", "name": "루카 디뉴", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "MF", "name": "아마두 오나나", "att_uv": 0.40, "def_uv": 0.55},
-            {"pos": "MF", "name": "유리 틸레만스", "att_uv": 0.55, "def_uv": 0.45},
-            {"pos": "MF", "name": "존 맥긴", "att_uv": 0.50, "def_uv": 0.45},
-            {"pos": "FW", "name": "레온 베일리", "att_uv": 0.70, "def_uv": 0.25},
-            {"pos": "FW", "name": "모건 로저스", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "올리 왓킨스", "att_uv": 0.80, "def_uv": 0.25},
+            {
+                "pos": "GK",
+                "name": "Marco Bizot",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Tyrone Mings",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Victor Lindelöf",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Matty Cash",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Aaron Wan-Bissaka",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Ross Barkley",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "John McGinn",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Leon Goretzka",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Ollie Watkins",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Leon Bailey",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Tammy Abraham",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "존 두란", "att_uv": 0.65, "def_uv": 0.20},
-            {"pos": "MF", "name": "로스 바클리", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "MF", "name": "제이콥 램지", "att_uv": 0.50, "def_uv": 0.30},
-            {"pos": "DF", "name": "디에고 카를로스", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "GK", "name": "조 로빈 오센", "att_uv": 0.10, "def_uv": 0.35},
-        ]
-    },
-    "웨스트햄 유나이티드": {
-        "starters": [
-            {"pos": "GK", "name": "알퐁스 아레올라", "att_uv": 0.15, "def_uv": 0.50},
-            {"pos": "DF", "name": "애런 완-비사카", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "DF", "name": "장-클레르 토디보", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "맥스 킬먼", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "에메르송 팔미에리", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "에드손 알바레스", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "MF", "name": "토마시 소우체크", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "루카스 파케타", "att_uv": 0.70, "def_uv": 0.35},
-            {"pos": "FW", "name": "자러드 보웬", "att_uv": 0.75, "def_uv": 0.30},
-            {"pos": "FW", "name": "모하메드 쿠두스", "att_uv": 0.70, "def_uv": 0.30},
-            {"pos": "FW", "name": "미카일 안토니오", "att_uv": 0.60, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "니클라스 퓔크루크", "att_uv": 0.65, "def_uv": 0.20},
-            {"pos": "MF", "name": "카를로스 솔레르", "att_uv": 0.50, "def_uv": 0.35},
-            {"pos": "FW", "name": "크라이센시오 서머빌", "att_uv": 0.60, "def_uv": 0.25},
-            {"pos": "DF", "name": "콘스탄티노스 마브로파노스", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "우카시 파비안스키", "att_uv": 0.10, "def_uv": 0.40},
-        ]
-    },
-    "브라이튼": {
-        "starters": [
-            {"pos": "GK", "name": "바르트 페르브뤼헌", "att_uv": 0.20, "def_uv": 0.50},
-            {"pos": "DF", "name": "조엘 펠트만", "att_uv": 0.35, "def_uv": 0.50},
-            {"pos": "DF", "name": "얀 폴 판 헤케", "att_uv": 0.30, "def_uv": 0.55},
-            {"pos": "DF", "name": "루이스 덩크", "att_uv": 0.30, "def_uv": 0.55},
-            {"pos": "DF", "name": "페르디 카디올루", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "카를로스 발레바", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "야신 아야리", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "주앙 페드로", "att_uv": 0.70, "def_uv": 0.30},
-            {"pos": "FW", "name": "얀쿠바 민테", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "카오루 미토마", "att_uv": 0.75, "def_uv": 0.25},
-            {"pos": "FW", "name": "대니 웰벡", "att_uv": 0.65, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "조르지니오 륫터", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "MF", "name": "맷 오라일리", "att_uv": 0.55, "def_uv": 0.35},
-            {"pos": "FW", "name": "에반 퍼거슨", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "DF", "name": "이구어 훌리우", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "제이슨 스틸", "att_uv": 0.15, "def_uv": 0.40},
-        ]
-    },
-    "풀럼": {
-        "starters": [
-            {"pos": "GK", "name": "베른트 레노", "att_uv": 0.15, "def_uv": 0.55},
-            {"pos": "DF", "name": "티모시 카스타뉴", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "DF", "name": "요아킴 안데르센", "att_uv": 0.30, "def_uv": 0.55},
-            {"pos": "DF", "name": "캘빈 배시", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "앤토니 로빈슨", "att_uv": 0.50, "def_uv": 0.45},
-            {"pos": "MF", "name": "사샤 루키치", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "샌더 베르게", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "안드레아스 페레이라", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "알렉스 이워비", "att_uv": 0.60, "def_uv": 0.35},
-            {"pos": "FW", "name": "아다마 트라오레", "att_uv": 0.65, "def_uv": 0.20},
-            {"pos": "FW", "name": "라울 히메네스", "att_uv": 0.65, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "호드리고 무니스", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "FW", "name": "헤이니어 손", "att_uv": 0.55, "def_uv": 0.30},
-            {"pos": "MF", "name": "톰 케어니", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "DF", "name": "잇사 디오프", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "스티븐 벤다", "att_uv": 0.10, "def_uv": 0.35},
-        ]
-    },
-    "크리스탈 팰리스": {
-        "starters": [
-            {"pos": "GK", "name": "딘 헨더슨", "att_uv": 0.15, "def_uv": 0.50},
-            {"pos": "DF", "name": "다니엘 무뇨스", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "DF", "name": "마크 게히", "att_uv": 0.30, "def_uv": 0.60},
-            {"pos": "DF", "name": "맥상스 라크루아", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "타이릭 미첼", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "애덤 워튼", "att_uv": 0.50, "def_uv": 0.50},
-            {"pos": "MF", "name": "셰이크 두쿠레", "att_uv": 0.40, "def_uv": 0.50},
-            {"pos": "MF", "name": "다이치 카마다", "att_uv": 0.55, "def_uv": 0.35},
-            {"pos": "FW", "name": "이스마일라 사르", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "에베레치 에제", "att_uv": 0.75, "def_uv": 0.30},
-            {"pos": "FW", "name": "장-필리프 마테타", "att_uv": 0.70, "def_uv": 0.20},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "에디 은케티아", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "MF", "name": "제퍼슨 마르마", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "DF", "name": "나타니엘 클라인", "att_uv": 0.30, "def_uv": 0.40},
-            {"pos": "DF", "name": "크리스 리차즈", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "레미 매튜스", "att_uv": 0.10, "def_uv": 0.35},
-        ]
-    },
-    "에버턴": {
-        "starters": [
-            {"pos": "GK", "name": "조던 픽포드", "att_uv": 0.20, "def_uv": 0.55},
-            {"pos": "DF", "name": "셰이머스 콜먼", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "DF", "name": "제임스 타코우스키", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "재러드 브랜스웨이트", "att_uv": 0.30, "def_uv": 0.60},
-            {"pos": "DF", "name": "비탈리 미콜렌코", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "MF", "name": "이드리사 게예", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "MF", "name": "제임스 가너", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "압둘라예 두쿠레", "att_uv": 0.55, "def_uv": 0.40},
-            {"pos": "FW", "name": "잭 해리슨", "att_uv": 0.55, "def_uv": 0.35},
-            {"pos": "FW", "name": "드와이트 맥닐", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "도미닉 칼버트-르윈", "att_uv": 0.65, "def_uv": 0.25},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "베토", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "FW", "name": "아르만도 브로야", "att_uv": 0.55, "def_uv": 0.20},
-            {"pos": "MF", "name": "팀 이로그부남", "att_uv": 0.40, "def_uv": 0.40},
-            {"pos": "DF", "name": "마이클 킨", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "주앙 버지니아", "att_uv": 0.10, "def_uv": 0.35},
-        ]
-    },
-    "울버햄튼": {
-        "starters": [
-            {"pos": "GK", "name": "주제 사", "att_uv": 0.15, "def_uv": 0.50},
-            {"pos": "DF", "name": "넬송 세메두", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "DF", "name": "산티아고 부에노", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "토티 고메스", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "라얀 아이트-누리", "att_uv": 0.50, "def_uv": 0.40},
-            {"pos": "MF", "name": "마리오 레미나", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "주앙 고메스", "att_uv": 0.45, "def_uv": 0.50},
-            {"pos": "MF", "name": "장-리크네 벨가르드", "att_uv": 0.50, "def_uv": 0.35},
-            {"pos": "FW", "name": "황희찬", "att_uv": 0.70, "def_uv": 0.25},
-            {"pos": "FW", "name": "마테우스 쿠냐", "att_uv": 0.75, "def_uv": 0.25},
-            {"pos": "FW", "name": "예르겐 스트란 라르센", "att_uv": 0.65, "def_uv": 0.20},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "곤살루 게데스", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "MF", "name": "도일", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "FW", "name": "로드리고 고메스", "att_uv": 0.50, "def_uv": 0.30},
-            {"pos": "DF", "name": "맷 도허티", "att_uv": 0.35, "def_uv": 0.40},
-            {"pos": "GK", "name": "샘 존스톤", "att_uv": 0.10, "def_uv": 0.40},
-        ]
-    },
-    "본머스": {
-        "starters": [
-            {"pos": "GK", "name": "케파 아리사발라가", "att_uv": 0.20, "def_uv": 0.45},
-            {"pos": "DF", "name": "아담 스미스", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "DF", "name": "일리아 자바르니", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "마르코스 세네시", "att_uv": 0.30, "def_uv": 0.50},
-            {"pos": "DF", "name": "밀로스 케르케즈", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "루이스 쿡", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "라이언 크리스티", "att_uv": 0.50, "def_uv": 0.40},
-            {"pos": "MF", "name": "저스틴 클라위베르트", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "앙투안 세메뇨", "att_uv": 0.70, "def_uv": 0.25},
-            {"pos": "FW", "name": "마커스 터베니어", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "에바니우송", "att_uv": 0.70, "def_uv": 0.20},
-        ],
-        "subs": [
-            {"pos": "FW", "name": "에네스 위날", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "FW", "name": "단조 루이스", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "MF", "name": "알렉스 스콧", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "DF", "name": "줄리안 아라우호", "att_uv": 0.35, "def_uv": 0.40},
-            {"pos": "GK", "name": "마크 트래버스", "att_uv": 0.10, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "Emiliano Martínez",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Pau Torres",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Ian Maatsen",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Emiliano Buendía",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Boubacar Kamara",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     },
     "브렌트포드": {
         "starters": [
-            {"pos": "GK", "name": "마크 플렉컨", "att_uv": 0.15, "def_uv": 0.50},
-            {"pos": "DF", "name": "크리스토페르 아예르", "att_uv": 0.35, "def_uv": 0.50},
-            {"pos": "DF", "name": "네이선 콜린스", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "에단 피녹", "att_uv": 0.25, "def_uv": 0.55},
-            {"pos": "DF", "name": "킨 루이스-포터", "att_uv": 0.40, "def_uv": 0.40},
-            {"pos": "MF", "name": "크리스티안 뇌르고르", "att_uv": 0.40, "def_uv": 0.55},
-            {"pos": "MF", "name": "비탈리 야넬트", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "미켈 담스고르", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "브라이언 음베우모", "att_uv": 0.75, "def_uv": 0.25},
-            {"pos": "FW", "name": "요안 위사", "att_uv": 0.70, "def_uv": 0.25},
-            {"pos": "FW", "name": "케빈 샤데", "att_uv": 0.60, "def_uv": 0.25},
+            {
+                "pos": "GK",
+                "name": "Ellery Balcombe",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Kristoffer Ajer",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Rico Henry",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Sepp van den Berg",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Nathan Collins",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Vitaly Janelt",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Mathias Jensen",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Mamadou Sangare",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Callum Wilson",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Keane Lewis-Potter",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Igor Thiago",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "이고르 티아구", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "MF", "name": "마티아스 옌센", "att_uv": 0.50, "def_uv": 0.35},
-            {"pos": "MF", "name": "파비안 뇌르베르크", "att_uv": 0.40, "def_uv": 0.40},
-            {"pos": "DF", "name": "셉 판 덴 베르흐", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "GK", "name": "하콘 발디마르손", "att_uv": 0.10, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "Caoimhín Kelleher",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Aaron Hickey",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jayden Meghoma",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Fábio Carvalho",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Josh Dasilva",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     },
-    "노팅엄 포레스트": {
+    "브라이튼": {
         "starters": [
-            {"pos": "GK", "name": "마츠 셀스", "att_uv": 0.15, "def_uv": 0.55},
-            {"pos": "DF", "name": "네코 윌리엄스", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "DF", "name": "니콜라 밀렌코비치", "att_uv": 0.25, "def_uv": 0.60},
-            {"pos": "DF", "name": "무릴로", "att_uv": 0.30, "def_uv": 0.60},
-            {"pos": "DF", "name": "알렉스 모레노", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "MF", "name": "라이안 예이츠", "att_uv": 0.40, "def_uv": 0.50},
-            {"pos": "MF", "name": "엘리엇 앤더슨", "att_uv": 0.50, "def_uv": 0.45},
-            {"pos": "MF", "name": "모건 깁스-화이트", "att_uv": 0.75, "def_uv": 0.30},
-            {"pos": "FW", "name": "앤서니 엘랑가", "att_uv": 0.70, "def_uv": 0.25},
-            {"pos": "FW", "name": "캘럼 허드슨-오도이", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "크리스 우드", "att_uv": 0.75, "def_uv": 0.20},
+            {
+                "pos": "GK",
+                "name": "Jason Steele",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Lewis Dunk",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Olivier Boscagli",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Igor Julio",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Ferdi Kadioglu",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Pascal Gross",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Diego Gómez",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Matt O'Riley",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Georginio Rutter",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Evan Ferguson",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Promise David",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "타이워 아워니이", "att_uv": 0.60, "def_uv": 0.20},
-            {"pos": "FW", "name": "조타 실바", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "MF", "name": "이콜라 도밍게스", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "DF", "name": "윌리 볼리", "att_uv": 0.20, "def_uv": 0.45},
-            {"pos": "GK", "name": "카를로스 미겔", "att_uv": 0.10, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "Tom McGill",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Pascal Struijk",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Costinha",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Kaoru Mitoma",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Mats Wieffer",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     },
-    "레스터 시티": {
+    "첼시": {
         "starters": [
-            {"pos": "GK", "name": "마즈 헤르만센", "att_uv": 0.15, "def_uv": 0.50},
-            {"pos": "DF", "name": "제임스 저스틴", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "DF", "name": "칼렙 오콜리", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "보우트 파스", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "빅토르 크리스티안센", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "MF", "name": "해리 윙크스", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "윌프레드 은디디", "att_uv": 0.35, "def_uv": 0.55},
-            {"pos": "MF", "name": "부오나노테", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "압둘 파타우", "att_uv": 0.65, "def_uv": 0.25},
-            {"pos": "FW", "name": "스테피 마비디디", "att_uv": 0.60, "def_uv": 0.25},
-            {"pos": "FW", "name": "제이미 바디", "att_uv": 0.70, "def_uv": 0.20},
+            {
+                "pos": "GK",
+                "name": "로베르트 산체스",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "리스 제임스",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Tosin Adarabioyo",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Maxence Lacroix",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "웨슬리 포파나",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Jordan Henderson",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Morgan Rogers",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "엔초 페르난데스",
+                "att_uv": 0.55,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Danny Welbeck",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "페드로 네투",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "주앙 페드로",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "에두아르", "att_uv": 0.55, "def_uv": 0.20},
-            {"pos": "MF", "name": "엘 칸누스", "att_uv": 0.50, "def_uv": 0.30},
-            {"pos": "MF", "name": "소울레", "att_uv": 0.45, "def_uv": 0.35},
-            {"pos": "DF", "name": "코디", "att_uv": 0.20, "def_uv": 0.45},
-            {"pos": "GK", "name": "워드", "att_uv": 0.10, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "Gaga Slonina",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "리바이 콜윌",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Pep Chavarría",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "모이세스 카이세도",
+                "att_uv": 0.4,
+                "def_uv": 0.6
+            },
+            {
+                "pos": "MF",
+                "name": "콜 파머",
+                "att_uv": 0.85,
+                "def_uv": 0.3
+            }
+        ]
+    },
+    "코번트리 시티": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Daniel Bentley",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Jake Bidwell",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jay Da Silva",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Ethan Pinnock",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Joel Latibeaudiere",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Matt Grimes",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Gustavo Hamer",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Ephron Mason-Clark",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Taiwo Awoniyi",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Haji Wright",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Brandon Thomas-Asante",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Ben Wilson",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Luke Woolfenden",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Liam Kitching",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Victor Torp",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Frank Onyeka",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "크리스탈 팰리스": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Walter Benítez",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Daniel Muñoz",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Borna Sosa",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Axel Disasi",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Takehiro Tomiyasu",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Will Hughes",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Jefferson Lerma",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Daichi Kamada",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Ismaïla Sarr",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Jean-Philippe Mateta",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Jørgen Strand Larsen",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Remi Matthews",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Chris Richards",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Óscar Mingueza",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Cheick Doucouré",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Justin Devenny",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "에버턴": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Mark Travers",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Michael Keane",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "James Tarkowski",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Vitaliy Mykolenko",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Nathan Patterson",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Christian Nørgaard",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Kiernan Dewsbury-Hall",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "James Garner",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Iliman Ndiaye",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Beto",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Brennan Johnson",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Tom King",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Jake O'Brien",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jarrad Branthwaite",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Hayden Hackney",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Charly Alcaraz",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "풀럼": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Benjamin Lecomte",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Kenny Tete",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Joachim Andersen",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Timothy Castagne",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Antonee Robinson",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "César Palacios",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Tom Cairney",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Harrison Reed",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Gonzalo García",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Alex Iwobi",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Rodrigo Muniz",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Bernd Leno",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Jorge Cuenca",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Calvin Bassey",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Sander Berge",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Ryan Sessegnon",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "헐 시티": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Jack Butland",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "John Egan",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Semi Ajayi",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Matt Targett",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Paddy McNair",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Matt Crooks",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Kieran Dowell",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Abdülkadir Ömür",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Oliver McBurnie",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Babajide David",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Liam Millar",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Dillon Phillips",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Lewie Coyle",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Ryan Giles",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Regan Slater",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Hidemasa Morita",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     },
     "입스위치 타운": {
         "starters": [
-            {"pos": "GK", "name": "아리자네트 무리치", "att_uv": 0.15, "def_uv": 0.45},
-            {"pos": "DF", "name": "엑셀 투안제베", "att_uv": 0.35, "def_uv": 0.45},
-            {"pos": "DF", "name": "다라 오셰이", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "제이콥 그레이브스", "att_uv": 0.25, "def_uv": 0.45},
-            {"pos": "DF", "name": "라이프 데이비스", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "MF", "name": "샘 모시", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "캘빈 필립스", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "오마리 허친슨", "att_uv": 0.65, "def_uv": 0.30},
-            {"pos": "FW", "name": "웨스 번스", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "FW", "name": "스모디치", "att_uv": 0.60, "def_uv": 0.25},
-            {"pos": "FW", "name": "리암 델랍", "att_uv": 0.70, "def_uv": 0.20},
+            {
+                "pos": "GK",
+                "name": "David Button",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Darnell Furlong",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Issa Diop",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Dara O'Shea",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Cedric Kipre",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Julio Enciso",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Jack Taylor",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Cameron Humphreys",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Chuba Akpom",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Chiedozie Ogbene",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Jack Clarke",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "조지 허스트", "att_uv": 0.55, "def_uv": 0.20},
-            {"pos": "FW", "name": "잭 클라크", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "MF", "name": "마시모 루옹고", "att_uv": 0.35, "def_uv": 0.40},
-            {"pos": "DF", "name": "울프enden", "att_uv": 0.20, "def_uv": 0.40},
-            {"pos": "GK", "name": "월튼", "att_uv": 0.10, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "Christian Walton",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Leif Davis",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jacob Greaves",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Sasa Lukic",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Exequiel Palacios",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     },
-    "사우샘프턴": {
+    "리즈 유나이티드": {
         "starters": [
-            {"pos": "GK", "name": "아론 램스데일", "att_uv": 0.20, "def_uv": 0.50},
-            {"pos": "DF", "name": "유키나리 수구와라", "att_uv": 0.40, "def_uv": 0.40},
-            {"pos": "DF", "name": "테일러 하우드-벨리스", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "얀 베드나렉", "att_uv": 0.25, "def_uv": 0.50},
-            {"pos": "DF", "name": "카일 워커-피터스", "att_uv": 0.45, "def_uv": 0.45},
-            {"pos": "MF", "name": "플린 다운스", "att_uv": 0.40, "def_uv": 0.45},
-            {"pos": "MF", "name": "윌 스몰본", "att_uv": 0.45, "def_uv": 0.40},
-            {"pos": "MF", "name": "타일러 디블링", "att_uv": 0.60, "def_uv": 0.30},
-            {"pos": "FW", "name": "라이안 프레이저", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "FW", "name": "마테우스 페르난데스", "att_uv": 0.55, "def_uv": 0.35},
-            {"pos": "FW", "name": "캐머런 아처", "att_uv": 0.65, "def_uv": 0.20},
+            {
+                "pos": "GK",
+                "name": "Alex Cairns",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Nico Elvedi",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "James Justin",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Joe Rodon",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jayden Bogle",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Ilia Gruev",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Ethan Ampadu",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Sean Longstaff",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Harry Wilson",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Dominic Calvert-Lewin",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Daniel James",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
         ],
         "subs": [
-            {"pos": "FW", "name": "아담 암스트롱", "att_uv": 0.55, "def_uv": 0.20},
-            {"pos": "FW", "name": "브레레턴 디아스", "att_uv": 0.55, "def_uv": 0.25},
-            {"pos": "MF", "name": "아담 랄라나", "att_uv": 0.45, "def_uv": 0.30},
-            {"pos": "DF", "name": "스티븐 매닝", "att_uv": 0.20, "def_uv": 0.40},
-            {"pos": "GK", "name": "맥카시", "att_uv": 0.10, "def_uv": 0.35},
+            {
+                "pos": "GK",
+                "name": "Lucas Perri",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Gabriel Gudmundsson",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jaka Bijol",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Ao Tanaka",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Brenden Aaronson",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "리버풀": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Freddie Woodman",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "조 고메스",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "버질 반 다이크",
+                "att_uv": 0.35,
+                "def_uv": 0.65
+            },
+            {
+                "pos": "DF",
+                "name": "Kostas Tsimikas",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Conor Bradley",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Wataru Endo",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "알렉시스 맥 알리스터",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "도미니크 소보슬라이",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "페데리코 키에사",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "알렉산데르 이삭",
+                "att_uv": 0.8,
+                "def_uv": 0.2
+            },
+            {
+                "pos": "FW",
+                "name": "코디 각포",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "알리송 베케르",
+                "att_uv": 0.25,
+                "def_uv": 0.6
+            },
+            {
+                "pos": "DF",
+                "name": "로날드 아라우호",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "제레미 프림퐁",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "라이언 흐라번베르흐",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Harvey Elliott",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "맨체스터 시티": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "헤로니모 룰리",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "후벵 디아스",
+                "att_uv": 0.3,
+                "def_uv": 0.65
+            },
+            {
+                "pos": "DF",
+                "name": "마크 게히",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "라얀 아이트-누리",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "요슈코 그바르디올",
+                "att_uv": 0.45,
+                "def_uv": 0.55
+            },
+            {
+                "pos": "MF",
+                "name": "마테오 코바치치",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "잭 그릴리시",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Elliot Anderson",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "엘링 홀란드",
+                "att_uv": 0.9,
+                "def_uv": 0.2
+            },
+            {
+                "pos": "FW",
+                "name": "앙투안 세메뇨",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "제레미 도쿠",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Marcus Bettinelli",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Josh Wilson-Esbrand",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "리코 루이스",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "필 포든",
+                "att_uv": 0.75,
+                "def_uv": 0.35
+            },
+            {
+                "pos": "MF",
+                "name": "라얀 체르키",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "맨체스터 유나이티드": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Tom Heaton",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "해리 매과이어",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "루크 쇼",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "리산드로 마르티네스",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "디오구 달롯",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "브루노 페르난데스",
+                "att_uv": 0.7,
+                "def_uv": 0.35
+            },
+            {
+                "pos": "MF",
+                "name": "유리 틸레만스",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Jack Fletcher",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "마커스 래시포드",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "마테우스 쿠냐",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "브라이언 음베우모",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "칼 다를로우",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "마테이스 더 리흐트",
+                "att_uv": 0.25,
+                "def_uv": 0.55
+            },
+            {
+                "pos": "DF",
+                "name": "누사이르 마즈라위",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "메이슨 마운트",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "마누엘 우가르테",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "뉴캐슬 유나이티드": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Mark Gillespie",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Lewis Hall",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Fabian Schär",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Dan Burn",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Sven Botman",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Jacob Murphy",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Joelinton",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Harvey Barnes",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Yoane Wissa",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Anthony Elanga",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Nick Woltemade",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Nick Pope",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Tino Livramento",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Malick Thiaw",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Joe Willock",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Jacob Ramsey",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "노팅엄 포레스트": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Matz Sels",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Morato",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Ola Aina",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Nikola Milenkovic",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Neco Williams",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Ibrahim Sangaré",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Xaver Schlager",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Ryan Yates",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Chris Wood",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Callum Hudson-Odoi",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Dan Ndoye",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "John Victor",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Luca Netz",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jair Paula",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Morgan Gibbs-White",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Nicolás Domínguez",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "선덜랜드": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "Simon Moore",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Thomas Meunier",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Nordi Mukiele",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Omar Alderete",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Reinildo Mandava",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Abdoullah Ba",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Granit Xhaka",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Luke O'Nien",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "Wilson Isidor",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Brian Brobbey",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "Simon Adingra",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Robin Roefs",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "Ajibola Alese",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Danny Ballard",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "Alan Browne",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "Enzo Le Fée",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
+        ]
+    },
+    "토트넘 홋스퍼": {
+        "starters": [
+            {
+                "pos": "GK",
+                "name": "마르틴 두브라브카",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "벤 데이비스",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "앤디 로버트슨",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "마르코스 세네시",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Kevin Danso",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "제임스 매디슨",
+                "att_uv": 0.7,
+                "def_uv": 0.3
+            },
+            {
+                "pos": "MF",
+                "name": "로드리고 벤탕쿠르",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "산드로 토날리",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "FW",
+                "name": "히샤를리송",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "도미닉 솔랑케",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            },
+            {
+                "pos": "FW",
+                "name": "오마르 마르무시",
+                "att_uv": 0.65,
+                "def_uv": 0.25
+            }
+        ],
+        "subs": [
+            {
+                "pos": "GK",
+                "name": "Brandon Austin",
+                "att_uv": 0.15,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "DF",
+                "name": "페드로 포로",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "DF",
+                "name": "Jan Paul van Hecke",
+                "att_uv": 0.35,
+                "def_uv": 0.5
+            },
+            {
+                "pos": "MF",
+                "name": "모하메드 쿠두스",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            },
+            {
+                "pos": "MF",
+                "name": "코너 갤러거",
+                "att_uv": 0.5,
+                "def_uv": 0.45
+            }
         ]
     }
 }
