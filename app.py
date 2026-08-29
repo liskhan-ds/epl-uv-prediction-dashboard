@@ -906,7 +906,7 @@ if not filtered_df.empty:
 st.markdown("---")
 
 # -----------------------------------------------------------------------------
-# 8. [선택 매치업 11.0 WUV 상세 전력 분석 카드 Grid & 3-Way 게이지 바]
+# 8. [선택 매치업 11.0 WUV 상세 전력 분석 카드 Grid & 3-Way 게이지 바)
 # -----------------------------------------------------------------------------
 st.header("🔥 선택 경기 11.0 WUV 상세 전력 분석")
 
@@ -1047,10 +1047,9 @@ if not filtered_df.empty:
     # 4) 상세 선발 라인업 & 교체 명단 비교 탭
     st.subheader("📋 선발 11인 & 교체 명단 UV 비교표")
     
-    t_home, t_away, t_math = st.tabs([
+    t_home, t_away = st.tabs([
         f"🏠 {h_team} 라인업", 
-        f"✈️ {a_team} 라인업", 
-        "📐 11.0 WUV 로직 산출 공식"
+        f"✈️ {a_team} 라인업"
     ])
     
     def render_roster_table(team_name, wuv_info):
@@ -1073,28 +1072,7 @@ if not filtered_df.empty:
         
     with t_away:
         render_roster_table(a_team, res["away_wuv"])
-        
-    with t_math:
-        st.markdown(
-            """
-            ### 📐 11.0 WUV (Weighted Unit Value) 산출 로직
-            
-            1. **피치 11인 기준선 (11.0 UV)**:
-               - 베스트 11 기준 총 **11.0 UV** (공격 5.5 UV + 수비/빌드업 5.5 UV).
-               
-            2. **선발(85%) 및 교체(15%) 가중치 규칙**:
-               - $UV_{\\text{starter}}$: 선발 11인 공격 및 수비 UV 각각 합산.
-               - $UV_{\\text{sub}}$: 교체 5인 UV 합산 후 피치 11인 스케일 변환 ($\\times \\frac{11}{5}$).
-               - $UV_{\\text{raw}} = 0.85 \\times UV_{\\text{starter}} + 0.15 \\times UV_{\\text{sub}}$
-               
-            3. **홈 어드밴티지 보정**:
-               - 홈 팀에 **$+0.25\\text{ UV}$** 부여 (공격 $+0.15$, 수비 $+0.10$).
-               
-            4. **무승부(Draw) 판정 룰**:
-               - $\\Delta UV = UV_{\\text{home, final}} - UV_{\\text{away, final}}$
-               - **$|\\Delta UV| \\le 0.4$** 일 때, **무승부(Draw)** 최종 승부 예측.
-            """
-        )
+
 
 if st.button("데이터 새로고침"):
     st.rerun()
