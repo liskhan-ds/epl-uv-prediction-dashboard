@@ -17,23 +17,31 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 상단 탭 네비게이션 (NBA, MLB, EPL 대시보드 사이트 링크)
-nav_col1, nav_col2, nav_col3, _ = st.columns([2.5, 3.2, 2.5, 3.8])
+# 상단 탭 네비게이션 (NBA, MLB, EPL, NHL 4대 종목)
+nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 2.5, 2.5, 2.5])
 with nav_col1:
     st.link_button(
         "🏀 NBA 대시보드 ↗", 
-        "https://nba-uv-prediction.streamlit.app/"
+        "https://nba-uv-prediction-dashboard.streamlit.app/",
+        use_container_width=True
     )
 with nav_col2:
     st.link_button(
         "⚾ MLB 대시보드 ↗", 
-        "https://mlb-uv-prediction.streamlit.app/"
+        "https://mlb-uv-prediction-dashboard.streamlit.app/",
+        use_container_width=True
     )
 with nav_col3:
-    st.link_button(
+    st.button(
         "⚽ EPL 대시보드 (현재)", 
-        "https://epl-uv-prediction.streamlit.app/", 
-        disabled=True
+        disabled=True,
+        use_container_width=True
+    )
+with nav_col4:
+    st.link_button(
+        "🏒 NHL 대시보드 ↗", 
+        "https://nhl-uv-prediction-dashboard.streamlit.app/",
+        use_container_width=True
     )
 
 st.divider()
