@@ -2864,6 +2864,76 @@
   ],
   "Tottenham Hotspur": [
     {
+      "name": "Guglielmo Vicario",
+      "pos": "G",
+      "position_name": "Goalkeeper"
+    },
+    {
+      "name": "Cristian Romero",
+      "pos": "D",
+      "position_name": "Defender"
+    },
+    {
+      "name": "Micky van de Ven",
+      "pos": "D",
+      "position_name": "Defender"
+    },
+    {
+      "name": "Pedro Porro",
+      "pos": "D",
+      "position_name": "Defender"
+    },
+    {
+      "name": "Destiny Udogie",
+      "pos": "D",
+      "position_name": "Defender"
+    },
+    {
+      "name": "Ben Davies",
+      "pos": "D",
+      "position_name": "Defender"
+    },
+    {
+      "name": "James Maddison",
+      "pos": "M",
+      "position_name": "Midfielder"
+    },
+    {
+      "name": "Rodrigo Bentancur",
+      "pos": "M",
+      "position_name": "Midfielder"
+    },
+    {
+      "name": "Dejan Kulusevski",
+      "pos": "M",
+      "position_name": "Midfielder"
+    },
+    {
+      "name": "Pape Matar Sarr",
+      "pos": "M",
+      "position_name": "Midfielder"
+    },
+    {
+      "name": "Son Heung-Min",
+      "pos": "F",
+      "position_name": "Forward"
+    },
+    {
+      "name": "Dominic Solanke",
+      "pos": "F",
+      "position_name": "Forward"
+    },
+    {
+      "name": "Brennan Johnson",
+      "pos": "F",
+      "position_name": "Forward"
+    },
+    {
+      "name": "Richarlison",
+      "pos": "F",
+      "position_name": "Forward"
+    },
+    {
       "name": "Martin Dúbravka",
       "pos": "G",
       "position_name": "Goalkeeper"
@@ -2877,11 +2947,6 @@
       "name": "Antonín Kinsky",
       "pos": "G",
       "position_name": "Goalkeeper"
-    },
-    {
-      "name": "Ben Davies",
-      "pos": "D",
-      "position_name": "Defender"
     },
     {
       "name": "Andy Robertson",
@@ -2899,22 +2964,7 @@
       "position_name": "Defender"
     },
     {
-      "name": "Pedro Porro",
-      "pos": "D",
-      "position_name": "Defender"
-    },
-    {
       "name": "Jan Paul van Hecke",
-      "pos": "D",
-      "position_name": "Defender"
-    },
-    {
-      "name": "Destiny Udogie",
-      "pos": "D",
-      "position_name": "Defender"
-    },
-    {
-      "name": "Micky van de Ven",
       "pos": "D",
       "position_name": "Defender"
     },
@@ -2929,16 +2979,6 @@
       "position_name": "Defender"
     },
     {
-      "name": "James Maddison",
-      "pos": "M",
-      "position_name": "Midfielder"
-    },
-    {
-      "name": "Rodrigo Bentancur",
-      "pos": "M",
-      "position_name": "Midfielder"
-    },
-    {
       "name": "Sandro Tonali",
       "pos": "M",
       "position_name": "Midfielder"
@@ -2950,16 +2990,6 @@
     },
     {
       "name": "Conor Gallagher",
-      "pos": "M",
-      "position_name": "Midfielder"
-    },
-    {
-      "name": "Dejan Kulusevski",
-      "pos": "M",
-      "position_name": "Midfielder"
-    },
-    {
-      "name": "Pape Matar Sarr",
       "pos": "M",
       "position_name": "Midfielder"
     },
@@ -2987,16 +3017,6 @@
       "name": "Luca Williams-Barnett",
       "pos": "M",
       "position_name": "Midfielder"
-    },
-    {
-      "name": "Richarlison",
-      "pos": "F",
-      "position_name": "Forward"
-    },
-    {
-      "name": "Dominic Solanke",
-      "pos": "F",
-      "position_name": "Forward"
     },
     {
       "name": "Omar Marmoush",
