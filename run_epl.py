@@ -62,13 +62,13 @@ def normalize_team_name(raw_name):
 
 def calculate_player_uv(player_data):
     """
-    [1. 개인별 UV 산출 함수 (0.1 ~ 3.0 Scale)]
+    [1. 개인별 UV 산출 함수 (0.1 ~ 2.0 Scale)]
     기준점: 리그 평균 선수 평점(6.80) = 1.0 UV
     공식:
-      - GK: min(max(1.0 + (rating - 6.8) * 1.2, 0.1), 3.0)
-      - DF: min(max(1.0 + (rating - 6.8) * 1.1, 0.1), 3.0)
-      - MF: min(max(1.0 + (rating - 6.8) * 1.0, 0.1), 3.0)
-      - FW: min(max(1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5), 0.1), 3.0)
+      - GK: min(max(1.0 + (rating - 6.8) * 1.2, 0.1), 2.0)
+      - DF: min(max(1.0 + (rating - 6.8) * 1.1, 0.1), 2.0)
+      - MF: min(max(1.0 + (rating - 6.8) * 1.0, 0.1), 2.0)
+      - FW: min(max(1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5), 0.1), 2.0)
     """
     p_name_raw = player_data.get("name", "")
     p_name = normalize_player_name(p_name_raw)
@@ -103,7 +103,7 @@ def calculate_player_uv(player_data):
     else:
         raw_uv = 1.0 + (rating - 6.8) * 1.0
 
-    return round(min(max(raw_uv, 0.1), 3.0), 3)
+    return round(min(max(raw_uv, 0.1), 2.0), 3)
 
 
 def get_team_roster(team_name):
@@ -151,8 +151,8 @@ def calculate_wuv(team_name):
     st_tot_sum = sum(st_uvs)
     gk_wuv = round(team_wuv * (pos_sums["GK"] / st_tot_sum), 2) if st_tot_sum > 0 else 1.0
     df_wuv = round(team_wuv * (pos_sums["DF"] / st_tot_sum), 2) if st_tot_sum > 0 else 4.0
-    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
-    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
+    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
+    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
     
     return {
         "team_wuv": team_wuv,
@@ -443,5 +443,5 @@ def run_pipeline():
     print(f"\n🎉 성공적으로 EPL 공식 정규 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!", flush=True)
 
 if __name__ == "__main__":
-    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (개인 UV 0.1~3.0 & 팀 11.0 WUV 합성 로직 적용)", flush=True)
+    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (개인 UV 0.1~2.0 & 팀 11.0 WUV 합성 로직 적용)", flush=True)
     run_pipeline()
