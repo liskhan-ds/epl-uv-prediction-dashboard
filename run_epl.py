@@ -47,22 +47,9 @@ TEAM_NAME_MAP = {
 }
 
 # 선수별 시즌/최근 평점(rating) 및 goals_per90 룩업 테이블 (FotMob/공식 API 기준 데이터)
-PLAYER_STATS_LOOKUP = {
-    # 맨체스터 시티
-    "Erling Haaland": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
-    "엘링 홀란드": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
-    "Phil Foden": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
-    "필 포든": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
-    "Bernardo Silva": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
-    "베르나르두 실바": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
-    "Gianluigi Donnarumma": {"rating": 7.30, "pos": "GK", "goals_per90": 0.0},
-    "잔루이지 돈나룸마": {"rating": 7.30, "pos": "GK", "goals_per90": 0.0},
-    "Rúben Dias": {"rating": 7.45, "pos": "DF", "goals_per90": 0.05},
-    "후벵 디아스": {"rating": 7.45, "pos": "DF", "goals_per90": 0.05},
-    "Josko Gvardiol": {"rating": 7.40, "pos": "DF", "goals_per90": 0.12},
-    "요슈코 그바르디올": {"rating": 7.40, "pos": "DF", "goals_per90": 0.12},
 
-    # 아스널
+PLAYER_STATS_LOOKUP = {
+    # 1. 아스널 (Arsenal)
     "Bukayo Saka": {"rating": 7.75, "pos": "FW", "goals_per90": 0.48},
     "부카요 사카": {"rating": 7.75, "pos": "FW", "goals_per90": 0.48},
     "Martin Ødegaard": {"rating": 7.65, "pos": "MF", "goals_per90": 0.35},
@@ -75,12 +62,18 @@ PLAYER_STATS_LOOKUP = {
     "가브리엘 마갈량이스": {"rating": 7.45, "pos": "DF", "goals_per90": 0.10},
     "Viktor Gyökeres": {"rating": 7.70, "pos": "FW", "goals_per90": 0.65},
     "빅토르 예케레스": {"rating": 7.70, "pos": "FW", "goals_per90": 0.65},
-    "Ben White": {"rating": 7.30, "pos": "DF", "goals_per90": 0.05},
-    "벤 화이트": {"rating": 7.30, "pos": "DF", "goals_per90": 0.05},
-    "David Raya": {"rating": 7.25, "pos": "GK", "goals_per90": 0.0},
-    "다비드 라야": {"rating": 7.25, "pos": "GK", "goals_per90": 0.0},
 
-    # 리버풀
+    # 2. 맨체스터 시티 (Man City)
+    "Erling Haaland": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
+    "엘링 홀란드": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
+    "Phil Foden": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
+    "필 포든": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
+    "Bernardo Silva": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
+    "베르나르두 실바": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
+    "Rúben Dias": {"rating": 7.45, "pos": "DF", "goals_per90": 0.05},
+    "후벵 디아스": {"rating": 7.45, "pos": "DF", "goals_per90": 0.05},
+
+    # 3. 리버풀 (Liverpool)
     "Virgil van Dijk": {"rating": 7.55, "pos": "DF", "goals_per90": 0.08},
     "버질 반 다이크": {"rating": 7.55, "pos": "DF", "goals_per90": 0.08},
     "Trent Alexander-Arnold": {"rating": 7.50, "pos": "DF", "goals_per90": 0.12},
@@ -88,16 +81,82 @@ PLAYER_STATS_LOOKUP = {
     "Florian Wirtz": {"rating": 7.70, "pos": "MF", "goals_per90": 0.45},
     "플로리안 비르츠": {"rating": 7.70, "pos": "MF", "goals_per90": 0.45},
 
-    # 첼시
+    # 4. 첼시 (Chelsea)
     "Cole Palmer": {"rating": 7.80, "pos": "FW", "goals_per90": 0.60},
     "콜 파머": {"rating": 7.80, "pos": "FW", "goals_per90": 0.60},
-    "Moisés Caicedo": {"rating": 7.40, "pos": "MF", "goals_per90": 0.05},
-    "모이세스 카이세도": {"rating": 7.40, "pos": "MF", "goals_per90": 0.05},
 
-    # 맨체스터 유나이티드
+    # 5. 맨체스터 유나이티드 (Man Utd)
     "Bruno Fernandes": {"rating": 7.55, "pos": "MF", "goals_per90": 0.30},
     "브루노 페르난데스": {"rating": 7.55, "pos": "MF", "goals_per90": 0.30},
+
+    # 6. 아스톤 빌라 (Aston Villa)
+    "Ollie Watkins": {"rating": 7.35, "pos": "FW", "goals_per90": 0.45},
+    "올리 와트킨스": {"rating": 7.35, "pos": "FW", "goals_per90": 0.45},
+    "John McGinn": {"rating": 7.15, "pos": "MF", "goals_per90": 0.15},
+    "존 맥긴": {"rating": 7.15, "pos": "MF", "goals_per90": 0.15},
+
+    # 7. 뉴캐슬 유나이티드 (Newcastle)
+    "Alexander Isak": {"rating": 7.45, "pos": "FW", "goals_per90": 0.55},
+    "알렉산데르 이삭": {"rating": 7.45, "pos": "FW", "goals_per90": 0.55},
+    "Anthony Gordon": {"rating": 7.25, "pos": "FW", "goals_per90": 0.35},
+    "앤서니 고든": {"rating": 7.25, "pos": "FW", "goals_per90": 0.35},
+
+    # 8. 토트넘 홋스퍼 (Tottenham)
+    "James Maddison": {"rating": 7.30, "pos": "MF", "goals_per90": 0.28},
+    "제임스 매디슨": {"rating": 7.30, "pos": "MF", "goals_per90": 0.28},
+    "Dominic Solanke": {"rating": 7.20, "pos": "FW", "goals_per90": 0.40},
+    "도미닉 솔랑케": {"rating": 7.20, "pos": "FW", "goals_per90": 0.40},
+
+    # 9. 브라이튼 (Brighton)
+    "Kaoru Mitoma": {"rating": 7.15, "pos": "FW", "goals_per90": 0.25},
+    "미토마 카오루": {"rating": 7.15, "pos": "FW", "goals_per90": 0.25},
+    "Evan Ferguson": {"rating": 7.05, "pos": "FW", "goals_per90": 0.30},
+
+    # 10. 본머스 (Bournemouth)
+    "Evanilson": {"rating": 7.05, "pos": "FW", "goals_per90": 0.35},
+    "에바닐송": {"rating": 7.05, "pos": "FW", "goals_per90": 0.35},
+
+    # 11. 브렌트포드 (Brentford)
+    "Yoane Wissa": {"rating": 7.05, "pos": "FW", "goals_per90": 0.38},
+    "요안 위사": {"rating": 7.05, "pos": "FW", "goals_per90": 0.38},
+
+    # 12. 풀럼 (Fulham)
+    "Alex Iwobi": {"rating": 7.00, "pos": "MF", "goals_per90": 0.18},
+    "알렉스 이워비": {"rating": 7.00, "pos": "MF", "goals_per90": 0.18},
+
+    # 13. 크리스탈 팰리스 (Crystal Palace)
+    "Jean-Philippe Mateta": {"rating": 7.10, "pos": "FW", "goals_per90": 0.42},
+    "장필리프 마테타": {"rating": 7.10, "pos": "FW", "goals_per90": 0.42},
+
+    # 14. 에버턴 (Everton)
+    "Dwight McNeil": {"rating": 6.95, "pos": "MF", "goals_per90": 0.15},
+    "드와이트 맥닐": {"rating": 6.95, "pos": "MF", "goals_per90": 0.15},
+
+    # 15. 노팅엄 포레스트 (Nottingham Forest)
+    "Chris Wood": {"rating": 6.65, "pos": "FW", "goals_per90": 0.30},
+    "크리스 우드": {"rating": 6.65, "pos": "FW", "goals_per90": 0.30},
+
+    # 16. 입스위치 타운 (Ipswich Town)
+    "Liam Delap": {"rating": 6.55, "pos": "FW", "goals_per90": 0.25},
+    "리암 들랍": {"rating": 6.55, "pos": "FW", "goals_per90": 0.25},
+
+    # 17. 코번트리 시티 (Coventry City)
+    "Haji Wright": {"rating": 6.45, "pos": "FW", "goals_per90": 0.22},
+    "하지 라이트": {"rating": 6.45, "pos": "FW", "goals_per90": 0.22},
+
+    # 18. 헐 시티 (Hull City)
+    "Oscar Estupiñan": {"rating": 6.40, "pos": "FW", "goals_per90": 0.20},
+    "오스카르 에스투피냔": {"rating": 6.40, "pos": "FW", "goals_per90": 0.20},
+
+    # 19. 선덜랜드 (Sunderland)
+    "Wilson Isidor": {"rating": 6.35, "pos": "FW", "goals_per90": 0.18},
+    "윌슨 이시도르": {"rating": 6.35, "pos": "FW", "goals_per90": 0.18},
+
+    # 20. 리즈 유나이티드 (Leeds United)
+    "Daniel James": {"rating": 6.50, "pos": "FW", "goals_per90": 0.20},
+    "다니엘 제임스": {"rating": 6.50, "pos": "FW", "goals_per90": 0.20},
 }
+
 
 from app import TEAMS_ROSTER
 
@@ -118,25 +177,33 @@ def calculate_player_uv(player_data):
       - FW: min(max(1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5), 0.1), 3.0)
     """
     p_name = player_data.get("name", "")
+    pos = str(player_data.get("pos", "MF") or "MF").upper()
+    pos_clean = "GK" if pos in ["GK", "G"] else ("DF" if pos in ["DF", "D"] else ("MF" if pos in ["MF", "M"] else "FW"))
+    
     rating = float(player_data.get("rating", 6.80) or 6.80)
     goals_per90 = float(player_data.get("goals_per90", 0.0) or 0.0)
-    pos = str(player_data.get("pos", "MF") or "MF").upper()
 
-    # Look up player rating overrides
-    for name_key, info in PLAYER_STATS_LOOKUP.items():
-        if name_key.lower() in p_name.lower() or p_name.lower() in name_key.lower():
-            rating = info["rating"]
-            goals_per90 = info.get("goals_per90", goals_per90)
-            pos = info.get("pos", pos)
-            break
+    # 1. DB player_stats 테이블 직접 조회
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT rating, goals_per90, position FROM player_stats WHERE player_name LIKE ? OR player_name = ?", (f"%{p_name}%", p_name))
+        row = cursor.fetchone()
+        conn.close()
+        if row:
+            rating = float(row[0])
+            goals_per90 = float(row[1])
+            pos_clean = str(row[2])
+    except Exception:
+        pass
 
-    if pos in ["GK", "G"]:
+    if pos_clean in ["GK", "G"]:
         raw_uv = 1.0 + (rating - 6.8) * 1.2
-    elif pos in ["DF", "D"]:
+    elif pos_clean in ["DF", "D"]:
         raw_uv = 1.0 + (rating - 6.8) * 1.1
-    elif pos in ["MF", "M"]:
+    elif pos_clean in ["MF", "M"]:
         raw_uv = 1.0 + (rating - 6.8) * 1.0
-    elif pos in ["FW", "F"]:
+    elif pos_clean in ["FW", "F"]:
         raw_uv = 1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5)
     else:
         raw_uv = 1.0 + (rating - 6.8) * 1.0
@@ -171,13 +238,20 @@ def calculate_wuv(team_name):
     
     team_wuv = 11.0 * (0.85 * st_avg + 0.15 * sub_avg)
     
+    st_df = pd.DataFrame(st_list)
+    sub_df = pd.DataFrame(sub_list)
+    
     return {
         "team_wuv": round(team_wuv, 2),
         "st_avg": round(st_avg, 3),
         "sub_avg": round(sub_avg, 3),
         "starters_detail": st_list,
         "subs_detail": sub_list,
-        "wuv_total": round(team_wuv, 2)
+        "wuv_att": round(team_wuv * 0.6, 2),
+        "wuv_def": round(team_wuv * 0.4, 2),
+        "wuv_total": round(team_wuv, 2),
+        "st_df": st_df,
+        "sub_df": sub_df
     }
 
 def fetch_espn_epl_season_fixtures():
