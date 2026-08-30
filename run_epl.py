@@ -61,11 +61,21 @@ def normalize_team_name(raw_name):
     return raw_name
 
 
-def calculate_player_uv(player_data):
+
+TEAM_CONCEDED_PER_GAME = {
+    "Arsenal": 0.8, "Manchester City": 0.9, "Liverpool": 1.0, "Chelsea": 1.2,
+    "Manchester United": 1.3, "Tottenham Hotspur": 1.35, "Aston Villa": 1.3,
+    "Newcastle United": 1.35, "Brighton & Hove Albion": 1.4, "AFC Bournemouth": 1.45,
+    "Brentford": 1.50, "Crystal Palace": 1.50, "Fulham": 1.55, "Everton": 1.60,
+    "Nottingham Forest": 1.65, "Ipswich Town": 1.75, "Leeds United": 1.80,
+    "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
+}
+
+def calculate_player_uv(player_data, team_name=""):
     p_name_raw = player_data.get("name", "")
     p_name = normalize_player_name(p_name_raw) if "normalize_player_name" in globals() else p_name_raw.strip()
     
-    rating = 6.80
+    rating = None
     goals_per90 = 0.0
     position = player_data.get("pos", "M")
     
@@ -85,46 +95,40 @@ def calculate_player_uv(player_data):
             
     pos_clean = "GK" if position in ["G", "GK"] else ("DF" if position in ["D", "DF"] else ("MF" if position in ["M", "MF"] else "FW"))
     
-    if pos_clean == "GK":
-        raw_uv = 1.0 + (rating - 6.8) * 0.60
-    elif pos_clean == "DF":
-        raw_uv = 1.0 + (rating - 6.8) * 0.55
-    elif pos_clean == "MF":
-        raw_uv = 1.0 + (rating - 6.8) * 0.50
-    else: # FW
-        raw_uv = 1.0 + (rating - 6.8) * 0.50 + (goals_per90 * 0.25)
+    # 1. Fallback logic for missing player data (0.78 UV default)
+    if rating is None:
+        raw_uv = 0.78
+    elif rating >= 6.80:
+        if pos_clean == "GK":
+            raw_uv = 1.0 + (rating - 6.8) * 0.50
+        elif pos_clean == "DF":
+            raw_uv = 1.0 + (rating - 6.8) * 0.45
+        elif pos_clean == "MF":
+            raw_uv = 1.0 + (rating - 6.8) * 0.40
+        else:
+            raw_uv = 1.0 + (rating - 6.8) * 0.40 + (goals_per90 * 0.20)
+    else:
+        # rating < 6.8: (rating - 6.8) * 0.70 (1.5x penalty)
+        raw_uv = 1.0 + (rating - 6.8) * 0.70 + (goals_per90 * 0.20 if pos_clean == "FW" else 0.0)
+        
+    # 2. Defense/GK conceded penalty if team conceded > 1.4 per game
+    conc = TEAM_CONCEDED_PER_GAME.get(team_name, 1.30)
+    if pos_clean in ["GK", "DF"] and conc > 1.4:
+        def_penalty = min(0.15, round(0.08 + (conc - 1.4) * 0.14, 3))
+        raw_uv -= def_penalty
         
     return round(min(max(raw_uv, 0.1), 2.0), 3)
-
-def get_team_roster(team_name):
-    if not os.path.exists("rosters_2026.json"):
-        return {"starters": [], "subs": []}
-    with open("rosters_2026.json", "r", encoding="utf-8") as f:
-        rosters = json.load(f)
-        
-    normalized_map = {normalize_team_name(k): v for k, v in rosters.items()}
-    norm_tname = normalize_team_name(team_name)
-    plist = normalized_map.get(norm_tname, [])
-    
-    gks = [p for p in plist if p.get("pos") in ["G", "GK"]]
-    dfs = [p for p in plist if p.get("pos") in ["D", "DF"]]
-    mfs = [p for p in plist if p.get("pos") in ["M", "MF"]]
-    fws = [p for p in plist if p.get("pos") in ["F", "FW"]]
-    
-    starters = gks[:1] + dfs[:4] + mfs[:3] + fws[:3]
-    subs = (gks[1:2] + dfs[4:6] + mfs[3:5] + fws[3:5])[:5]
-    return {"starters": starters, "subs": subs}
 
 def calculate_wuv(team_name):
     roster = get_team_roster(team_name)
     starters = roster.get("starters", [])
     subs = roster.get("subs", [])
     
-    st_uvs = [calculate_player_uv(p) for p in starters]
-    sub_uvs = [calculate_player_uv(p) for p in subs]
+    st_uvs = [calculate_player_uv(p, team_name) for p in starters]
+    sub_uvs = [calculate_player_uv(p, team_name) for p in subs]
     
-    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 1.0
-    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 1.0
+    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 0.78
+    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.78
     
     team_wuv = round(11.0 * (0.85 * st_avg + 0.15 * sub_avg), 2)
     
@@ -132,7 +136,7 @@ def calculate_wuv(team_name):
     pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
     starters_detail = []
     for p in starters:
-        uv = calculate_player_uv(p)
+        uv = calculate_player_uv(p, team_name)
         pos = p.get("pos", "M")
         pos_clean = "GK" if pos in ["G","GK"] else ("DF" if pos in ["D","DF"] else ("MF" if pos in ["M","MF"] else "FW"))
         pos_sums[pos_clean] += uv
@@ -141,13 +145,14 @@ def calculate_wuv(team_name):
     st_tot_sum = sum(st_uvs)
     gk_wuv = round(team_wuv * (pos_sums["GK"] / st_tot_sum), 2) if st_tot_sum > 0 else 1.0
     df_wuv = round(team_wuv * (pos_sums["DF"] / st_tot_sum), 2) if st_tot_sum > 0 else 4.0
-    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
-    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
-    
+    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
+    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
     return {
         "team_wuv": team_wuv,
         "st_avg": round(st_avg, 3),
         "sub_avg": round(sub_avg, 3),
+        "st_sum": round(st_tot_sum, 3),
+        "sub_sum": round(sum(sub_uvs), 3),
         "gk_wuv": gk_wuv,
         "df_wuv": df_wuv,
         "mf_wuv": mf_wuv,
@@ -197,11 +202,12 @@ def ensure_team_roster(team_name):
             ]
         }
 
+
 def get_match_prediction(home_team, away_team):
     h_info = calculate_wuv(home_team)
     a_info = calculate_wuv(away_team)
     
-    h_total = h_info["team_wuv"] + 0.25  # 홈 어드밴티지 +0.25 WUV
+    h_total = h_info["team_wuv"] + 0.25
     a_total = a_info["team_wuv"]
     
     gap = h_total - a_total
@@ -233,8 +239,7 @@ def get_match_prediction(home_team, away_team):
     
     if code == "DRAW" and sc_h != sc_a:
         sc_h = sc_a = int(round((sc_h + sc_a) / 2.0))
-        
-    return {
+        return {
         "home_wuv": h_info,
         "away_wuv": a_info,
         "h_total": h_total,
@@ -248,189 +253,6 @@ def get_match_prediction(home_team, away_team):
         "sc_h": sc_h,
         "sc_a": sc_a
     }
-
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS predictions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT NOT NULL,
-        uk_date TEXT,
-        kst_date TEXT,
-        round_name TEXT,
-        home_team TEXT NOT NULL,
-        visit_team TEXT NOT NULL,
-        predicted_winner TEXT NOT NULL,
-        predicted_gap REAL NOT NULL,
-        prob_home REAL NOT NULL,
-        prob_draw REAL NOT NULL,
-        prob_away REAL NOT NULL,
-        home_uv REAL NOT NULL,
-        visit_uv REAL NOT NULL,
-        score_home INTEGER,
-        score_away INTEGER,
-        actual_winner TEXT,
-        actual_score_home INTEGER,
-        actual_score_away INTEGER,
-        is_correct INTEGER,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(date, home_team, visit_team) ON CONFLICT REPLACE
-    )
-    """)
-    
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS player_stats (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        team_name TEXT NOT NULL,
-        player_name TEXT NOT NULL,
-        position TEXT NOT NULL,
-        rating REAL NOT NULL,
-        goals_per90 REAL NOT NULL,
-        player_uv REAL NOT NULL,
-        UNIQUE(team_name, player_name) ON CONFLICT REPLACE
-    )
-    """)
-    
-    cursor.execute("PRAGMA table_info(predictions)")
-    cols = [col[1] for col in cursor.fetchall()]
-    for c in ["uk_date", "kst_date", "round_name"]:
-        if c not in cols:
-            cursor.execute(f"ALTER TABLE predictions ADD COLUMN {c} TEXT")
-    conn.commit()
-    conn.close()
-
-def parse_timezones(utc_iso_str):
-    dt_utc = datetime.fromisoformat(utc_iso_str.replace("Z", "+00:00"))
-    uk_offset = 1 if 4 <= dt_utc.month <= 10 else 0
-    dt_uk = dt_utc + timedelta(hours=uk_offset)
-    dt_kst = dt_utc + timedelta(hours=9)
-    uk_date_str = dt_uk.strftime("%Y-%m-%d %H:%M (영국)")
-    kst_date_str = dt_kst.strftime("%Y-%m-%d %H:%M (KST)")
-    return dt_uk.strftime("%Y-%m-%d"), uk_date_str, kst_date_str, dt_uk
-
-def run_pipeline():
-    init_db()
-    
-    events = fetch_espn_epl_season_fixtures()
-    print(f"📡 수집된 EPL 공식 정규 시즌 경기 수: {len(events)} 경기", flush=True)
-    
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
-    synced_count = 0
-    total_rounds = len(events) // 10
-    
-    for r_idx in range(total_rounds):
-        r_events = events[r_idx*10 : (r_idx+1)*10]
-        
-        _, first_uk_str, _, dt_first_uk = parse_timezones(r_events[0]["date"])
-        _, last_uk_str, _, dt_last_uk = parse_timezones(r_events[-1]["date"])
-        
-        round_title = f"Round {r_idx+1:02d} ({dt_first_uk.strftime('%Y-%m-%d')} ~ {dt_last_uk.strftime('%m-%d')})"
-        print(f"\n=== [{round_title}] 매치업 및 팀 11.0 WUV 상세 데이터 검증 ===", flush=True)
-        
-        for event in r_events:
-            try:
-                event_id = event["id"]
-                status_type = event["status"]["type"]["name"]
-                match_date_utc = event["date"]
-                
-                uk_day, uk_str, kst_str, _ = parse_timezones(match_date_utc)
-                
-                competition = event["competitions"][0]
-                competitors = competition["competitors"]
-                
-                home_comp = [c for c in competitors if c.get("homeAway") == "home"][0]
-                away_comp = [c for c in competitors if c.get("homeAway") == "away"][0]
-                
-                home_raw = home_comp["team"]["displayName"]
-                away_raw = away_comp["team"]["displayName"]
-                
-                home_team = normalize_team_name(home_raw)
-                away_team = normalize_team_name(away_raw)
-                
-                ensure_team_roster(home_team)
-                ensure_team_roster(away_team)
-                
-                pred = get_match_prediction(home_team, away_team)
-                h_wuv = pred["home_wuv"]
-                a_wuv = pred["away_wuv"]
-                
-                # [3. 데이터 검증 및 콘솔 로그 출력]
-                print(f"\n⚽ [{home_team}] vs [{away_team}] 매치업 WUV 검증:", flush=True)
-                print(f"   • [{home_team}] 팀 최종 11.0 WUV: {h_wuv['team_wuv']} WUV (선발 평균: {h_wuv['st_avg']} UV, 교체 평균: {h_wuv['sub_avg']} UV)", flush=True)
-                print(f"     - 선발 11명 개인 UV: ", end="", flush=True)
-                for p in h_wuv['starters_detail']:
-                    print(f"{p['name']}({p['pos']}:{p['uv']}) ", end="", flush=True)
-                print("", flush=True)
-                
-                print(f"   • [{away_team}] 팀 최종 11.0 WUV: {a_wuv['team_wuv']} WUV (선발 평균: {a_wuv['st_avg']} UV, 교체 평균: {a_wuv['sub_avg']} UV)", flush=True)
-                print(f"     - 선발 11명 개인 UV: ", end="", flush=True)
-                for p in a_wuv['starters_detail']:
-                    print(f"{p['name']}({p['pos']}:{p['uv']}) ", end="", flush=True)
-                print("", flush=True)
-                
-                actual_winner = ""
-                actual_sc_h = None
-                actual_sc_a = None
-                is_correct = None
-                
-                if status_type in ["STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_AFTER_EXTRA_TIME"]:
-                    actual_sc_h = int(home_comp.get("score", 0))
-                    actual_sc_a = int(away_comp.get("score", 0))
-                    
-                    if actual_sc_h > actual_sc_a:
-                        actual_winner = home_team
-                    elif actual_sc_a > actual_sc_h:
-                        actual_winner = away_team
-                    else:
-                        actual_winner = "무승부 (Draw)"
-                        
-                    is_correct = 1 if (pred["winner"] == actual_winner) else 0
-                    
-                cursor.execute("""
-                INSERT INTO predictions (
-                    date, uk_date, kst_date, round_name, home_team, visit_team,
-                    predicted_winner, predicted_gap, prob_home, prob_draw, prob_away,
-                    home_uv, visit_uv, score_home, score_away, actual_winner,
-                    actual_score_home, actual_score_away, is_correct
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(date, home_team, visit_team) DO UPDATE SET
-                    uk_date=excluded.uk_date,
-                    kst_date=excluded.kst_date,
-                    round_name=excluded.round_name,
-                    predicted_winner=excluded.predicted_winner,
-                    predicted_gap=excluded.predicted_gap,
-                    prob_home=excluded.prob_home,
-                    prob_draw=excluded.prob_draw,
-                    prob_away=excluded.prob_away,
-                    home_uv=excluded.home_uv,
-                    visit_uv=excluded.visit_uv,
-                    score_home=excluded.score_home,
-                    score_away=excluded.score_away,
-                    actual_winner=excluded.actual_winner,
-                    actual_score_home=excluded.actual_score_home,
-                    actual_score_away=excluded.actual_score_away,
-                    is_correct=excluded.is_correct
-                """, (
-                    uk_day, uk_str, kst_str, round_title, home_team, away_team,
-                    pred["winner"], pred["gap"], pred["p_home"], pred["p_draw"], pred["p_away"],
-                    pred["h_total"], pred["a_total"], pred["sc_h"], pred["sc_a"],
-                    actual_winner, actual_sc_h, actual_sc_a, is_correct
-                ))
-                
-                synced_count += 1
-                status_disp = f"실제: {actual_sc_h}-{actual_sc_a} {actual_winner}" if actual_winner else "대기중"
-                print(f"  ✓ 예측 결과: {pred['winner']} ({status_disp})", flush=True)
-                
-            except Exception as ex:
-                print(f"❌ 경기 동기화 실패: {ex}", flush=True)
-                
-    conn.commit()
-    conn.close()
-    print(f"\n🎉 성공적으로 EPL 공식 정규 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!", flush=True)
 
 if __name__ == "__main__":
     print(f"🚀 EPL 정규 시즌 파이프라인 시작 (개인 UV 0.1~2.0 & 팀 11.0 WUV 합성 로직 적용)", flush=True)

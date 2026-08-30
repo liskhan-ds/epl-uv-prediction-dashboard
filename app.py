@@ -1,3 +1,31 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
+
+import json
+
+TEAM_NAME_MAP = {
+    "Manchester United": "맨체스터 유나이티드", "Arsenal": "아스널", "Manchester City": "맨체스터 시티",
+    "Liverpool": "리버풀", "Chelsea": "첼시", "Tottenham Hotspur": "토트넘 홋스퍼", "Tottenham": "토트넘 홋스퍼",
+    "Newcastle United": "뉴캐슬 유나이티드", "Newcastle": "뉴캐슬 유나이티드", "Aston Villa": "아스톤 빌라",
+    "West Ham United": "웨스트햄 유나이티드", "West Ham": "웨스트햄 유나이티드", "Brighton & Hove Albion": "브라이튼",
+    "Brighton": "브라이튼", "Fulham": "풀럼", "Crystal Palace": "크리스탈 팰리스", "Everton": "에버턴",
+    "Wolverhampton Wanderers": "울버햄튼", "Wolves": "울버햄튼", "AFC Bournemouth": "본머스",
+    "Bournemouth": "본머스", "Brentford": "브렌트포드", "Nottingham Forest": "노팅엄 포레스트",
+    "Leicester City": "레스터 시티", "Ipswich Town": "입스위치 타운", "Southampton": "사우샘프턴",
+    "Sunderland": "선덜랜드", "Burnley": "번리", "Leeds United": "리즈 유나이티드", "Leeds": "리즈 유나이티드",
+    "Coventry City": "코번트리 시티", "Coventry": "코번트리 시티", "Hull City": "헐 시티", "Hull": "헐 시티"
+}
+
+
+def normalize_team_name(raw_name):
+    for key, val in TEAM_NAME_MAP.items():
+        if key.lower() in raw_name.lower() or raw_name.lower() in key.lower():
+            return val
+    return raw_name
+
+import json
 
 
 
@@ -2209,11 +2237,12 @@ def calculate_wuv(team_name):
     df_wuv = round(team_wuv * (pos_sums["DF"] / st_tot_sum), 2) if st_tot_sum > 0 else 4.0
     mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
     fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
-    
     return {
         "team_wuv": team_wuv,
         "st_avg": round(st_avg, 3),
         "sub_avg": round(sub_avg, 3),
+        "st_sum": round(st_tot_sum, 3),
+        "sub_sum": round(sum(sub_uvs), 3),
         "gk_wuv": gk_wuv,
         "df_wuv": df_wuv,
         "mf_wuv": mf_wuv,
@@ -2221,33 +2250,26 @@ def calculate_wuv(team_name):
         "starters_detail": starters_detail
     }
 
+
 def get_match_prediction(home_team, away_team):
     h_info = calculate_wuv(home_team)
     a_info = calculate_wuv(away_team)
     
-    # 홈 어드밴티지 (+0.25 UV: 공격 +0.15, 수비 +0.10)
-    h_att = h_info["wuv_att"] + 0.15
-    h_def = h_info["wuv_def"] + 0.10
-    h_total = h_info["wuv_total"] + 0.25
-    
-    a_att = a_info["wuv_att"]
-    a_def = a_info["wuv_def"]
-    a_total = a_info["wuv_total"]
+    h_total = h_info["team_wuv"] + 0.25
+    a_total = a_info["team_wuv"]
     
     gap = h_total - a_total
     
-    # 무승부 룰 (|gap| <= 0.4)
-    if abs(gap) <= 0.4:
+    if abs(gap) <= 0.40:
         winner = "무승부 (Draw)"
         code = "DRAW"
-    elif gap > 0.4:
+    elif gap > 0.40:
         winner = home_team
         code = "HOME"
     else:
         winner = away_team
         code = "AWAY"
         
-    # Softmax 3-Way 확률 (Home / Draw / Away)
     z = gap
     lh = 1.55 * z
     la = -1.55 * z
@@ -2260,24 +2282,15 @@ def get_match_prediction(home_team, away_team):
     p_draw = round((ed / tot) * 100, 1)
     p_away = round((ea / tot) * 100, 1)
     
-    # xG 기대득점 및 스코어
-    xg_h = 1.35 * (h_att / 5.5) * (5.5 / a_def)
-    xg_a = 1.35 * (a_att / 5.5) * (5.5 / h_def)
-    sc_h = int(round(xg_h))
-    sc_a = int(round(xg_a))
+    sc_h = int(round(1.35 * (h_total / 11.0)))
+    sc_a = int(round(1.35 * (a_total / 11.0)))
     
     if code == "DRAW" and sc_h != sc_a:
-        avg_s = int(round((xg_h + xg_a) / 2.0))
-        sc_h, sc_a = avg_s, avg_s
-        
-    return {
+        sc_h = sc_a = int(round((sc_h + sc_a) / 2.0))
+        return {
         "home_wuv": h_info,
         "away_wuv": a_info,
-        "h_att": h_att,
-        "h_def": h_def,
         "h_total": h_total,
-        "a_att": a_att,
-        "a_def": a_def,
         "a_total": a_total,
         "gap": gap,
         "winner": winner,
@@ -2285,131 +2298,35 @@ def get_match_prediction(home_team, away_team):
         "p_home": p_home,
         "p_draw": p_draw,
         "p_away": p_away,
-        "xg_h": xg_h,
-        "xg_a": xg_a,
         "sc_h": sc_h,
         "sc_a": sc_a
     }
 
-# -----------------------------------------------------------------------------
-# 4. 라운드별 10개 경기 매치업 데이터베이스 생성
-# -----------------------------------------------------------------------------
-ROUNDS_MATCHES = {
-    "Round 01 (2026-08-21 ~ 08-24)": [
-        ("아스널", "코번트리 시티", "아스널", 1),
-        ("헐 시티", "맨체스터 유나이티드", "헐 시티", 0),
-        ("에버턴", "크리스탈 팰리스", "에버턴", 0),
-        ("입스위치 타운", "선덜랜드", "입스위치 타운", 1),
-        ("노팅엄 포레스트", "리즈 유나이티드", "리즈 유나이티드", 0),
-        ("브렌트포드", "토트넘 홋스퍼", "브렌트포드", 0),
-        ("브라이튼", "아스톤 빌라", "브라이튼", 0),
-        ("맨체스터 시티", "본머스", "맨체스터 시티", 1),
-        ("뉴캐슬 유나이티드", "리버풀", "무승부 (Draw)", 1),
-        ("풀럼", "첼시", "첼시", 0),
-    ],
-    "Round 02 (2026-08-28 ~ 08-31)": [
-        ("크리스탈 팰리스", "맨체스터 시티", "", None),
-        ("리버풀", "노팅엄 포레스트", "", None),
-        ("본머스", "에버턴", "", None),
-        ("코번트리 시티", "헐 시티", "", None),
-        ("토트넘 홋스퍼", "뉴캐슬 유나이티드", "", None),
-        ("첼시", "브라이튼", "", None),
-        ("리즈 유나이티드", "브렌트포드", "", None),
-        ("선덜랜드", "풀럼", "", None),
-        ("맨체스터 유나이티드", "입스위치 타운", "", None),
-        ("아스톤 빌라", "아스널", "", None),
-    ],
-    "Round 03 (2026-09-04 ~ 09-06)": [
-        ("입스위치 타운", "리버풀", "", None),
-        ("뉴캐슬 유나이티드", "본머스", "", None),
-        ("브렌트포드", "선덜랜드", "", None),
-        ("브라이튼", "리즈 유나이티드", "", None),
-        ("풀럼", "크리스탈 팰리스", "", None),
-        ("맨체스터 시티", "코번트리 시티", "", None),
-        ("노팅엄 포레스트", "토트넘 홋스퍼", "", None),
-        ("헐 시티", "아스톤 빌라", "", None),
-        ("에버턴", "맨체스터 유나이티드", "", None),
-        ("아스널", "첼시", "", None),
-    ]
-}
-
-# -----------------------------------------------------------------------------
-# 5. [상단] 누적 예측 성적표 & 100경기 트래킹 (MLB/NBA 템플릿과 100% 동일)
-# -----------------------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
 def load_data():
     if not os.path.exists(DB_PATH):
-        try:
-            from run_epl import run_pipeline
-            run_pipeline()
-        except Exception:
-            pass
+        return pd.DataFrame([])
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        df_db = pd.read_sql_query("SELECT * FROM predictions ORDER BY date ASC", conn)
+        conn.close()
+        return df_db
+    except Exception:
+        return pd.DataFrame([])
 
-    if os.path.exists(DB_PATH):
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            db_df = pd.read_sql("SELECT * FROM predictions ORDER BY date ASC, id ASC", conn)
-            conn.close()
-            if not db_df.empty:
-                records = []
-                for _, row in db_df.iterrows():
-                    h_team = row["home_team"]
-                    v_team = row["visit_team"]
-                    p = get_match_prediction(h_team, v_team)
-                    records.append({
-                        "date": row["date"],
-                        "uk_date": row["uk_date"] if ("uk_date" in db_df.columns and pd.notna(row["uk_date"])) else row["date"],
-                        "kst_date": row["kst_date"] if ("kst_date" in db_df.columns and pd.notna(row["kst_date"])) else row["date"],
-                        "round_name": row["round_name"] if ("round_name" in db_df.columns and pd.notna(row["round_name"])) else row["date"],
-                        "home_team": h_team,
-                        "visit_team": v_team,
-                        "predicted_winner": row["predicted_winner"],
-                        "predicted_gap": row["predicted_gap"],
-                        "prob_home": row["prob_home"],
-                        "prob_draw": row["prob_draw"],
-                        "prob_away": row["prob_away"],
-                        "actual_winner": row["actual_winner"] if row["actual_winner"] else "",
-                        "is_correct": row["is_correct"] if pd.notna(row["is_correct"]) else None,
-                        "home_uv": row["home_uv"],
-                        "visit_uv": row["visit_uv"],
-                        "res_obj": p
-                    })
-                return pd.DataFrame(records)
-        except Exception:
-            pass
-
-    # DB 미존재 시 Fallback 데이터셋
-    all_records = []
-    for r_date, m_list in ROUNDS_MATCHES.items():
-        for home, away, act_win, _ in m_list:
-            p = get_match_prediction(home, away)
-            is_corr = 1 if (p["winner"] == act_win) else (0 if act_win else None)
-            all_records.append({
-                "date": r_date,
-                "uk_date": r_date,
-                "kst_date": r_date,
-                "round_name": r_date,
-                "home_team": home,
-                "visit_team": away,
-                "predicted_winner": p["winner"],
-                "predicted_gap": p["gap"],
-                "prob_home": p["p_home"],
-                "prob_draw": p["p_draw"],
-                "prob_away": p["p_away"],
-                "actual_winner": act_win,
-                "is_correct": is_corr,
-                "home_uv": p["h_total"],
-                "visit_uv": p["a_total"],
-                "res_obj": p
-            })
-    return pd.DataFrame(all_records)
 
 df = load_data()
 
-df['total_no'] = range(1, len(df) + 1)
-stats_df = df[df['actual_winner'].notna() & (df['actual_winner'] != '')].copy()
+if not df.empty and "actual_winner" in df.columns:
+    df["total_no"] = range(1, len(df) + 1)
+    stats_df = df[df["actual_winner"].notna() & (df["actual_winner"] != "")].copy()
+else:
+    df = pd.DataFrame(columns=[
+        "total_no", "date", "uk_date", "kst_date", "round_name", "home_team", "visit_team",
+        "predicted_winner", "predicted_gap", "prob_home", "prob_draw", "prob_away",
+        "home_uv", "visit_uv", "actual_winner", "actual_score_home", "actual_score_away", "is_correct"
+    ])
+    stats_df = pd.DataFrame([])
 
 st.header("📊 누적 예측 성적표")
 total_stats = len(stats_df)
