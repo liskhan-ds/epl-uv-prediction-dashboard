@@ -2126,51 +2126,41 @@ def ensure_team_roster(team_name):
             ]
         }
 
+
 def calculate_player_uv(player_data):
-    """
-    [1. 개인별 UV 산출 함수 (0.1 ~ 2.0 Scale)]
-    기준점: 리그 평균 선수 평점(6.80) = 1.0 UV
-    공식:
-      - GK: min(max(1.0 + (rating - 6.8) * 1.2, 0.1), 2.0)
-      - DF: min(max(1.0 + (rating - 6.8) * 1.1, 0.1), 2.0)
-      - MF: min(max(1.0 + (rating - 6.8) * 1.0, 0.1), 2.0)
-      - FW: min(max(1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5), 0.1), 2.0)
-    """
     p_name_raw = player_data.get("name", "")
-    p_name = normalize_player_name(p_name_raw)
-    pos = str(player_data.get("pos", "MF") or "MF").upper()
-    pos_clean = "GK" if pos in ["GK", "G"] else ("DF" if pos in ["DF", "D"] else ("MF" if pos in ["MF", "M"] else "FW"))
+    p_name = normalize_player_name(p_name_raw) if "normalize_player_name" in globals() else p_name_raw.strip()
     
-    rating = float(player_data.get("rating", 6.80) or 6.80)
-    goals_per90 = float(player_data.get("goals_per90", 0.0) or 0.0)
-
-    # 1. DB player_stats 테이블 직접 조회
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("SELECT rating, goals_per90, position FROM player_stats WHERE player_name LIKE ? OR player_name = ?", (f"%{p_name}%", p_name))
-        row = cursor.fetchone()
-        conn.close()
-        if row:
-            rating = float(row[0])
-            goals_per90 = float(row[1])
-            pos_clean = str(row[2])
-    except Exception:
-        pass
-
-    if pos_clean in ["GK", "G"]:
-        raw_uv = 1.0 + (rating - 6.8) * 1.2
-    elif pos_clean in ["DF", "D"]:
-        raw_uv = 1.0 + (rating - 6.8) * 1.1
-    elif pos_clean in ["MF", "M"]:
-        raw_uv = 1.0 + (rating - 6.8) * 1.0
-    elif pos_clean in ["FW", "F"]:
-        raw_uv = 1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5)
-    else:
-        raw_uv = 1.0 + (rating - 6.8) * 1.0
-
+    rating = 6.80
+    goals_per90 = 0.0
+    position = player_data.get("pos", "M")
+    
+    if os.path.exists(DB_PATH):
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute("SELECT rating, goals_per90, position FROM player_stats WHERE player_name = ? OR player_name LIKE ?", (p_name, f"%{p_name}%"))
+            row = cursor.fetchone()
+            if row:
+                rating = row[0]
+                goals_per90 = row[1]
+                position = row[2]
+            conn.close()
+        except Exception:
+            pass
+            
+    pos_clean = "GK" if position in ["G", "GK"] else ("DF" if position in ["D", "DF"] else ("MF" if position in ["M", "MF"] else "FW"))
+    
+    if pos_clean == "GK":
+        raw_uv = 1.0 + (rating - 6.8) * 0.60
+    elif pos_clean == "DF":
+        raw_uv = 1.0 + (rating - 6.8) * 0.55
+    elif pos_clean == "MF":
+        raw_uv = 1.0 + (rating - 6.8) * 0.50
+    else: # FW
+        raw_uv = 1.0 + (rating - 6.8) * 0.50 + (goals_per90 * 0.25)
+        
     return round(min(max(raw_uv, 0.1), 2.0), 3)
-
 
 def get_team_roster(team_name):
     if not os.path.exists("rosters_2026.json"):
