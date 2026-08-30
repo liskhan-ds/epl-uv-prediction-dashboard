@@ -2607,7 +2607,7 @@ else:
 if not filtered_df.empty:
     filtered_df['day_no'] = range(1, len(filtered_df) + 1)
     
-    completed_in_round = filtered_df[filtered_df['actual_winner'].notna() & (filtered_df['actual_winner'] != '')]
+    completed_in_round = filtered_df[filtered_df['actual_winner'].notna() & (filtered_df['actual_winner'] != '') & (~filtered_df['actual_winner'].isin(['경기 연기', '경기 취소', '연기됨', '취소됨']))]
     
     col1, col2, col3 = st.columns(3)
     col1.metric("해당 라운드 총 경기 수", f"{len(filtered_df)} 경기")
@@ -2632,12 +2632,14 @@ if not filtered_df.empty:
         lambda r: f"[{r['prob_home']:.1f}% | {r['prob_draw']:.1f}% | {r['prob_away']:.1f}%]", axis=1
     )
     display_df['예상 격차(ΔUV)'] = filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
-    display_df['실제 결과'] = filtered_df.apply(lambda r: f"{int(r['actual_score_home'])} : {int(r['actual_score_away'])} ({r['actual_winner']})" if (pd.notna(r.get('actual_score_home')) and pd.notna(r.get('actual_winner')) and r['actual_winner'] != '') else (r['actual_winner'] if (pd.notna(r.get('actual_winner')) and r['actual_winner'] != '') else "대기중"), axis=1)
+    display_df['실제 결과'] = filtered_df.apply(lambda r: f"{int(r['actual_score_home'])} : {int(r['actual_score_away'])} ({r['actual_winner']})" if (pd.notna(r.get('actual_score_home')) and pd.notna(r.get('actual_winner')) and r['actual_winner'] not in ['', '경기 연기', '경기 취소', '연기됨', '취소됨']) else (r['actual_winner'] if (pd.notna(r.get('actual_winner')) and r['actual_winner'] != '') else "대기중"), axis=1)
     
     def get_status_tag(r):
         act = r['actual_winner']
         if not act or pd.isna(act) or act == '':
             return "⏳ 경기 대기중"
+        if act in ['경기 연기', '경기 취소', '연기됨', '취소됨']:
+            return "🚫 연기/취소 (적중 제외)"
         return "✅ 정답" if r['is_correct'] == 1 else "❌ 오답"
         
     display_df['적중 여부'] = filtered_df.apply(get_status_tag, axis=1)
