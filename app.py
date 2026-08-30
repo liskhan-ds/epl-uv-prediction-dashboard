@@ -2165,6 +2165,16 @@ TEAM_CONCEDED_PER_GAME = {
     "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
 }
 
+
+TEAM_CONCEDED_PER_GAME = {
+    "Arsenal": 0.8, "Manchester City": 0.9, "Liverpool": 1.0, "Chelsea": 1.2,
+    "Manchester United": 1.3, "Tottenham Hotspur": 1.35, "Aston Villa": 1.3,
+    "Newcastle United": 1.35, "Brighton & Hove Albion": 1.4, "AFC Bournemouth": 1.45,
+    "Brentford": 1.50, "Crystal Palace": 1.50, "Fulham": 1.55, "Everton": 1.60,
+    "Nottingham Forest": 1.65, "Ipswich Town": 1.75, "Leeds United": 1.80,
+    "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
+}
+
 def calculate_player_uv(player_data, team_name=""):
     p_name_raw = player_data.get("name", "")
     p_name = normalize_player_name(p_name_raw) if "normalize_player_name" in globals() else p_name_raw.strip()
@@ -2225,7 +2235,7 @@ def calculate_wuv(team_name):
     sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.85
     
     raw_wuv = (0.85 * st_avg + 0.15 * sub_avg)
-    team_wuv = round(11.0 * (raw_wuv / 0.97), 2)
+    team_wuv = round(11.0 * (raw_wuv / 0.878), 2)
     
     # Position detail breakdown
     pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
