@@ -84,7 +84,18 @@ TEAM_GOALS_PER_GAME = {
 
 LOW_POSSESSION_TEAMS = ["Everton", "Nottingham Forest", "Ipswich Town", "Leeds United", "Coventry City", "Sunderland", "Hull City"]
 
-def get_team_roster(team_name):
+MATCHWEEK_1_ABSENCES = {
+    "Arsenal": ["William Saliba", "Jurriën Timber"],
+    "Chelsea": ["Wesley Fofana"],
+    "Fulham": ["Joachim Andersen"],
+    "Manchester United": ["Rasmus Højlund", "Tyrell Malacia"],
+    "Tottenham Hotspur": ["Richarlison"],
+    "Liverpool": ["Stefan Bajcetic"],
+    "Newcastle United": ["Sven Botman"],
+    "Aston Villa": ["Boubacar Kamara"],
+}
+
+def get_team_roster(team_name, absentees=None):
     if not os.path.exists("rosters_2026.json"):
         return {"starters": [], "subs": []}
     with open("rosters_2026.json", "r", encoding="utf-8") as f:
@@ -94,15 +105,22 @@ def get_team_roster(team_name):
     norm_tname = normalize_team_name(team_name)
     plist = normalized_map.get(norm_tname, [])
     
-    gks = [p for p in plist if p.get("pos") in ["G", "GK"]]
-    dfs = [p for p in plist if p.get("pos") in ["D", "DF"]]
-    mfs = [p for p in plist if p.get("pos") in ["M", "MF"]]
-    fws = [p for p in plist if p.get("pos") in ["F", "FW"]]
+    if absentees is None:
+        absentees = MATCHWEEK_1_ABSENCES.get(team_name, [])
+        
+    available = [p for p in plist if p.get("name") not in absentees]
+    
+    for p in available:
+        p["calc_uv"] = calculate_player_uv(p, team_name)
+        
+    gks = sorted([p for p in available if p.get("pos") in ["G", "GK"]], key=lambda x: x["calc_uv"], reverse=True)
+    dfs = sorted([p for p in available if p.get("pos") in ["D", "DF"]], key=lambda x: x["calc_uv"], reverse=True)
+    mfs = sorted([p for p in available if p.get("pos") in ["M", "MF"]], key=lambda x: x["calc_uv"], reverse=True)
+    fws = sorted([p for p in available if p.get("pos") in ["F", "FW"]], key=lambda x: x["calc_uv"], reverse=True)
     
     starters = gks[:1] + dfs[:4] + mfs[:3] + fws[:3]
     subs = (gks[1:2] + dfs[4:6] + mfs[3:5] + fws[3:5])[:5]
     return {"starters": starters, "subs": subs}
-
 def calculate_player_uv(player_data, team_name=""):
     p_name_raw = player_data.get("name", "")
     p_name = normalize_team_name(p_name_raw) if "normalize_team_name" in globals() else p_name_raw.strip()
