@@ -254,8 +254,9 @@ def calculate_wuv(team_name):
         "sub_df": sub_df
     }
 
-def fetch_espn_epl_season_fixtures():
-    url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260815-20261130"
+def fetch_espn_epl_season_fixtures(date_range="20260815-20260826"):
+    # 라운드 1 & 라운드 2 경기 일정만 실시간 수집 (요청 시 추가 확장)
+    url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates={date_range}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
     }
