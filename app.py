@@ -2155,11 +2155,21 @@ def ensure_team_roster(team_name):
         }
 
 
-def calculate_player_uv(player_data):
+
+TEAM_CONCEDED_PER_GAME = {
+    "Arsenal": 0.8, "Manchester City": 0.9, "Liverpool": 1.0, "Chelsea": 1.2,
+    "Manchester United": 1.3, "Tottenham Hotspur": 1.35, "Aston Villa": 1.3,
+    "Newcastle United": 1.35, "Brighton & Hove Albion": 1.4, "AFC Bournemouth": 1.45,
+    "Brentford": 1.50, "Crystal Palace": 1.50, "Fulham": 1.55, "Everton": 1.60,
+    "Nottingham Forest": 1.65, "Ipswich Town": 1.75, "Leeds United": 1.80,
+    "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
+}
+
+def calculate_player_uv(player_data, team_name=""):
     p_name_raw = player_data.get("name", "")
     p_name = normalize_player_name(p_name_raw) if "normalize_player_name" in globals() else p_name_raw.strip()
     
-    rating = 6.80
+    rating = None
     goals_per90 = 0.0
     position = player_data.get("pos", "M")
     
@@ -2179,54 +2189,49 @@ def calculate_player_uv(player_data):
             
     pos_clean = "GK" if position in ["G", "GK"] else ("DF" if position in ["D", "DF"] else ("MF" if position in ["M", "MF"] else "FW"))
     
-    if pos_clean == "GK":
-        raw_uv = 1.0 + (rating - 6.8) * 0.60
-    elif pos_clean == "DF":
-        raw_uv = 1.0 + (rating - 6.8) * 0.55
-    elif pos_clean == "MF":
-        raw_uv = 1.0 + (rating - 6.8) * 0.50
-    else: # FW
-        raw_uv = 1.0 + (rating - 6.8) * 0.50 + (goals_per90 * 0.25)
+    # 1. Baseline 6.65 EPL League Average
+    if rating is None:
+        raw_uv = 0.85
+    elif rating >= 6.65:
+        if pos_clean == "GK":
+            raw_uv = 1.0 + (rating - 6.65) * 0.45
+        elif pos_clean == "DF":
+            raw_uv = 1.0 + (rating - 6.65) * 0.40
+        elif pos_clean == "MF":
+            raw_uv = 1.0 + (rating - 6.65) * 0.35
+        else:
+            raw_uv = 1.0 + (rating - 6.65) * 0.35 + (goals_per90 * 0.18)
+    else:
+        # rating < 6.65 penalty: (rating - 6.65) * 0.65
+        raw_uv = 1.0 + (rating - 6.65) * 0.65 + (goals_per90 * 0.18 if pos_clean == "FW" else 0.0)
         
-    return round(min(max(raw_uv, 0.1), 2.0), 3)
-
-def get_team_roster(team_name):
-    if not os.path.exists("rosters_2026.json"):
-        return {"starters": [], "subs": []}
-    with open("rosters_2026.json", "r", encoding="utf-8") as f:
-        rosters = json.load(f)
+    # 2. Defense/GK conceded penalty if team conceded > 1.4 per game
+    conc = TEAM_CONCEDED_PER_GAME.get(team_name, 1.30)
+    if pos_clean in ["GK", "DF"] and conc > 1.4:
+        def_penalty = min(0.12, round(0.04 + (conc - 1.4) * 0.10, 3))
+        raw_uv -= def_penalty
         
-    normalized_map = {normalize_team_name(k): v for k, v in rosters.items()}
-    norm_tname = normalize_team_name(team_name)
-    plist = normalized_map.get(norm_tname, [])
-    
-    gks = [p for p in plist if p.get("pos") in ["G", "GK"]]
-    dfs = [p for p in plist if p.get("pos") in ["D", "DF"]]
-    mfs = [p for p in plist if p.get("pos") in ["M", "MF"]]
-    fws = [p for p in plist if p.get("pos") in ["F", "FW"]]
-    
-    starters = gks[:1] + dfs[:4] + mfs[:3] + fws[:3]
-    subs = (gks[1:2] + dfs[4:6] + mfs[3:5] + fws[3:5])[:5]
-    return {"starters": starters, "subs": subs}
+    return round(min(max(raw_uv, 0.4), 2.0), 3)
 
 def calculate_wuv(team_name):
     roster = get_team_roster(team_name)
     starters = roster.get("starters", [])
     subs = roster.get("subs", [])
     
-    st_uvs = [calculate_player_uv(p) for p in starters]
-    sub_uvs = [calculate_player_uv(p) for p in subs]
+    st_uvs = [calculate_player_uv(p, team_name) for p in starters]
+    sub_uvs = [calculate_player_uv(p, team_name) for p in subs]
     
-    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 1.0
-    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 1.0
+    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 0.95
+    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.85
     
-    team_wuv = round(11.0 * (0.85 * st_avg + 0.15 * sub_avg), 2)
+    raw_wuv = (0.85 * st_avg + 0.15 * sub_avg)
+    team_wuv = round(11.0 * (raw_wuv / 0.97), 2)
     
     # Position detail breakdown
     pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
     starters_detail = []
     for p in starters:
-        uv = calculate_player_uv(p)
+        uv = calculate_player_uv(p, team_name)
         pos = p.get("pos", "M")
         pos_clean = "GK" if pos in ["G","GK"] else ("DF" if pos in ["D","DF"] else ("MF" if pos in ["M","MF"] else "FW"))
         pos_sums[pos_clean] += uv
@@ -2235,8 +2240,9 @@ def calculate_wuv(team_name):
     st_tot_sum = sum(st_uvs)
     gk_wuv = round(team_wuv * (pos_sums["GK"] / st_tot_sum), 2) if st_tot_sum > 0 else 1.0
     df_wuv = round(team_wuv * (pos_sums["DF"] / st_tot_sum), 2) if st_tot_sum > 0 else 4.0
-    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
-    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 2.0
+    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
+    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
+    
     return {
         "team_wuv": team_wuv,
         "st_avg": round(st_avg, 3),
@@ -2249,7 +2255,6 @@ def calculate_wuv(team_name):
         "fw_wuv": fw_wuv,
         "starters_detail": starters_detail
     }
-
 
 def get_match_prediction(home_team, away_team):
     h_info = calculate_wuv(home_team)
