@@ -46,61 +46,57 @@ TEAM_NAME_MAP = {
     "Hull": "헐 시티",
 }
 
-POSITION_BASE_UV = {
-    "GK": {"att_uv": 0.15, "def_uv": 0.50}, "G": {"att_uv": 0.15, "def_uv": 0.50},
-    "DF": {"att_uv": 0.35, "def_uv": 0.55}, "D": {"att_uv": 0.35, "def_uv": 0.55},
-    "MF": {"att_uv": 0.45, "def_uv": 0.45}, "M": {"att_uv": 0.45, "def_uv": 0.45},
-    "FW": {"att_uv": 0.65, "def_uv": 0.25}, "F": {"att_uv": 0.65, "def_uv": 0.25},
-}
+# 선수별 시즌/최근 평점(rating) 및 goals_per90 룩업 테이블 (FotMob/공식 API 기준 데이터)
+PLAYER_STATS_LOOKUP = {
+    # 맨체스터 시티
+    "Erling Haaland": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
+    "엘링 홀란드": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
+    "Phil Foden": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
+    "필 포든": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
+    "Bernardo Silva": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
+    "베르나르두 실바": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
+    "Gianluigi Donnarumma": {"rating": 7.30, "pos": "GK", "goals_per90": 0.0},
+    "잔루이지 돈나룸마": {"rating": 7.30, "pos": "GK", "goals_per90": 0.0},
+    "Rúben Dias": {"rating": 7.45, "pos": "DF", "goals_per90": 0.05},
+    "후벵 디아스": {"rating": 7.45, "pos": "DF", "goals_per90": 0.05},
+    "Josko Gvardiol": {"rating": 7.40, "pos": "DF", "goals_per90": 0.12},
+    "요슈코 그바르디올": {"rating": 7.40, "pos": "DF", "goals_per90": 0.12},
 
-PLAYER_UV_LOOKUP = {
-    "Erling Haaland": {"att_uv": 0.90, "def_uv": 0.20},
-    "Mohamed Salah": {"att_uv": 0.85, "def_uv": 0.25},
-    "Bukayo Saka": {"att_uv": 0.80, "def_uv": 0.35},
-    "Cole Palmer": {"att_uv": 0.85, "def_uv": 0.30},
-    "Dejan Kulusevski": {"att_uv": 0.65, "def_uv": 0.35},
-    "Yang Min-Hyeok": {"att_uv": 0.55, "def_uv": 0.30},
-    "Wilson Odobert": {"att_uv": 0.60, "def_uv": 0.30},
-    "Phil Foden": {"att_uv": 0.75, "def_uv": 0.35},
-    "Bruno Fernandes": {"att_uv": 0.70, "def_uv": 0.35},
-    "Alexander Isak": {"att_uv": 0.80, "def_uv": 0.20},
-    "Ollie Watkins": {"att_uv": 0.80, "def_uv": 0.25},
-    "Jarrod Bowen": {"att_uv": 0.75, "def_uv": 0.30},
-    "Gabriel Martinelli": {"att_uv": 0.65, "def_uv": 0.30},
-    "Kai Havertz": {"att_uv": 0.60, "def_uv": 0.35},
-    "Marcus Rashford": {"att_uv": 0.65, "def_uv": 0.25},
-    "Alejandro Garnacho": {"att_uv": 0.60, "def_uv": 0.30},
-    "Rasmus Højlund": {"att_uv": 0.60, "def_uv": 0.25},
-    "Rasmus Hojlund": {"att_uv": 0.60, "def_uv": 0.25},
-    "Luis Díaz": {"att_uv": 0.70, "def_uv": 0.30},
-    "Luis Diaz": {"att_uv": 0.70, "def_uv": 0.30},
-    "Darwin Núñez": {"att_uv": 0.65, "def_uv": 0.25},
-    "Darwin Nunez": {"att_uv": 0.65, "def_uv": 0.25},
-    "Nicolas Jackson": {"att_uv": 0.65, "def_uv": 0.25},
-    "Pedro Neto": {"att_uv": 0.65, "def_uv": 0.30},
-    "Dominic Solanke": {"att_uv": 0.65, "def_uv": 0.25},
-    "Anthony Gordon": {"att_uv": 0.70, "def_uv": 0.30},
-    "Leon Bailey": {"att_uv": 0.70, "def_uv": 0.25},
-    "Rodri": {"att_uv": 0.55, "def_uv": 0.65},
-    "Declan Rice": {"att_uv": 0.50, "def_uv": 0.60},
-    "Martin Ødegaard": {"att_uv": 0.75, "def_uv": 0.35},
-    "Martin Odegaard": {"att_uv": 0.75, "def_uv": 0.35},
-    "Bernardo Silva": {"att_uv": 0.65, "def_uv": 0.45},
-    "Alexis Mac Allister": {"att_uv": 0.55, "def_uv": 0.45},
-    "Dominik Szoboszlai": {"att_uv": 0.60, "def_uv": 0.40},
-    "Moisés Caicedo": {"att_uv": 0.40, "def_uv": 0.60},
-    "Enzo Fernández": {"att_uv": 0.55, "def_uv": 0.45},
-    "James Maddison": {"att_uv": 0.70, "def_uv": 0.30},
-    "Virgil van Dijk": {"att_uv": 0.35, "def_uv": 0.65},
-    "William Saliba": {"att_uv": 0.30, "def_uv": 0.65},
-    "Gabriel Magalhães": {"att_uv": 0.35, "def_uv": 0.60},
-    "Trent Alexander-Arnold": {"att_uv": 0.65, "def_uv": 0.40},
-    "Rúben Dias": {"att_uv": 0.30, "def_uv": 0.65},
-    "Josko Gvardiol": {"att_uv": 0.45, "def_uv": 0.55},
-    "Cristian Romero": {"att_uv": 0.35, "def_uv": 0.60},
-    "Alisson Becker": {"att_uv": 0.25, "def_uv": 0.60},
-    "David Raya": {"att_uv": 0.25, "def_uv": 0.55},
-    "Ederson": {"att_uv": 0.30, "def_uv": 0.50},
+    # 아스널
+    "Bukayo Saka": {"rating": 7.75, "pos": "FW", "goals_per90": 0.48},
+    "부카요 사카": {"rating": 7.75, "pos": "FW", "goals_per90": 0.48},
+    "Martin Ødegaard": {"rating": 7.65, "pos": "MF", "goals_per90": 0.35},
+    "마르틴 외데고르": {"rating": 7.65, "pos": "MF", "goals_per90": 0.35},
+    "Declan Rice": {"rating": 7.55, "pos": "MF", "goals_per90": 0.20},
+    "데클런 라이스": {"rating": 7.55, "pos": "MF", "goals_per90": 0.20},
+    "William Saliba": {"rating": 7.50, "pos": "DF", "goals_per90": 0.05},
+    "윌리엄 살리바": {"rating": 7.50, "pos": "DF", "goals_per90": 0.05},
+    "Gabriel Magalhães": {"rating": 7.45, "pos": "DF", "goals_per90": 0.10},
+    "가브리엘 마갈량이스": {"rating": 7.45, "pos": "DF", "goals_per90": 0.10},
+    "Viktor Gyökeres": {"rating": 7.70, "pos": "FW", "goals_per90": 0.65},
+    "빅토르 예케레스": {"rating": 7.70, "pos": "FW", "goals_per90": 0.65},
+    "Ben White": {"rating": 7.30, "pos": "DF", "goals_per90": 0.05},
+    "벤 화이트": {"rating": 7.30, "pos": "DF", "goals_per90": 0.05},
+    "David Raya": {"rating": 7.25, "pos": "GK", "goals_per90": 0.0},
+    "다비드 라야": {"rating": 7.25, "pos": "GK", "goals_per90": 0.0},
+
+    # 리버풀
+    "Virgil van Dijk": {"rating": 7.55, "pos": "DF", "goals_per90": 0.08},
+    "버질 반 다이크": {"rating": 7.55, "pos": "DF", "goals_per90": 0.08},
+    "Trent Alexander-Arnold": {"rating": 7.50, "pos": "DF", "goals_per90": 0.12},
+    "트렌트 알렉산더-아놀드": {"rating": 7.50, "pos": "DF", "goals_per90": 0.12},
+    "Florian Wirtz": {"rating": 7.70, "pos": "MF", "goals_per90": 0.45},
+    "플로리안 비르츠": {"rating": 7.70, "pos": "MF", "goals_per90": 0.45},
+
+    # 첼시
+    "Cole Palmer": {"rating": 7.80, "pos": "FW", "goals_per90": 0.60},
+    "콜 파머": {"rating": 7.80, "pos": "FW", "goals_per90": 0.60},
+    "Moisés Caicedo": {"rating": 7.40, "pos": "MF", "goals_per90": 0.05},
+    "모이세스 카이세도": {"rating": 7.40, "pos": "MF", "goals_per90": 0.05},
+
+    # 맨체스터 유나이티드
+    "Bruno Fernandes": {"rating": 7.55, "pos": "MF", "goals_per90": 0.30},
+    "브루노 페르난데스": {"rating": 7.55, "pos": "MF", "goals_per90": 0.30},
 }
 
 from app import TEAMS_ROSTER
@@ -111,8 +107,80 @@ def normalize_team_name(raw_name):
             return val
     return raw_name
 
+def calculate_player_uv(player_data):
+    """
+    [1. 개인별 UV 산출 함수 (0.1 ~ 3.0 Scale)]
+    기준점: 리그 평균 선수 평점(6.80) = 1.0 UV
+    공식:
+      - GK: min(max(1.0 + (rating - 6.8) * 1.2, 0.1), 3.0)
+      - DF: min(max(1.0 + (rating - 6.8) * 1.1, 0.1), 3.0)
+      - MF: min(max(1.0 + (rating - 6.8) * 1.0, 0.1), 3.0)
+      - FW: min(max(1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5), 0.1), 3.0)
+    """
+    p_name = player_data.get("name", "")
+    rating = float(player_data.get("rating", 6.80) or 6.80)
+    goals_per90 = float(player_data.get("goals_per90", 0.0) or 0.0)
+    pos = str(player_data.get("pos", "MF") or "MF").upper()
+
+    # Look up player rating overrides
+    for name_key, info in PLAYER_STATS_LOOKUP.items():
+        if name_key.lower() in p_name.lower() or p_name.lower() in name_key.lower():
+            rating = info["rating"]
+            goals_per90 = info.get("goals_per90", goals_per90)
+            pos = info.get("pos", pos)
+            break
+
+    if pos in ["GK", "G"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.2
+    elif pos in ["DF", "D"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.1
+    elif pos in ["MF", "M"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.0
+    elif pos in ["FW", "F"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5)
+    else:
+        raw_uv = 1.0 + (rating - 6.8) * 1.0
+
+    return round(min(max(raw_uv, 0.1), 3.0), 3)
+
+def calculate_wuv(team_name):
+    """
+    [2. 팀 11.0 WUV 합성 로직 구현]
+    Starters_Avg_UV = sum(선발 11명 UV) / 11
+    Subs_Avg_UV = sum(교체 5명 UV) / 5
+    Team_WUV = 11.0 * (0.85 * Starters_Avg_UV + 0.15 * Subs_Avg_UV)
+    """
+    ensure_team_roster(team_name)
+    team = TEAMS_ROSTER[team_name]
+    
+    starters = team.get("starters", [])[:11]
+    subs = team.get("subs", [])[:5]
+    
+    st_list = []
+    for p in starters:
+        uv = calculate_player_uv(p)
+        st_list.append({"name": p.get("name"), "pos": p.get("pos"), "uv": uv})
+        
+    sub_list = []
+    for p in subs:
+        uv = calculate_player_uv(p)
+        sub_list.append({"name": p.get("name"), "pos": p.get("pos"), "uv": uv})
+        
+    st_avg = sum([p["uv"] for p in st_list]) / len(st_list) if st_list else 1.0
+    sub_avg = sum([p["uv"] for p in sub_list]) / len(sub_list) if sub_list else 1.0
+    
+    team_wuv = 11.0 * (0.85 * st_avg + 0.15 * sub_avg)
+    
+    return {
+        "team_wuv": round(team_wuv, 2),
+        "st_avg": round(st_avg, 3),
+        "sub_avg": round(sub_avg, 3),
+        "starters_detail": st_list,
+        "subs_detail": sub_list,
+        "wuv_total": round(team_wuv, 2)
+    }
+
 def fetch_espn_epl_season_fixtures():
-    # 2026-27 EPL 정규 시즌 실시간 경기 수집
     url = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260815-20261130"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
@@ -128,122 +196,44 @@ def fetch_espn_epl_season_fixtures():
         print(f"⚠️ ESPN API 요청 오류: {e}")
     return []
 
-def get_player_uv(p_name, pos_abbr):
-    for name_key, uv_val in PLAYER_UV_LOOKUP.items():
-        if name_key.lower() in p_name.lower() or p_name.lower() in name_key.lower():
-            return uv_val
-    pos_clean = pos_abbr.upper() if pos_abbr else "MF"
-    return POSITION_BASE_UV.get(pos_clean, POSITION_BASE_UV["MF"])
-
-def fetch_official_match_roster(event_id):
-    summary_url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event={event_id}"
-    try:
-        res = requests.get(summary_url, timeout=5)
-        if res.status_code == 200:
-            rosters = res.json().get("rosters", [])
-            live_rosters = {}
-            for t_rost in rosters:
-                tname = normalize_team_name(t_rost.get("team", {}).get("displayName", ""))
-                r_entries = t_rost.get("roster", [])
-                st_list = []
-                sub_list = []
-                for p in r_entries:
-                    ath = p.get("athlete", {})
-                    p_name = ath.get("displayName") or "Unknown Player"
-                    pos_abbr = p.get("position", {}).get("abbreviation") or ath.get("position", {}).get("abbreviation", "MF")
-                    uv_data = get_player_uv(p_name, pos_abbr)
-                    p_item = {"pos": pos_abbr, "name": p_name, "att_uv": uv_data["att_uv"], "def_uv": uv_data["def_uv"]}
-                    if p.get("starter"):
-                        st_list.append(p_item)
-                    else:
-                        sub_list.append(p_item)
-                if st_list:
-                    live_rosters[tname] = {"starters": st_list[:11], "subs": sub_list[:5]}
-            return live_rosters
-    except Exception as e:
-        pass
-    return {}
-
 def ensure_team_roster(team_name):
     if team_name not in TEAMS_ROSTER:
         TEAMS_ROSTER[team_name] = {
             "starters": [
-                {"pos": "GK", "name": f"{team_name} GK", "att_uv": 0.15, "def_uv": 0.45},
-                {"pos": "DF", "name": f"{team_name} DF1", "att_uv": 0.30, "def_uv": 0.45},
-                {"pos": "DF", "name": f"{team_name} DF2", "att_uv": 0.25, "def_uv": 0.50},
-                {"pos": "DF", "name": f"{team_name} DF3", "att_uv": 0.25, "def_uv": 0.50},
-                {"pos": "DF", "name": f"{team_name} DF4", "att_uv": 0.35, "def_uv": 0.40},
-                {"pos": "MF", "name": f"{team_name} MF1", "att_uv": 0.40, "def_uv": 0.45},
-                {"pos": "MF", "name": f"{team_name} MF2", "att_uv": 0.40, "def_uv": 0.45},
-                {"pos": "MF", "name": f"{team_name} MF3", "att_uv": 0.55, "def_uv": 0.35},
-                {"pos": "FW", "name": f"{team_name} FW1", "att_uv": 0.60, "def_uv": 0.25},
-                {"pos": "FW", "name": f"{team_name} FW2", "att_uv": 0.60, "def_uv": 0.25},
-                {"pos": "FW", "name": f"{team_name} FW3", "att_uv": 0.65, "def_uv": 0.20},
+                {"pos": "GK", "name": f"{team_name} GK", "rating": 6.80},
+                {"pos": "DF", "name": f"{team_name} DF1", "rating": 6.80},
+                {"pos": "DF", "name": f"{team_name} DF2", "rating": 6.80},
+                {"pos": "DF", "name": f"{team_name} DF3", "rating": 6.80},
+                {"pos": "DF", "name": f"{team_name} DF4", "rating": 6.80},
+                {"pos": "MF", "name": f"{team_name} MF1", "rating": 6.80},
+                {"pos": "MF", "name": f"{team_name} MF2", "rating": 6.80},
+                {"pos": "MF", "name": f"{team_name} MF3", "rating": 6.80},
+                {"pos": "FW", "name": f"{team_name} FW1", "rating": 6.80},
+                {"pos": "FW", "name": f"{team_name} FW2", "rating": 6.80},
+                {"pos": "FW", "name": f"{team_name} FW3", "rating": 6.80},
             ],
             "subs": [
-                {"pos": "FW", "name": f"{team_name} Sub1", "att_uv": 0.50, "def_uv": 0.20},
-                {"pos": "MF", "name": f"{team_name} Sub2", "att_uv": 0.40, "def_uv": 0.30},
-                {"pos": "MF", "name": f"{team_name} Sub3", "att_uv": 0.35, "def_uv": 0.35},
-                {"pos": "DF", "name": f"{team_name} Sub4", "att_uv": 0.20, "def_uv": 0.40},
-                {"pos": "GK", "name": f"{team_name} Sub5", "att_uv": 0.10, "def_uv": 0.35},
+                {"pos": "FW", "name": f"{team_name} Sub1", "rating": 6.80},
+                {"pos": "MF", "name": f"{team_name} Sub2", "rating": 6.80},
+                {"pos": "MF", "name": f"{team_name} Sub3", "rating": 6.80},
+                {"pos": "DF", "name": f"{team_name} Sub4", "rating": 6.80},
+                {"pos": "GK", "name": f"{team_name} Sub5", "rating": 6.80},
             ]
         }
-
-def calculate_wuv(team_name):
-    ensure_team_roster(team_name)
-    team = TEAMS_ROSTER[team_name]
-    
-    st_df = pd.DataFrame(team["starters"])
-    st_att = st_df["att_uv"].sum()
-    st_def = st_df["def_uv"].sum()
-    st_total = st_att + st_def
-    
-    sub_df = pd.DataFrame(team["subs"])
-    sub_att_raw = sub_df["att_uv"].sum()
-    sub_def_raw = sub_df["def_uv"].sum()
-    
-    sub_att_scaled = sub_att_raw * (11.0 / 5.0)
-    sub_def_scaled = sub_def_raw * (11.0 / 5.0)
-    sub_total_scaled = sub_att_scaled + sub_def_scaled
-    
-    wuv_att = 0.85 * st_att + 0.15 * sub_att_scaled
-    wuv_def = 0.85 * st_def + 0.15 * sub_def_scaled
-    wuv_total = wuv_att + wuv_def
-    
-    return {
-        "st_att": st_att,
-        "st_def": st_def,
-        "st_total": st_total,
-        "sub_att_raw": sub_att_raw,
-        "sub_def_raw": sub_def_raw,
-        "sub_att_scaled": sub_att_scaled,
-        "sub_def_scaled": sub_def_scaled,
-        "sub_total_scaled": sub_total_scaled,
-        "wuv_att": wuv_att,
-        "wuv_def": wuv_def,
-        "wuv_total": wuv_total,
-        "st_df": st_df,
-        "sub_df": sub_df
-    }
 
 def get_match_prediction(home_team, away_team):
     h_info = calculate_wuv(home_team)
     a_info = calculate_wuv(away_team)
     
-    h_att = h_info["wuv_att"] + 0.15
-    h_def = h_info["wuv_def"] + 0.10
-    h_total = h_info["wuv_total"] + 0.25
-    
-    a_att = a_info["wuv_att"]
-    a_def = a_info["wuv_def"]
-    a_total = a_info["wuv_total"]
+    h_total = h_info["team_wuv"] + 0.25  # 홈 어드밴티지 +0.25 WUV
+    a_total = a_info["team_wuv"]
     
     gap = h_total - a_total
     
-    if abs(gap) <= 0.4:
+    if abs(gap) <= 0.40:
         winner = "무승부 (Draw)"
         code = "DRAW"
-    elif gap > 0.4:
+    elif gap > 0.40:
         winner = home_team
         code = "HOME"
     else:
@@ -262,23 +252,16 @@ def get_match_prediction(home_team, away_team):
     p_draw = round((ed / tot) * 100, 1)
     p_away = round((ea / tot) * 100, 1)
     
-    xg_h = 1.35 * (h_att / 5.5) * (5.5 / a_def)
-    xg_a = 1.35 * (a_att / 5.5) * (5.5 / h_def)
-    sc_h = int(round(xg_h))
-    sc_a = int(round(xg_a))
+    sc_h = int(round(1.35 * (h_total / 11.0)))
+    sc_a = int(round(1.35 * (a_total / 11.0)))
     
     if code == "DRAW" and sc_h != sc_a:
-        avg_s = int(round((xg_h + xg_a) / 2.0))
-        sc_h, sc_a = avg_s, avg_s
+        sc_h = sc_a = int(round((sc_h + sc_a) / 2.0))
         
     return {
         "home_wuv": h_info,
         "away_wuv": a_info,
-        "h_att": h_att,
-        "h_def": h_def,
         "h_total": h_total,
-        "a_att": a_att,
-        "a_def": a_def,
         "a_total": a_total,
         "gap": gap,
         "winner": winner,
@@ -286,8 +269,6 @@ def get_match_prediction(home_team, away_team):
         "p_home": p_home,
         "p_draw": p_draw,
         "p_away": p_away,
-        "xg_h": xg_h,
-        "xg_a": xg_a,
         "sc_h": sc_h,
         "sc_a": sc_a
     }
@@ -357,6 +338,7 @@ def run_pipeline():
         _, last_uk_str, _, dt_last_uk = parse_timezones(r_events[-1]["date"])
         
         round_title = f"Round {r_idx+1:02d} ({dt_first_uk.strftime('%Y-%m-%d')} ~ {dt_last_uk.strftime('%m-%d')})"
+        print(f"\n=== [{round_title}] 매치업 및 팀 11.0 WUV 상세 데이터 검증 ===", flush=True)
         
         for event in r_events:
             try:
@@ -382,6 +364,22 @@ def run_pipeline():
                 ensure_team_roster(away_team)
                 
                 pred = get_match_prediction(home_team, away_team)
+                h_wuv = pred["home_wuv"]
+                a_wuv = pred["away_wuv"]
+                
+                # [3. 데이터 검증 및 콘솔 로그 출력]
+                print(f"\n⚽ [{home_team}] vs [{away_team}] 매치업 WUV 검증:", flush=True)
+                print(f"   • [{home_team}] 팀 최종 11.0 WUV: {h_wuv['team_wuv']} WUV (선발 평균: {h_wuv['st_avg']} UV, 교체 평균: {h_wuv['sub_avg']} UV)", flush=True)
+                print(f"     - 선발 11명 개인 UV: ", end="", flush=True)
+                for p in h_wuv['starters_detail']:
+                    print(f"{p['name']}({p['pos']}:{p['uv']}) ", end="", flush=True)
+                print("", flush=True)
+                
+                print(f"   • [{away_team}] 팀 최종 11.0 WUV: {a_wuv['team_wuv']} WUV (선발 평균: {a_wuv['st_avg']} UV, 교체 평균: {a_wuv['sub_avg']} UV)", flush=True)
+                print(f"     - 선발 11명 개인 UV: ", end="", flush=True)
+                for p in a_wuv['starters_detail']:
+                    print(f"{p['name']}({p['pos']}:{p['uv']}) ", end="", flush=True)
+                print("", flush=True)
                 
                 actual_winner = ""
                 actual_sc_h = None
@@ -434,15 +432,15 @@ def run_pipeline():
                 
                 synced_count += 1
                 status_disp = f"실제: {actual_sc_h}-{actual_sc_a} {actual_winner}" if actual_winner else "대기중"
-                print(f"  ✓ [{round_title}] {home_team} vs {away_team} -> 예측: {pred['winner']} ({status_disp})", flush=True)
+                print(f"  ✓ 예측 결과: {pred['winner']} ({status_disp})", flush=True)
                 
             except Exception as ex:
                 print(f"❌ 경기 동기화 실패: {ex}", flush=True)
                 
     conn.commit()
     conn.close()
-    print(f"🎉 성공적으로 EPL 공식 정규 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!", flush=True)
+    print(f"\n🎉 성공적으로 EPL 공식 정규 시즌 {synced_count}개 경기를 epl_data.db에 적재하였습니다!", flush=True)
 
 if __name__ == "__main__":
-    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (공식 Real EPL 20개 구단)", flush=True)
+    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (개인 UV 0.1~3.0 & 팀 11.0 WUV 합성 로직 적용)", flush=True)
     run_pipeline()

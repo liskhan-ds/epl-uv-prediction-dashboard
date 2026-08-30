@@ -2120,61 +2120,95 @@ def ensure_team_roster(team_name):
             ]
         }
 
+def calculate_player_uv(player_data):
+    p_name = player_data.get("name", "")
+    rating = float(player_data.get("rating", 6.80) or 6.80)
+    goals_per90 = float(player_data.get("goals_per90", 0.0) or 0.0)
+    pos = str(player_data.get("pos", "MF") or "MF").upper()
+
+    PLAYER_STATS_LOOKUP = {
+        "Erling Haaland": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
+        "엘링 홀란드": {"rating": 7.85, "pos": "FW", "goals_per90": 0.95},
+        "Phil Foden": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
+        "필 포든": {"rating": 7.65, "pos": "MF", "goals_per90": 0.55},
+        "Bernardo Silva": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
+        "베르나르두 실바": {"rating": 7.45, "pos": "MF", "goals_per90": 0.20},
+        "Bukayo Saka": {"rating": 7.75, "pos": "FW", "goals_per90": 0.48},
+        "부카요 사카": {"rating": 7.75, "pos": "FW", "goals_per90": 0.48},
+        "Martin Ødegaard": {"rating": 7.65, "pos": "MF", "goals_per90": 0.35},
+        "마르틴 외데고르": {"rating": 7.65, "pos": "MF", "goals_per90": 0.35},
+        "Declan Rice": {"rating": 7.55, "pos": "MF", "goals_per90": 0.20},
+        "데클런 라이스": {"rating": 7.55, "pos": "MF", "goals_per90": 0.20},
+        "William Saliba": {"rating": 7.50, "pos": "DF", "goals_per90": 0.05},
+        "윌리엄 살리바": {"rating": 7.50, "pos": "DF", "goals_per90": 0.05},
+        "Gabriel Magalhães": {"rating": 7.45, "pos": "DF", "goals_per90": 0.10},
+        "가브리엘 마갈량이스": {"rating": 7.45, "pos": "DF", "goals_per90": 0.10},
+        "Viktor Gyökeres": {"rating": 7.70, "pos": "FW", "goals_per90": 0.65},
+        "빅토르 예케레스": {"rating": 7.70, "pos": "FW", "goals_per90": 0.65},
+        "Cole Palmer": {"rating": 7.80, "pos": "FW", "goals_per90": 0.60},
+        "콜 파머": {"rating": 7.80, "pos": "FW", "goals_per90": 0.60},
+    }
+
+    for name_key, info in PLAYER_STATS_LOOKUP.items():
+        if name_key.lower() in p_name.lower() or p_name.lower() in name_key.lower():
+            rating = info["rating"]
+            goals_per90 = info.get("goals_per90", goals_per90)
+            pos = info.get("pos", pos)
+            break
+
+    if pos in ["GK", "G"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.2
+    elif pos in ["DF", "D"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.1
+    elif pos in ["MF", "M"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.0
+    elif pos in ["FW", "F"]:
+        raw_uv = 1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5)
+    else:
+        raw_uv = 1.0 + (rating - 6.8) * 1.0
+
+    return round(min(max(raw_uv, 0.1), 3.0), 3)
+
 def calculate_wuv(team_name):
     ensure_team_roster(team_name)
     team = TEAMS_ROSTER[team_name]
     
-    st_df = pd.DataFrame(team["starters"])
-    sub_df = pd.DataFrame(team["subs"])
+    starters = team.get("starters", [])[:11]
+    subs = team.get("subs", [])[:5]
     
-    POS_WEIGHT = {"GK": 0.90, "DF": 1.00, "MF": 1.05, "FW": 1.10}
+    st_list = []
+    for p in starters:
+        uv = calculate_player_uv(p)
+        st_list.append({"name": p.get("name"), "pos": p.get("pos"), "att_uv": round(uv*0.6, 2), "def_uv": round(uv*0.4, 2), "uv": uv})
+        
+    sub_list = []
+    for p in subs:
+        uv = calculate_player_uv(p)
+        sub_list.append({"name": p.get("name"), "pos": p.get("pos"), "att_uv": round(uv*0.6, 2), "def_uv": round(uv*0.4, 2), "uv": uv})
+        
+    st_avg = sum([p["uv"] for p in st_list]) / len(st_list) if st_list else 1.0
+    sub_avg = sum([p["uv"] for p in sub_list]) / len(sub_list) if sub_list else 1.0
     
-    lines = {}
-    st_att, st_def = 0.0, 0.0
-    sub_att_raw, sub_def_raw = 0.0, 0.0
-    sub_att_scaled, sub_def_scaled = 0.0, 0.0
+    team_wuv = 11.0 * (0.85 * st_avg + 0.15 * sub_avg)
     
-    for pos in ["GK", "DF", "MF", "FW"]:
-        st_p = st_df[st_df["pos"] == pos]
-        sub_p = sub_df[sub_df["pos"] == pos]
-        
-        st_a = st_p["att_uv"].sum()
-        st_d = st_p["def_uv"].sum()
-        st_att += st_a
-        st_def += st_d
-        
-        sub_a = sub_p["att_uv"].sum()
-        sub_d = sub_p["def_uv"].sum()
-        sub_att_raw += sub_a
-        sub_def_raw += sub_d
-        
-        st_cnt = len(st_p)
-        sub_cnt = len(sub_p)
-        sub_a_sc = sub_a * (st_cnt / sub_cnt) if sub_cnt > 0 else 0.0
-        sub_d_sc = sub_d * (st_cnt / sub_cnt) if sub_cnt > 0 else 0.0
-        sub_att_scaled += sub_a_sc
-        sub_def_scaled += sub_d_sc
-        
-        line_raw = 0.85 * (st_a + st_d) + 0.15 * (sub_a_sc + sub_d_sc)
-        lines[pos] = line_raw * POS_WEIGHT[pos]
-        
-    wuv_att = 0.85 * st_att + 0.15 * sub_att_scaled
-    wuv_def = 0.85 * st_def + 0.15 * sub_def_scaled
-    wuv_total = sum(lines.values())
+    st_df = pd.DataFrame(st_list)
+    sub_df = pd.DataFrame(sub_list)
     
     return {
-        "st_att": st_att,
-        "st_def": st_def,
-        "st_total": st_att + st_def,
-        "sub_att_raw": sub_att_raw,
-        "sub_def_raw": sub_def_raw,
-        "sub_att_scaled": sub_att_scaled,
-        "sub_def_scaled": sub_def_scaled,
-        "sub_total_scaled": sub_att_scaled + sub_def_scaled,
-        "wuv_att": wuv_att,
-        "wuv_def": wuv_def,
-        "wuv_total": wuv_total,
-        "lines": lines,
+        "st_att": round(st_avg * 11 * 0.6, 2),
+        "st_def": round(st_avg * 11 * 0.4, 2),
+        "st_total": round(st_avg * 11, 2),
+        "sub_att_raw": round(sub_avg * 5 * 0.6, 2),
+        "sub_def_raw": round(sub_avg * 5 * 0.4, 2),
+        "sub_att_scaled": round(sub_avg * 11 * 0.6, 2),
+        "sub_def_scaled": round(sub_avg * 11 * 0.4, 2),
+        "sub_total_scaled": round(sub_avg * 11, 2),
+        "wuv_att": round(team_wuv * 0.6, 2),
+        "wuv_def": round(team_wuv * 0.4, 2),
+        "wuv_total": round(team_wuv, 2),
+        "team_wuv": round(team_wuv, 2),
+        "st_avg": round(st_avg, 3),
+        "sub_avg": round(sub_avg, 3),
         "st_df": st_df,
         "sub_df": sub_df
     }
