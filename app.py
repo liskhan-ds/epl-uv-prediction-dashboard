@@ -2409,8 +2409,13 @@ def get_match_prediction(home_team, away_team):
     sc_h = int(round(1.35 * (h_total / 11.0)))
     sc_a = int(round(1.35 * (a_total / 11.0)))
     
-    if code == "DRAW" and sc_h != sc_a:
+    # Ensure score consistency with winner prediction
+    if code == "DRAW":
         sc_h = sc_a = int(round((sc_h + sc_a) / 2.0))
+    elif code == "HOME" and sc_h <= sc_a:
+        sc_h = sc_a + 1
+    elif code == "AWAY" and sc_a <= sc_h:
+        sc_a = sc_h + 1
         
     return {
         "home_wuv": h_info,
