@@ -2381,14 +2381,17 @@ def get_match_prediction(home_team, away_team):
     
     gap = h_total - a_total
     
+    home_kr = TEAM_NAME_MAP.get(home_team, home_team)
+    away_kr = TEAM_NAME_MAP.get(away_team, away_team)
+    
     if abs(gap) <= 0.40:
-        winner = "무승부 (Draw)"
+        winner = "무승부"
         code = "DRAW"
     elif gap > 0.40:
-        winner = home_team
+        winner = f"{home_kr} 승"
         code = "HOME"
     else:
-        winner = away_team
+        winner = f"{away_kr} 승"
         code = "AWAY"
         
     z = gap
