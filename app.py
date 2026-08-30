@@ -2632,7 +2632,7 @@ if not filtered_df.empty:
         lambda r: f"[{r['prob_home']:.1f}% | {r['prob_draw']:.1f}% | {r['prob_away']:.1f}%]", axis=1
     )
     display_df['예상 격차(ΔUV)'] = filtered_df['predicted_gap'].apply(lambda x: f"{x:+.2f}")
-    display_df['실제 결과'] = filtered_df['actual_winner'].apply(lambda x: x if (pd.notna(x) and x != '') else "대기중")
+    display_df['실제 결과'] = filtered_df.apply(lambda r: f"{int(r['actual_score_home'])} : {int(r['actual_score_away'])} ({r['actual_winner']})" if (pd.notna(r.get('actual_score_home')) and pd.notna(r.get('actual_winner')) and r['actual_winner'] != '') else (r['actual_winner'] if (pd.notna(r.get('actual_winner')) and r['actual_winner'] != '') else "대기중"), axis=1)
     
     def get_status_tag(r):
         act = r['actual_winner']
