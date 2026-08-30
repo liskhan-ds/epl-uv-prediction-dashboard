@@ -2175,6 +2175,16 @@ TEAM_CONCEDED_PER_GAME = {
     "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
 }
 
+
+TEAM_CONCEDED_PER_GAME = {
+    "Arsenal": 0.8, "Manchester City": 0.9, "Liverpool": 1.0, "Chelsea": 1.2,
+    "Manchester United": 1.3, "Tottenham Hotspur": 1.35, "Aston Villa": 1.3,
+    "Newcastle United": 1.35, "Brighton & Hove Albion": 1.4, "AFC Bournemouth": 1.45,
+    "Brentford": 1.50, "Crystal Palace": 1.50, "Fulham": 1.55, "Everton": 1.60,
+    "Nottingham Forest": 1.65, "Ipswich Town": 1.75, "Leeds United": 1.80,
+    "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
+}
+
 def calculate_player_uv(player_data, team_name=""):
     p_name_raw = player_data.get("name", "")
     p_name = normalize_player_name(p_name_raw) if "normalize_player_name" in globals() else p_name_raw.strip()
@@ -2199,21 +2209,14 @@ def calculate_player_uv(player_data, team_name=""):
             
     pos_clean = "GK" if position in ["G", "GK"] else ("DF" if position in ["D", "DF"] else ("MF" if position in ["M", "MF"] else "FW"))
     
-    # 1. Baseline 6.65 EPL League Average
+    # 1. Baseline 6.65 EPL League Average (Exact User Prompt Specification)
     if rating is None:
-        raw_uv = 0.85
+        raw_uv = 1.00
     elif rating >= 6.65:
-        if pos_clean == "GK":
-            raw_uv = 1.0 + (rating - 6.65) * 0.45
-        elif pos_clean == "DF":
-            raw_uv = 1.0 + (rating - 6.65) * 0.40
-        elif pos_clean == "MF":
-            raw_uv = 1.0 + (rating - 6.65) * 0.35
-        else:
-            raw_uv = 1.0 + (rating - 6.65) * 0.35 + (goals_per90 * 0.18)
+        raw_uv = 1.0 + (rating - 6.65) * 0.45 + (goals_per90 * 0.20 if pos_clean == "FW" else 0.0)
     else:
         # rating < 6.65 penalty: (rating - 6.65) * 0.65
-        raw_uv = 1.0 + (rating - 6.65) * 0.65 + (goals_per90 * 0.18 if pos_clean == "FW" else 0.0)
+        raw_uv = 1.0 + (rating - 6.65) * 0.65 + (goals_per90 * 0.20 if pos_clean == "FW" else 0.0)
         
     # 2. Defense/GK conceded penalty if team conceded > 1.4 per game
     conc = TEAM_CONCEDED_PER_GAME.get(team_name, 1.30)
@@ -2231,11 +2234,12 @@ def calculate_wuv(team_name):
     st_uvs = [calculate_player_uv(p, team_name) for p in starters]
     sub_uvs = [calculate_player_uv(p, team_name) for p in subs]
     
-    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 0.95
-    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.85
+    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 1.00
+    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.88
     
+    # Exact User Prompt Specification: Team_WUV = 11.0 * (Raw_WUV / 0.97)
     raw_wuv = (0.85 * st_avg + 0.15 * sub_avg)
-    team_wuv = round(11.0 * (raw_wuv / 0.878), 2)
+    team_wuv = round(11.0 * (raw_wuv / 0.97), 2)
     
     # Position detail breakdown
     pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
