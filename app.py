@@ -2440,10 +2440,39 @@ def load_data():
         return pd.DataFrame([])
     try:
         conn = sqlite3.connect(DB_PATH)
-        df_db = pd.read_sql_query("SELECT * FROM predictions ORDER BY date ASC", conn)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(predictions)")
+        cols = [row[1] for row in cursor.fetchall()]
+        
+        order_col = "date" if "date" in cols else "id"
+        df_db = pd.read_sql_query(f"SELECT * FROM predictions ORDER BY {order_col} ASC", conn)
         conn.close()
+        
+        if not df_db.empty:
+            if "round_name" not in df_db.columns:
+                df_db["round_name"] = "Round 1 (Gameweek 1)"
+            if "date" not in df_db.columns and "match_date" in df_db.columns:
+                df_db["date"] = df_db["match_date"]
+            if "uk_date" not in df_db.columns:
+                df_db["uk_date"] = df_db.get("date", df_db.get("match_date", "2026-08"))
+            if "kst_date" not in df_db.columns:
+                df_db["kst_date"] = df_db.get("date", df_db.get("match_date", "2026-08"))
+            if "visit_team" not in df_db.columns and "away_team" in df_db.columns:
+                df_db["visit_team"] = df_db["away_team"]
+            if "visit_uv" not in df_db.columns and "away_wuv" in df_db.columns:
+                df_db["visit_uv"] = df_db["away_wuv"]
+            if "home_uv" not in df_db.columns and "home_total_wuv" in df_db.columns:
+                df_db["home_uv"] = df_db["home_total_wuv"]
+            if "predicted_gap" not in df_db.columns and "gap" in df_db.columns:
+                df_db["predicted_gap"] = df_db["gap"]
+            if "actual_winner" not in df_db.columns:
+                df_db["actual_winner"] = ""
+            if "is_correct" not in df_db.columns:
+                df_db["is_correct"] = None
+                
         return df_db
-    except Exception:
+    except Exception as e:
+        print(f"Error loading data: {e}")
         return pd.DataFrame([])
 
 
