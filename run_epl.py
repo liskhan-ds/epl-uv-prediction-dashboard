@@ -232,8 +232,8 @@ def calculate_player_uv(player_data, team_name=""):
         
     return round(min(max(raw_uv, 0.4), 2.0), 3)
 
-def calculate_wuv(team_name):
-    roster = get_team_roster(team_name)
+def calculate_wuv(team_name, absentees=None):
+    roster = get_team_roster(team_name, absentees=absentees)
     starters = roster.get("starters", [])
     subs = roster.get("subs", [])
     
