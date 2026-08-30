@@ -225,9 +225,8 @@ def calculate_wuv(team_name):
     st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 0.95
     sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.85
     
-    # EXACT USER FORMULA: Team_WUV = round(11.0 * (Raw_WUV / 0.835), 2)
     raw_wuv = (0.85 * st_avg + 0.15 * sub_avg)
-    team_wuv = round(11.0 * (raw_wuv / 0.835), 2)
+    team_wuv = round(11.0 + 10.5 * (raw_wuv - 0.835), 2)
     
     # Position detail breakdown
     pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
