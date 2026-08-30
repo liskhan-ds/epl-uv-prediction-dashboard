@@ -57,6 +57,14 @@ from app import TEAMS_ROSTER
 
 
 
+
+def normalize_team_name(raw_name):
+    for key, val in TEAM_NAME_MAP.items():
+        if key.lower() in raw_name.lower() or raw_name.lower() in key.lower():
+            return val
+    return raw_name
+
+
 OFFICIAL_STATS = {
     "Bukayo Saka": (7.75, 0.48), "Martin Ødegaard": (7.65, 0.35), "Declan Rice": (7.55, 0.20),
     "William Saliba": (7.50, 0.05), "Gabriel Magalhães": (7.45, 0.10), "Viktor Gyökeres": (7.70, 0.65),
@@ -132,16 +140,15 @@ def get_team_roster(team_name):
 
 def calculate_player_uv(player_data, team_name=""):
     p_name_raw = player_data.get("name", "")
-    p_name = normalize_player_name(p_name_raw) if "normalize_player_name" in globals() else p_name_raw.strip()
+    p_name = normalize_team_name(p_name_raw) if "normalize_team_name" in globals() else p_name_raw.strip()
     
     rating = None
     goals_per90 = 0.0
     position = player_data.get("pos", "M")
     
-    # 1. Lookup OFFICIAL_STATS dictionary first
     matched = False
     for off_name, (off_r, off_g90) in OFFICIAL_STATS.items():
-        if off_name.lower() in p_name.lower() or p_name.lower() in off_name.lower():
+        if off_name.lower() in p_name_raw.lower() or p_name_raw.lower() in off_name.lower():
             rating = off_r
             goals_per90 = off_g90
             matched = True
@@ -151,7 +158,7 @@ def calculate_player_uv(player_data, team_name=""):
         try:
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
-            cursor.execute("SELECT rating, goals_per90, position FROM player_stats WHERE player_name = ? OR player_name LIKE ?", (p_name, f"%{p_name}%"))
+            cursor.execute("SELECT rating, goals_per90, position FROM player_stats WHERE player_name = ? OR player_name LIKE ?", (p_name_raw, f"%{p_name_raw}%"))
             row = cursor.fetchone()
             if row:
                 rating = row[0]
@@ -218,8 +225,9 @@ def calculate_wuv(team_name):
     st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 0.95
     sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.85
     
+    # EXACT USER FORMULA: Team_WUV = round(11.0 * (Raw_WUV / 0.835), 2)
     raw_wuv = (0.85 * st_avg + 0.15 * sub_avg)
-    team_wuv = round(11.0 * (raw_wuv / 1.045), 2)
+    team_wuv = round(11.0 * (raw_wuv / 0.835), 2)
     
     # Position detail breakdown
     pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
@@ -249,12 +257,6 @@ def calculate_wuv(team_name):
         "fw_wuv": fw_wuv,
         "starters_detail": starters_detail
     }
-
-def normalize_team_name(raw_name):
-    for key, val in TEAM_NAME_MAP.items():
-        if key.lower() in raw_name.lower() or raw_name.lower() in key.lower():
-            return val
-    return raw_name
 
 
 
