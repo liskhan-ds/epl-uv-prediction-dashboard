@@ -341,7 +341,8 @@ def get_match_prediction(home_team, away_team):
     
     if code == "DRAW" and sc_h != sc_a:
         sc_h = sc_a = int(round((sc_h + sc_a) / 2.0))
-        return {
+        
+    return {
         "home_wuv": h_info,
         "away_wuv": a_info,
         "h_total": h_total,
