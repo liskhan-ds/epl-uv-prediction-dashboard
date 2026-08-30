@@ -105,48 +105,64 @@ def calculate_player_uv(player_data):
 
     return round(min(max(raw_uv, 0.1), 3.0), 3)
 
+
+def get_team_roster(team_name):
+    if not os.path.exists("rosters_2026.json"):
+        return {"starters": [], "subs": []}
+    with open("rosters_2026.json", "r", encoding="utf-8") as f:
+        rosters = json.load(f)
+        
+    normalized_map = {normalize_team_name(k): v for k, v in rosters.items()}
+    norm_tname = normalize_team_name(team_name)
+    plist = normalized_map.get(norm_tname, [])
+    
+    gks = [p for p in plist if p.get("pos") in ["G", "GK"]]
+    dfs = [p for p in plist if p.get("pos") in ["D", "DF"]]
+    mfs = [p for p in plist if p.get("pos") in ["M", "MF"]]
+    fws = [p for p in plist if p.get("pos") in ["F", "FW"]]
+    
+    starters = gks[:1] + dfs[:4] + mfs[:3] + fws[:3]
+    subs = (gks[1:2] + dfs[4:6] + mfs[3:5] + fws[3:5])[:5]
+    return {"starters": starters, "subs": subs}
+
 def calculate_wuv(team_name):
-    """
-    [2. 팀 11.0 WUV 합성 로직 구현]
-    Starters_Avg_UV = sum(선발 11명 UV) / 11
-    Subs_Avg_UV = sum(교체 5명 UV) / 5
-    Team_WUV = 11.0 * (0.85 * Starters_Avg_UV + 0.15 * Subs_Avg_UV)
-    """
-    ensure_team_roster(team_name)
-    team = TEAMS_ROSTER[team_name]
+    roster = get_team_roster(team_name)
+    starters = roster.get("starters", [])
+    subs = roster.get("subs", [])
     
-    starters = team.get("starters", [])[:11]
-    subs = team.get("subs", [])[:5]
+    st_uvs = [calculate_player_uv(p) for p in starters]
+    sub_uvs = [calculate_player_uv(p) for p in subs]
     
-    st_list = []
+    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 1.0
+    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 1.0
+    
+    team_wuv = round(11.0 * (0.85 * st_avg + 0.15 * sub_avg), 2)
+    
+    # Position detail breakdown
+    pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
+    starters_detail = []
     for p in starters:
         uv = calculate_player_uv(p)
-        st_list.append({"name": p.get("name"), "pos": p.get("pos"), "uv": uv})
+        pos = p.get("pos", "M")
+        pos_clean = "GK" if pos in ["G","GK"] else ("DF" if pos in ["D","DF"] else ("MF" if pos in ["M","MF"] else "FW"))
+        pos_sums[pos_clean] += uv
+        starters_detail.append({"name": p.get("name"), "pos": pos_clean, "uv": uv})
         
-    sub_list = []
-    for p in subs:
-        uv = calculate_player_uv(p)
-        sub_list.append({"name": p.get("name"), "pos": p.get("pos"), "uv": uv})
-        
-    st_avg = sum([p["uv"] for p in st_list]) / len(st_list) if st_list else 1.0
-    sub_avg = sum([p["uv"] for p in sub_list]) / len(sub_list) if sub_list else 1.0
-    
-    team_wuv = 11.0 * (0.85 * st_avg + 0.15 * sub_avg)
-    
-    st_df = pd.DataFrame(st_list)
-    sub_df = pd.DataFrame(sub_list)
+    st_tot_sum = sum(st_uvs)
+    gk_wuv = round(team_wuv * (pos_sums["GK"] / st_tot_sum), 2) if st_tot_sum > 0 else 1.0
+    df_wuv = round(team_wuv * (pos_sums["DF"] / st_tot_sum), 2) if st_tot_sum > 0 else 4.0
+    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
+    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
     
     return {
-        "team_wuv": round(team_wuv, 2),
+        "team_wuv": team_wuv,
         "st_avg": round(st_avg, 3),
         "sub_avg": round(sub_avg, 3),
-        "starters_detail": st_list,
-        "subs_detail": sub_list,
-        "wuv_att": round(team_wuv * 0.6, 2),
-        "wuv_def": round(team_wuv * 0.4, 2),
-        "wuv_total": round(team_wuv, 2),
-        "st_df": st_df,
-        "sub_df": sub_df
+        "gk_wuv": gk_wuv,
+        "df_wuv": df_wuv,
+        "mf_wuv": mf_wuv,
+        "fw_wuv": fw_wuv,
+        "starters_detail": starters_detail
     }
 
 def fetch_espn_epl_season_fixtures(date_range="20260815-20260831"):
