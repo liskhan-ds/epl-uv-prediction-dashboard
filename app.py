@@ -1,4 +1,28 @@
 
+PLAYER_NAME_MAP = {
+    '엘링 홀란드': 'Erling Haaland', '필 포든': 'Phil Foden', '베르나르두 실바': 'Bernardo Silva',
+    '후벵 디아스': 'Rúben Dias', '요슈코 그바르디올': 'Josko Gvardiol', '잔루이지 돈나룸마': 'Gianluigi Donnarumma',
+    '헤로니모 룰리': 'Geronimo Rulli', '부카요 사카': 'Bukayo Saka', '마르틴 외데고르': 'Martin Ødegaard',
+    '데클런 라이스': 'Declan Rice', '윌리엄 살리바': 'William Saliba', '가브리엘 마갈량이스': 'Gabriel Magalhães',
+    '빅토르 예케레스': 'Viktor Gyökeres', '벤 화이트': 'Ben White', '다비드 라야': 'David Raya',
+    '버질 반 다이크': 'Virgil van Dijk', '트렌트 알렉산더-아놀드': 'Trent Alexander-Arnold',
+    '플로리안 비르츠': 'Florian Wirtz', '알리송 베케르': 'Alisson Becker', '콜 파머': 'Cole Palmer',
+    '모이세스 카이세도': 'Moisés Caicedo', '브루노 페르난데스': 'Bruno Fernandes', '올리 와트킨스': 'Ollie Watkins',
+    '알렉산데르 이삭': 'Alexander Isak', '제임스 매디슨': 'James Maddison', '도미닉 솔랑케': 'Dominic Solanke',
+    '가브리엘 제수스': 'Gabriel Jesus', '카이 하베르츠': 'Kai Havertz', '미켈 메리노': 'Mikel Merino',
+    '마커스 래시포드': 'Marcus Rashford', '마테우스 쿠냐': 'Matheus Cunha', '브라이언 음베우모': 'Bryan Mbeumo',
+    '해리 매과이어': 'Harry Maguire', '루크 쇼': 'Luke Shaw', '리산드로 마르티네스': 'Lisandro Martínez',
+    '디오구 달롯': 'Diogo Dalot', '유리 틸레만스': 'Youri Tielemans', '엔초 페르난데스': 'Enzo Fernández',
+    '페드로 네투': 'Pedro Neto', '주앙 페드로': 'João Pedro', '리스 제임스': 'Reece James',
+    '웨슬리 포파나': 'Wesley Fofana', '로베르트 산체스': 'Robert Sánchez', '산드로 토날리': 'Sandro Tonali',
+    '로드리고 벤탕쿠르': 'Rodrigo Bentancur', '히샤를리송': 'Richarlison', '앤디 로버트슨': 'Andrew Robertson',
+    '벤 데이비스': 'Ben Davies', '마르틴 두브라브카': 'Martin Dúbravka', '존 맥긴': 'John McGinn',
+}
+
+def normalize_player_name(p_name):
+    return PLAYER_NAME_MAP.get(p_name.strip(), p_name.strip())
+
+
 
 PLAYER_STATS_LOOKUP = {
     # 1. 아스널 (Arsenal)
@@ -2242,7 +2266,8 @@ def calculate_player_uv(player_data):
       - MF: min(max(1.0 + (rating - 6.8) * 1.0, 0.1), 3.0)
       - FW: min(max(1.0 + (rating - 6.8) * 1.0 + (goals_per90 * 0.5), 0.1), 3.0)
     """
-    p_name = player_data.get("name", "")
+    p_name_raw = player_data.get("name", "")
+    p_name = normalize_player_name(p_name_raw)
     pos = str(player_data.get("pos", "MF") or "MF").upper()
     pos_clean = "GK" if pos in ["GK", "G"] else ("DF" if pos in ["DF", "D"] else ("MF" if pos in ["MF", "M"] else "FW"))
     
