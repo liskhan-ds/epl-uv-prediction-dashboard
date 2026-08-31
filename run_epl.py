@@ -3,6 +3,7 @@
 import sqlite3
 import requests
 import os
+import json
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, timezone
@@ -382,6 +383,119 @@ def get_match_prediction(home_team, away_team):
         "sc_h": sc_h,
         "sc_a": sc_a
     }
+
+def run_pipeline():
+    url_mw1 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260820-20260826"
+    url_mw2 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260828-20260901"
+    
+    try:
+        resp_mw1 = requests.get(url_mw1, timeout=10).json()
+        resp_mw2 = requests.get(url_mw2, timeout=10).json()
+    except Exception as e:
+        print(f"Error fetching ESPN API: {e}")
+        return
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("DROP TABLE IF EXISTS predictions")
+    cursor.execute("""
+    CREATE TABLE predictions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        match_id TEXT UNIQUE,
+        round_name TEXT NOT NULL,
+        home_team TEXT NOT NULL,
+        away_team TEXT NOT NULL,
+        match_date TEXT NOT NULL,
+        home_wuv REAL NOT NULL,
+        away_wuv REAL NOT NULL,
+        home_total_wuv REAL NOT NULL,
+        away_total_wuv REAL NOT NULL,
+        gap REAL NOT NULL,
+        predicted_winner TEXT NOT NULL,
+        prob_home REAL NOT NULL,
+        prob_draw REAL NOT NULL,
+        prob_away REAL NOT NULL,
+        score_home INTEGER NOT NULL,
+        score_away INTEGER NOT NULL,
+        actual_score_home INTEGER,
+        actual_score_away INTEGER,
+        actual_winner TEXT,
+        is_correct INTEGER
+    )
+    """)
+
+    def process_espn_events(events, round_label, mw_prefix):
+        for idx, e in enumerate(events, 1):
+            comp = e.get("competitions", [{}])[0]
+            competitors = comp.get("competitors", [])
+            if len(competitors) < 2:
+                continue
+                
+            home_comp = competitors[0] if competitors[0].get("homeAway") == "home" else competitors[1]
+            away_comp = competitors[1] if competitors[0].get("homeAway") == "home" else competitors[0]
+            
+            h_team_raw = home_comp.get("team", {}).get("displayName", "")
+            a_team_raw = away_comp.get("team", {}).get("displayName", "")
+            
+            h_team = normalize_team_name(h_team_raw)
+            a_team = normalize_team_name(a_team_raw)
+            
+            date_raw = e.get("date", "")
+            
+            status_type = e.get("status", {}).get("type", {}).get("name", "")
+            is_completed = (status_type == "STATUS_FULL_TIME")
+            is_cancelled = status_type in ["STATUS_POSTPONED", "STATUS_CANCELED", "STATUS_SUSPENDED", "STATUS_ABANDONED"]
+            
+            act_sc_h = int(home_comp.get("score")) if (is_completed and home_comp.get("score") is not None) else None
+            act_sc_a = int(away_comp.get("score")) if (is_completed and away_comp.get("score") is not None) else None
+            
+            if is_completed and act_sc_h is not None and act_sc_a is not None:
+                if act_sc_h > act_sc_a:
+                    act_winner = f"{h_team} 승"
+                elif act_sc_a > act_sc_h:
+                    act_winner = f"{a_team} 승"
+                else:
+                    act_winner = "무승부"
+            elif is_cancelled:
+                act_winner = "경기 연기"
+            else:
+                act_winner = None
+                
+            pred = get_match_prediction(h_team, a_team)
+            pred_winner = pred["winner"]
+            
+            if is_completed and act_winner is not None:
+                if (act_winner == pred_winner) or (h_team in act_winner and h_team in pred_winner) or (a_team in act_winner and a_team in pred_winner):
+                    is_corr = 1
+                else:
+                    is_corr = 0
+            else:
+                is_corr = None
+                
+            mid = f"2026_{mw_prefix}_{idx}"
+            cursor.execute("""
+            INSERT INTO predictions (
+                match_id, round_name, home_team, away_team, match_date,
+                home_wuv, away_wuv, home_total_wuv, away_total_wuv,
+                gap, predicted_winner, prob_home, prob_draw, prob_away,
+                score_home, score_away,
+                actual_score_home, actual_score_away, actual_winner, is_correct
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                mid, round_label, h_team, a_team, date_raw[:10],
+                pred["home_wuv"]["team_wuv"], pred["away_wuv"]["team_wuv"], pred["h_total"], pred["a_total"],
+                pred["gap"], pred_winner, pred["p_home"], pred["p_draw"], pred["p_away"],
+                pred["sc_h"], pred["sc_a"],
+                act_sc_h, act_sc_a, act_winner, is_corr
+            ))
+
+    process_espn_events(resp_mw1.get("events", []), "Round 1 (Gameweek 1)", "MW1")
+    process_espn_events(resp_mw2.get("events", []), "Round 2 (Gameweek 2)", "MW2")
+
+    conn.commit()
+    conn.close()
+    print("✅ Pipeline run complete! epl_data.db successfully updated.")
 
 if __name__ == "__main__":
     print(f"🚀 EPL 정규 시즌 파이프라인 시작 (개인 UV 0.1~2.0 & 팀 11.0 WUV 합성 로직 적용)", flush=True)

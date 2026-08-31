@@ -2646,8 +2646,7 @@ if not filtered_df.empty:
 
     st.dataframe(display_df, hide_index=True, use_container_width=True)
 
-if st.button("데이터 새로고침"):
-    st.rerun()
+
 
 # -----------------------------------------------------------------------------
 # 9. [최하단] 푸터 문구 (MLB/NBA 템플릿과 100% 동일)
