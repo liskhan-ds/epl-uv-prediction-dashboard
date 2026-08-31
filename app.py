@@ -266,8 +266,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 상단 탭 네비게이션 (NBA, MLB, EPL, NHL 4대 종목 균등 와이드 배치)
-nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 2.5, 2.5, 2.5])
+# 상단 탭 네비게이션 (NBA, MLB, EPL, NHL, NFL 5대 종목 균등 와이드 배치)
+nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns([2, 2, 2, 2, 2])
 with nav_col1:
     st.link_button(
         "🏀 NBA 대시보드 ↗", 
@@ -290,6 +290,12 @@ with nav_col4:
     st.link_button(
         "🏒 NHL 대시보드 ↗", 
         "https://nhl-uv-prediction-dashboard.streamlit.app/",
+        use_container_width=True
+    )
+with nav_col5:
+    st.link_button(
+        "🏈 NFL 대시보드 ↗", 
+        "https://nfl-uv-prediction-dashboard.streamlit.app/",
         use_container_width=True
     )
 
