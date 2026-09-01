@@ -398,9 +398,8 @@ def run_pipeline():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS predictions")
     cursor.execute("""
-    CREATE TABLE predictions (
+    CREATE TABLE IF NOT EXISTS predictions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         match_id TEXT UNIQUE,
         round_name TEXT NOT NULL,
@@ -462,33 +461,59 @@ def run_pipeline():
             else:
                 act_winner = None
                 
-            pred = get_match_prediction(h_team, a_team)
-            pred_winner = pred["winner"]
-            
-            if is_completed and act_winner is not None:
-                if (act_winner == pred_winner) or (h_team in act_winner and h_team in pred_winner) or (a_team in act_winner and a_team in pred_winner):
-                    is_corr = 1
-                else:
-                    is_corr = 0
-            else:
-                is_corr = None
-                
             mid = f"2026_{mw_prefix}_{idx}"
-            cursor.execute("""
-            INSERT INTO predictions (
-                match_id, round_name, home_team, away_team, match_date,
-                home_wuv, away_wuv, home_total_wuv, away_total_wuv,
-                gap, predicted_winner, prob_home, prob_draw, prob_away,
-                score_home, score_away,
-                actual_score_home, actual_score_away, actual_winner, is_correct
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                mid, round_label, h_team, a_team, date_raw[:10],
-                pred["home_wuv"]["team_wuv"], pred["away_wuv"]["team_wuv"], pred["h_total"], pred["a_total"],
-                pred["gap"], pred_winner, pred["p_home"], pred["p_draw"], pred["p_away"],
-                pred["sc_h"], pred["sc_a"],
-                act_sc_h, act_sc_a, act_winner, is_corr
-            ))
+            
+            # Check if match already exists in DB to freeze past predictions
+            cursor.execute("SELECT predicted_winner FROM predictions WHERE match_id = ?", (mid,))
+            existing = cursor.fetchone()
+            
+            if existing:
+                # Match already exists: ONLY update actual scores & grading, NEVER overwrite past predictions!
+                pred_winner = existing[0]
+                if is_completed and act_winner is not None:
+                    if (act_winner == pred_winner) or (h_team in act_winner and h_team in pred_winner) or (a_team in act_winner and a_team in pred_winner):
+                        is_corr = 1
+                    else:
+                        is_corr = 0
+                else:
+                    is_corr = None
+                    
+                cursor.execute("""
+                UPDATE predictions SET
+                    actual_score_home = ?,
+                    actual_score_away = ?,
+                    actual_winner = ?,
+                    is_correct = ?
+                WHERE match_id = ?
+                """, (act_sc_h, act_sc_a, act_winner, is_corr, mid))
+            else:
+                # New match: calculate prediction for the first time and insert
+                pred = get_match_prediction(h_team, a_team)
+                pred_winner = pred["winner"]
+                
+                if is_completed and act_winner is not None:
+                    if (act_winner == pred_winner) or (h_team in act_winner and h_team in pred_winner) or (a_team in act_winner and a_team in pred_winner):
+                        is_corr = 1
+                    else:
+                        is_corr = 0
+                else:
+                    is_corr = None
+                    
+                cursor.execute("""
+                INSERT INTO predictions (
+                    match_id, round_name, home_team, away_team, match_date,
+                    home_wuv, away_wuv, home_total_wuv, away_total_wuv,
+                    gap, predicted_winner, prob_home, prob_draw, prob_away,
+                    score_home, score_away,
+                    actual_score_home, actual_score_away, actual_winner, is_correct
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    mid, round_label, h_team, a_team, date_raw[:10],
+                    pred["home_wuv"]["team_wuv"], pred["away_wuv"]["team_wuv"], pred["h_total"], pred["a_total"],
+                    pred["gap"], pred_winner, pred["p_home"], pred["p_draw"], pred["p_away"],
+                    pred["sc_h"], pred["sc_a"],
+                    act_sc_h, act_sc_a, act_winner, is_corr
+                ))
 
     process_espn_events(resp_mw1.get("events", []), "Round 1 (Gameweek 1)", "MW1")
     process_espn_events(resp_mw2.get("events", []), "Round 2 (Gameweek 2)", "MW2")
