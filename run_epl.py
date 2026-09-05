@@ -1,8 +1,6 @@
-
-
+import os
 import sqlite3
 import requests
-import os
 import json
 import pandas as pd
 import numpy as np
@@ -11,63 +9,18 @@ from datetime import datetime, timedelta, timezone
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "epl_data.db")
 
-# 팀명 매핑 영문 -> 한글 TEAM_NAME_MAP = {
-    "Manchester United": "Manchester United",
-    "Arsenal": "Arsenal",
-    "Manchester City": "Manchester City",
-    "Liverpool": "Liverpool",
-    "Chelsea": "Chelsea",
-    "Tottenham Hotspur": "Tottenham Hotspur",
-    "Tottenham": "Tottenham Hotspur",
-    "Newcastle United": "Newcastle United",
-    "Newcastle": "Newcastle United",
-    "Aston Villa": "Aston Villa",
-    "West Ham United": "West Ham United",
-    "West Ham": "West Ham United",
-    "Brighton & Hove Albion": "Brighton & Hove Albion",
-    "Brighton": "Brighton & Hove Albion",
-    "Fulham": "Fulham",
-    "Crystal Palace": "Crystal Palace",
-    "Everton": "Everton",
-    "Wolverhampton Wanderers": "Wolverhampton Wanderers",
-    "Wolves": "Wolverhampton Wanderers",
-    "AFC Bournemouth": "AFC Bournemouth",
-    "Bournemouth": "AFC Bournemouth",
-    "Brentford": "Brentford",
-    "Nottingham Forest": "Nottingham Forest",
-    "Leicester City": "Leicester City",
-    "Ipswich Town": "Ipswich Town",
-    "Southampton": "Southampton",
-    "Sunderland": "Sunderland",
-    "Burnley": "Burnley",
-    "Leeds United": "Leeds United",
-    "Leeds": "Leeds United",
-    "Coventry City": "Coventry City",
-    "Coventry": "Coventry City",
-    "Hull City": "Hull City",
-    "Hull": "Hull City"
-}��티",
-    "Ipswich Town": "입스위치 타운",
-    "Southampton": "사우샘프턴",
-    "Sunderland": "선덜랜드",
-    "Burnley": "번리",
-    "Leeds United": "리즈 유나이티드",
-    "Leeds": "리즈 유나이티드",
-    "Coventry City": "코번트리 시티",
-    "Coventry": "코번트리 시티",
-    "Hull City": "헐 시티",
-    "Hull": "헐 시티",
+TEAM_NAME_MAP = {
+    "Manchester United": "Manchester United", "Arsenal": "Arsenal", "Manchester City": "Manchester City",
+    "Liverpool": "Liverpool", "Chelsea": "Chelsea", "Tottenham Hotspur": "Tottenham Hotspur", "Tottenham": "Tottenham Hotspur",
+    "Newcastle United": "Newcastle United", "Newcastle": "Newcastle United", "Aston Villa": "Aston Villa",
+    "West Ham United": "West Ham United", "West Ham": "West Ham United", "Brighton & Hove Albion": "Brighton & Hove Albion",
+    "Brighton": "Brighton & Hove Albion", "Fulham": "Fulham", "Crystal Palace": "Crystal Palace", "Everton": "Everton",
+    "Wolverhampton Wanderers": "Wolverhampton Wanderers", "Wolves": "Wolverhampton Wanderers", "AFC Bournemouth": "AFC Bournemouth",
+    "Bournemouth": "AFC Bournemouth", "Brentford": "Brentford", "Nottingham Forest": "Nottingham Forest",
+    "Leicester City": "Leicester City", "Ipswich Town": "Ipswich Town", "Southampton": "Southampton",
+    "Sunderland": "Sunderland", "Burnley": "Burnley", "Leeds United": "Leeds United", "Leeds": "Leeds United",
+    "Coventry City": "Coventry City", "Coventry": "Coventry City", "Hull City": "Hull City", "Hull": "Hull City"
 }
-
-# 선수별 시즌/최근 평점(rating) 및 goals_per90 룩업 테이블 (FotMob/공식 API 기준 데이터)
-
-
-
-from app import TEAMS_ROSTER
-
-
-
-
 
 def normalize_team_name(raw_name):
     for key, val in TEAM_NAME_MAP.items():
@@ -75,6 +28,18 @@ def normalize_team_name(raw_name):
             return val
     return raw_name
 
+def parse_espn_date(date_str):
+    if not date_str:
+        return "", ""
+    try:
+        dt_utc = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+        # UK Time: BST in summer (UTC+1), GMT in winter (UTC+0)
+        dt_uk = dt_utc.astimezone(timezone(timedelta(hours=1)))
+        # KST Time: UTC+9
+        dt_kst = dt_utc.astimezone(timezone(timedelta(hours=9)))
+        return dt_uk.strftime("%Y-%m-%d"), dt_kst.strftime("%Y-%m-%d")
+    except Exception:
+        return date_str[:10], date_str[:10]
 
 OFFICIAL_STATS = {
     "Bukayo Saka": (7.75, 0.48), "Martin Ødegaard": (7.65, 0.35), "Declan Rice": (7.55, 0.20),
@@ -134,205 +99,136 @@ MATCHWEEK_1_ABSENCES = {
     "Arsenal": ["William Saliba", "Jurriën Timber"],
     "Chelsea": ["Wesley Fofana"],
     "Fulham": ["Joachim Andersen"],
-    "Manchester United": ["Rasmus Højlund", "Tyrell Malacia"],
-    "Tottenham Hotspur": ["Richarlison"],
-    "Liverpool": ["Stefan Bajcetic"],
+    "Liverpool": ["Jeremie Frimpong"],
+    "Manchester City": ["Kevin De Bruyne"],
+    "Manchester United": ["Matthijs de Ligt"],
     "Newcastle United": ["Sven Botman"],
+    "Tottenham Hotspur": ["Destiny Udogie"],
     "Aston Villa": ["Boubacar Kamara"],
+    "Brighton & Hove Albion": ["Solly March"],
 }
 
-def get_team_roster(team_name, absentees=None):
-    if not os.path.exists("rosters_2026.json"):
-        return {"starters": [], "subs": []}
-    with open("rosters_2026.json", "r", encoding="utf-8") as f:
-        rosters = json.load(f)
-        
-    normalized_map = {normalize_team_name(k): v for k, v in rosters.items()}
-    norm_tname = normalize_team_name(team_name)
-    plist = normalized_map.get(norm_tname, [])
-    
-    if absentees is None:
-        absentees = MATCHWEEK_1_ABSENCES.get(team_name, [])
-        
-    available = [p for p in plist if p.get("name") not in absentees]
-    
-    for p in available:
-        p["calc_uv"] = calculate_player_uv(p, team_name)
-        
-    gks = sorted([p for p in available if p.get("pos") in ["G", "GK"]], key=lambda x: x["calc_uv"], reverse=True)
-    dfs = sorted([p for p in available if p.get("pos") in ["D", "DF"]], key=lambda x: x["calc_uv"], reverse=True)
-    mfs = sorted([p for p in available if p.get("pos") in ["M", "MF"]], key=lambda x: x["calc_uv"], reverse=True)
-    fws = sorted([p for p in available if p.get("pos") in ["F", "FW"]], key=lambda x: x["calc_uv"], reverse=True)
-    
-    starters = gks[:1] + dfs[:4] + mfs[:3] + fws[:3]
-    subs = (gks[1:2] + dfs[4:6] + mfs[3:5] + fws[3:5])[:5]
-    return {"starters": starters, "subs": subs}
-def calculate_player_uv(player_data, team_name=""):
-    p_name_raw = player_data.get("name", "")
-    p_name = normalize_team_name(p_name_raw) if "normalize_team_name" in globals() else p_name_raw.strip()
-    
-    rating = None
-    goals_per90 = 0.0
-    position = player_data.get("pos", "M")
-    
-    matched = False
-    for off_name, (off_r, off_g90) in OFFICIAL_STATS.items():
-        if off_name.lower() in p_name_raw.lower() or p_name_raw.lower() in off_name.lower():
-            rating = off_r
-            goals_per90 = off_g90
-            matched = True
-            break
-            
-    if not matched and os.path.exists(DB_PATH):
+def load_rosters_from_json():
+    json_path = os.path.join(BASE_DIR, "rosters_2026.json")
+    if os.path.exists(json_path):
         try:
-            conn = sqlite3.connect(DB_PATH)
-            cursor = conn.cursor()
-            cursor.execute("SELECT rating, goals_per90, position FROM player_stats WHERE player_name = ? OR player_name LIKE ?", (p_name_raw, f"%{p_name_raw}%"))
-            row = cursor.fetchone()
-            if row:
-                rating = row[0]
-                goals_per90 = row[1]
-                position = row[2]
-            conn.close()
-        except Exception:
-            pass
-            
-    pos_clean = "GK" if position in ["G", "GK"] else ("DF" if position in ["D", "DF"] else ("MF" if position in ["M", "MF"] else "FW"))
-    
-    tgoals = TEAM_GOALS_PER_GAME.get(team_name, 1.30)
-    is_low_poss = team_name in LOW_POSSESSION_TEAMS
-    
-    if rating is None:
-        if pos_clean == "GK":
-            raw_uv = 0.95
-        elif pos_clean == "DF":
-            raw_uv = 0.90
-        elif pos_clean == "MF":
-            raw_uv = 0.82 if is_low_poss else 0.88
-        else: # FW
-            raw_uv = 0.78 if tgoals < 1.1 else 0.85
-    elif rating >= 6.65:
-        if pos_clean == "GK":
-            raw_uv = 1.0 + (rating - 6.65) * 0.45
-        elif pos_clean == "DF":
-            raw_uv = 1.0 + (rating - 6.65) * 0.40
-        elif pos_clean == "MF":
-            raw_uv = 1.0 + (rating - 6.65) * 0.35
-            if is_low_poss:
-                raw_uv -= 0.08
-        else: # FW
-            raw_uv = 1.0 + (rating - 6.65) * 0.35 + (goals_per90 * 0.20)
-            if goals_per90 < 0.15 or tgoals < 1.1:
-                fw_penalty = min(0.15, round(0.10 + (0.15 - max(goals_per90, 0.0)) * 0.33, 3))
-                raw_uv -= fw_penalty
-    else:
-        # rating < 6.65 penalty: MF slope 0.80
-        slope = 0.80 if pos_clean == "MF" else 0.65
-        raw_uv = 1.0 + (rating - 6.65) * slope + (goals_per90 * 0.20 if pos_clean == "FW" else 0.0)
-        if pos_clean == "MF" and is_low_poss:
-            raw_uv -= 0.08
-        elif pos_clean == "FW" and (goals_per90 < 0.15 or tgoals < 1.1):
-            fw_penalty = min(0.15, round(0.10 + (0.15 - max(goals_per90, 0.0)) * 0.33, 3))
-            raw_uv -= fw_penalty
-        
-    # Defense/GK conceded penalty if team conceded > 1.4 per game
-    conc = TEAM_CONCEDED_PER_GAME.get(team_name, 1.30)
-    if pos_clean in ["GK", "DF"] and conc > 1.4:
-        def_penalty = min(0.12, round(0.04 + (conc - 1.4) * 0.10, 3))
-        raw_uv -= def_penalty
-        
-    return round(min(max(raw_uv, 0.4), 2.0), 3)
+            with open(json_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Failed to load rosters_2026.json: {e}")
+    return {}
 
-def calculate_wuv(team_name, absentees=None):
-    roster = get_team_roster(team_name, absentees=absentees)
-    starters = roster.get("starters", [])
-    subs = roster.get("subs", [])
-    
-    st_uvs = [calculate_player_uv(p, team_name) for p in starters]
-    sub_uvs = [calculate_player_uv(p, team_name) for p in subs]
-    
-    st_avg = sum(st_uvs) / len(st_uvs) if st_uvs else 0.95
-    sub_avg = sum(sub_uvs) / len(sub_uvs) if sub_uvs else 0.85
-    
-    raw_wuv = (0.85 * st_avg + 0.15 * sub_avg)
-    team_wuv = round(11.0 + 10.5 * (raw_wuv - 0.835), 2)
-    
-    # Position detail breakdown
-    pos_sums = {"GK": 0.0, "DF": 0.0, "MF": 0.0, "FW": 0.0}
-    starters_detail = []
-    for p in starters:
-        uv = calculate_player_uv(p, team_name)
-        pos = p.get("pos", "M")
-        pos_clean = "GK" if pos in ["G","GK"] else ("DF" if pos in ["D","DF"] else ("MF" if pos in ["M","MF"] else "FW"))
-        pos_sums[pos_clean] += uv
-        starters_detail.append({"name": p.get("name"), "pos": pos_clean, "uv": uv})
-        
-    st_tot_sum = sum(st_uvs)
-    gk_wuv = round(team_wuv * (pos_sums["GK"] / st_tot_sum), 2) if st_tot_sum > 0 else 1.0
-    df_wuv = round(team_wuv * (pos_sums["DF"] / st_tot_sum), 2) if st_tot_sum > 0 else 4.0
-    mf_wuv = round(team_wuv * (pos_sums["MF"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
-    fw_wuv = round(team_wuv * (pos_sums["FW"] / st_tot_sum), 2) if st_tot_sum > 0 else 3.0
-    
-    return {
-        "team_wuv": team_wuv,
-        "st_avg": round(st_avg, 3),
-        "sub_avg": round(sub_avg, 3),
-        "st_sum": round(st_tot_sum, 3),
-        "sub_sum": round(sum(sub_uvs), 3),
-        "gk_wuv": gk_wuv,
-        "df_wuv": df_wuv,
-        "mf_wuv": mf_wuv,
-        "fw_wuv": fw_wuv,
-        "starters_detail": starters_detail
-    }
-
-
-
-
-
-
-def fetch_espn_epl_season_fixtures(date_range="20260815-20260831"):
-    # 라운드 1 & 라운드 2 경기 일정만 실시간 수집 (요청 시 추가 확장)
-    url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates={date_range}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-    }
-    
-    try:
-        res = requests.get(url, headers=headers, timeout=10)
-        if res.status_code == 200:
-            events = res.json().get("events", [])
-            events.sort(key=lambda x: x["date"])
-            return events
-    except Exception as e:
-        print(f"⚠️ ESPN API 요청 오류: {e}")
-    return []
+TEAMS_ROSTER = load_rosters_from_json()
 
 def ensure_team_roster(team_name):
     if team_name not in TEAMS_ROSTER:
         TEAMS_ROSTER[team_name] = {
             "starters": [
-                {"pos": "GK", "name": f"{team_name} GK", "rating": 6.80},
-                {"pos": "DF", "name": f"{team_name} DF1", "rating": 6.80},
-                {"pos": "DF", "name": f"{team_name} DF2", "rating": 6.80},
-                {"pos": "DF", "name": f"{team_name} DF3", "rating": 6.80},
-                {"pos": "DF", "name": f"{team_name} DF4", "rating": 6.80},
-                {"pos": "MF", "name": f"{team_name} MF1", "rating": 6.80},
-                {"pos": "MF", "name": f"{team_name} MF2", "rating": 6.80},
-                {"pos": "MF", "name": f"{team_name} MF3", "rating": 6.80},
-                {"pos": "FW", "name": f"{team_name} FW1", "rating": 6.80},
-                {"pos": "FW", "name": f"{team_name} FW2", "rating": 6.80},
-                {"pos": "FW", "name": f"{team_name} FW3", "rating": 6.80},
+                {"pos": "GK", "name": f"{team_name} GK", "att_uv": 0.15, "def_uv": 0.45},
+                {"pos": "DF", "name": f"{team_name} DF1", "att_uv": 0.30, "def_uv": 0.45},
+                {"pos": "DF", "name": f"{team_name} DF2", "att_uv": 0.25, "def_uv": 0.50},
+                {"pos": "DF", "name": f"{team_name} DF3", "att_uv": 0.25, "def_uv": 0.50},
+                {"pos": "DF", "name": f"{team_name} DF4", "att_uv": 0.35, "def_uv": 0.40},
+                {"pos": "MF", "name": f"{team_name} MF1", "att_uv": 0.40, "def_uv": 0.45},
+                {"pos": "MF", "name": f"{team_name} MF2", "att_uv": 0.40, "def_uv": 0.45},
+                {"pos": "MF", "name": f"{team_name} MF3", "att_uv": 0.55, "def_uv": 0.35},
+                {"pos": "FW", "name": f"{team_name} FW1", "att_uv": 0.60, "def_uv": 0.25},
+                {"pos": "FW", "name": f"{team_name} FW2", "att_uv": 0.60, "def_uv": 0.25},
+                {"pos": "FW", "name": f"{team_name} FW3", "att_uv": 0.65, "def_uv": 0.20},
             ],
             "subs": [
-                {"pos": "FW", "name": f"{team_name} Sub1", "rating": 6.80},
-                {"pos": "MF", "name": f"{team_name} Sub2", "rating": 6.80},
-                {"pos": "MF", "name": f"{team_name} Sub3", "rating": 6.80},
-                {"pos": "DF", "name": f"{team_name} Sub4", "rating": 6.80},
-                {"pos": "GK", "name": f"{team_name} Sub5", "rating": 6.80},
+                {"pos": "FW", "name": f"{team_name} Sub1", "att_uv": 0.50, "def_uv": 0.20},
+                {"pos": "MF", "name": f"{team_name} Sub2", "att_uv": 0.40, "def_uv": 0.30},
+                {"pos": "MF", "name": f"{team_name} Sub3", "att_uv": 0.35, "def_uv": 0.35},
+                {"pos": "DF", "name": f"{team_name} Sub4", "att_uv": 0.20, "def_uv": 0.40},
+                {"pos": "GK", "name": f"{team_name} Sub5", "att_uv": 0.10, "def_uv": 0.35},
             ]
         }
 
+def get_team_roster(team_name, absentees=None):
+    ensure_team_roster(team_name)
+    roster = TEAMS_ROSTER.get(team_name, {"starters": [], "subs": []})
+    starters = list(roster.get("starters", []))
+    subs = list(roster.get("subs", []))
+    
+    if absentees:
+        active_starters = [p for p in starters if p.get("name") not in absentees]
+        missing_count = len(starters) - len(active_starters)
+        
+        if missing_count > 0:
+            available_subs = [p for p in subs if p.get("name") not in absentees]
+            substitutes = available_subs[:missing_count]
+            starters = active_starters + substitutes
+            
+    return {"starters": starters, "subs": subs}
+
+def calculate_player_uv(player_data, team_name=""):
+    p_name = player_data.get("name", "")
+    p_pos = player_data.get("pos", "MF")
+    
+    if p_name in OFFICIAL_STATS:
+        rating, xg_90 = OFFICIAL_STATS[p_name]
+    else:
+        rating = 6.80
+        xg_90 = 0.10
+        
+    conceded_per_game = TEAM_CONCEDED_PER_GAME.get(team_name, 1.40)
+    def_uv = max(0.1, round(0.50 * (rating / 7.0) * (1.20 / max(0.5, conceded_per_game)), 2))
+    
+    goals_per_game = TEAM_GOALS_PER_GAME.get(team_name, 1.30)
+    
+    if p_pos in ["FW", "ST", "LW", "RW"]:
+        base_att = 0.65 * (rating / 7.0) * (1.0 + xg_90)
+    elif p_pos in ["MF", "CAM", "CM"]:
+        base_att = 0.45 * (rating / 7.0) * (1.0 + (xg_90 * 0.5))
+    elif p_pos in ["DF", "CB", "LB", "RB"]:
+        base_att = 0.30 * (rating / 7.0)
+    else:
+        base_att = 0.15 * (rating / 7.0)
+        
+    att_uv = max(0.1, round(base_att * (goals_per_game / 1.30), 2))
+    
+    att_uv = min(2.0, max(0.1, att_uv))
+    def_uv = min(2.0, max(0.1, def_uv))
+    
+    return {"att_uv": att_uv, "def_uv": def_uv, "total_uv": att_uv + def_uv}
+
+def calculate_wuv(team_name, absentees=None):
+    roster_info = get_team_roster(team_name, absentees)
+    starters = roster_info["starters"]
+    
+    att_list = []
+    def_list = []
+    
+    for p in starters:
+        uv_res = calculate_player_uv(p, team_name)
+        att_list.append(uv_res["att_uv"])
+        def_list.append(uv_res["def_uv"])
+        
+    raw_team_att = sum(att_list) if att_list else 5.5
+    raw_team_def = sum(def_list) if def_list else 5.5
+    raw_team_uv = raw_team_att + raw_team_def
+    
+    goals_pg = TEAM_GOALS_PER_GAME.get(team_name, 1.30)
+    conc_pg = TEAM_CONCEDED_PER_GAME.get(team_name, 1.40)
+    
+    off_factor = goals_pg / 1.40
+    def_factor = 1.30 / conc_pg
+    
+    if team_name in LOW_POSSESSION_TEAMS:
+        tactical_mod = 0.95
+    else:
+        tactical_mod = 1.05
+        
+    scaled_team_uv = 11.0 * (raw_team_uv / 11.0) * (0.4 * off_factor + 0.4 * def_factor + 0.2 * tactical_mod)
+    scaled_team_uv = max(8.5, min(14.5, round(scaled_team_uv, 2)))
+    
+    return {
+        "team_name": team_name,
+        "raw_team_uv": round(raw_team_uv, 2),
+        "team_wuv": scaled_team_uv,
+        "starters_count": len(starters)
+    }
 
 def get_match_prediction(home_team, away_team):
     h_info = calculate_wuv(home_team)
@@ -343,17 +239,14 @@ def get_match_prediction(home_team, away_team):
     
     gap = h_total - a_total
     
-    home_kr = TEAM_NAME_MAP.get(home_team, home_team)
-    away_kr = TEAM_NAME_MAP.get(away_team, away_team)
-    
     if abs(gap) <= 0.40:
-        winner = "무승부"
+        winner = "Draw"
         code = "DRAW"
     elif gap > 0.40:
-        winner = f"{home_kr} 승"
+        winner = f"{home_team} Win"
         code = "HOME"
     else:
-        winner = f"{away_kr} 승"
+        winner = f"{away_team} Win"
         code = "AWAY"
         
     z = gap
@@ -371,7 +264,6 @@ def get_match_prediction(home_team, away_team):
     sc_h = int(round(1.35 * (h_total / 11.0)))
     sc_a = int(round(1.35 * (a_total / 11.0)))
     
-    # Ensure score consistency with winner prediction
     if code == "DRAW":
         sc_h = sc_a = int(round((sc_h + sc_a) / 2.0))
     elif code == "HOME" and sc_h <= sc_a:
@@ -416,6 +308,8 @@ def run_pipeline():
         home_team TEXT NOT NULL,
         away_team TEXT NOT NULL,
         match_date TEXT NOT NULL,
+        uk_date TEXT,
+        kst_date TEXT,
         home_wuv REAL NOT NULL,
         away_wuv REAL NOT NULL,
         home_total_wuv REAL NOT NULL,
@@ -433,6 +327,13 @@ def run_pipeline():
         is_correct INTEGER
     )
     """)
+    
+    cursor.execute("PRAGMA table_info(predictions)")
+    cols = [r[1] for r in cursor.fetchall()]
+    if "uk_date" not in cols:
+        cursor.execute("ALTER TABLE predictions ADD COLUMN uk_date TEXT")
+    if "kst_date" not in cols:
+        cursor.execute("ALTER TABLE predictions ADD COLUMN kst_date TEXT")
 
     def process_espn_events(events, round_label, mw_prefix):
         for idx, e in enumerate(events, 1):
@@ -451,6 +352,7 @@ def run_pipeline():
             a_team = normalize_team_name(a_team_raw)
             
             date_raw = e.get("date", "")
+            uk_d, kst_d = parse_espn_date(date_raw)
             
             status_type = e.get("status", {}).get("type", {}).get("name", "")
             is_completed = (status_type == "STATUS_FULL_TIME")
@@ -461,24 +363,22 @@ def run_pipeline():
             
             if is_completed and act_sc_h is not None and act_sc_a is not None:
                 if act_sc_h > act_sc_a:
-                    act_winner = f"{h_team} 승"
+                    act_winner = f"{h_team} Win"
                 elif act_sc_a > act_sc_h:
-                    act_winner = f"{a_team} 승"
+                    act_winner = f"{a_team} Win"
                 else:
-                    act_winner = "무승부"
+                    act_winner = "Draw"
             elif is_cancelled:
-                act_winner = "경기 연기"
+                act_winner = "Postponed"
             else:
                 act_winner = None
                 
             mid = f"2026_{mw_prefix}_{idx}"
             
-            # Check if match already exists in DB to freeze past predictions
             cursor.execute("SELECT predicted_winner FROM predictions WHERE match_id = ?", (mid,))
             existing = cursor.fetchone()
             
             if existing:
-                # Match already exists: ONLY update actual scores & grading, NEVER overwrite past predictions!
                 pred_winner = existing[0]
                 if is_completed and act_winner is not None:
                     if (act_winner == pred_winner) or (h_team in act_winner and h_team in pred_winner) or (a_team in act_winner and a_team in pred_winner):
@@ -490,14 +390,15 @@ def run_pipeline():
                     
                 cursor.execute("""
                 UPDATE predictions SET
+                    uk_date = ?,
+                    kst_date = ?,
                     actual_score_home = ?,
                     actual_score_away = ?,
                     actual_winner = ?,
                     is_correct = ?
                 WHERE match_id = ?
-                """, (act_sc_h, act_sc_a, act_winner, is_corr, mid))
+                """, (uk_d, kst_d, act_sc_h, act_sc_a, act_winner, is_corr, mid))
             else:
-                # New match: calculate prediction for the first time and insert
                 pred = get_match_prediction(h_team, a_team)
                 pred_winner = pred["winner"]
                 
@@ -511,14 +412,14 @@ def run_pipeline():
                     
                 cursor.execute("""
                 INSERT INTO predictions (
-                    match_id, round_name, home_team, away_team, match_date,
+                    match_id, round_name, home_team, away_team, match_date, uk_date, kst_date,
                     home_wuv, away_wuv, home_total_wuv, away_total_wuv,
                     gap, predicted_winner, prob_home, prob_draw, prob_away,
                     score_home, score_away,
                     actual_score_home, actual_score_away, actual_winner, is_correct
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
-                    mid, round_label, h_team, a_team, date_raw[:10],
+                    mid, round_label, h_team, a_team, date_raw[:10], uk_d, kst_d,
                     pred["home_wuv"]["team_wuv"], pred["away_wuv"]["team_wuv"], pred["h_total"], pred["a_total"],
                     pred["gap"], pred_winner, pred["p_home"], pred["p_draw"], pred["p_away"],
                     pred["sc_h"], pred["sc_a"],
