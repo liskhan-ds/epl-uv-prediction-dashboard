@@ -148,8 +148,14 @@ def ensure_team_roster(team_name):
 def get_team_roster(team_name, absentees=None):
     ensure_team_roster(team_name)
     roster = TEAMS_ROSTER.get(team_name, {"starters": [], "subs": []})
-    starters = list(roster.get("starters", []))
-    subs = list(roster.get("subs", []))
+    if isinstance(roster, dict):
+        starters = list(roster.get("starters", []))
+        subs = list(roster.get("subs", []))
+    elif isinstance(roster, list):
+        starters = list(roster[:11])
+        subs = list(roster[11:])
+    else:
+        starters, subs = [], []
     
     if absentees:
         active_starters = [p for p in starters if p.get("name") not in absentees]
@@ -289,10 +295,12 @@ def get_match_prediction(home_team, away_team):
 def run_pipeline():
     url_mw1 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260820-20260826"
     url_mw2 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260828-20260901"
+    url_mw3 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260902-20260907"
     
     try:
         resp_mw1 = requests.get(url_mw1, timeout=10).json()
         resp_mw2 = requests.get(url_mw2, timeout=10).json()
+        resp_mw3 = requests.get(url_mw3, timeout=10).json()
     except Exception as e:
         print(f"Error fetching ESPN API: {e}")
         return
@@ -428,6 +436,7 @@ def run_pipeline():
 
     process_espn_events(resp_mw1.get("events", []), "Round 1 (Gameweek 1)", "MW1")
     process_espn_events(resp_mw2.get("events", []), "Round 2 (Gameweek 2)", "MW2")
+    process_espn_events(resp_mw3.get("events", []), "Round 3 (Gameweek 3)", "MW3")
 
     conn.commit()
     conn.close()
