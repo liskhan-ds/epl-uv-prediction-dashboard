@@ -292,7 +292,7 @@ def get_match_prediction(home_team, away_team):
         "sc_a": sc_a
     }
 
-def run_pipeline():
+def run_pipeline(mode="all"):
     url_mw1 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260820-20260826"
     url_mw2 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260828-20260901"
     url_mw3 = "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260902-20260907"
@@ -443,5 +443,10 @@ def run_pipeline():
     print("✅ Pipeline run complete! epl_data.db successfully updated.")
 
 if __name__ == "__main__":
-    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (개인 UV 0.1~2.0 & 팀 11.0 WUV 합성 로직 적용)", flush=True)
-    run_pipeline()
+    import argparse
+    parser = argparse.ArgumentParser(description="EPL Pipeline Runner")
+    parser.add_argument("--mode", choices=["predict", "score", "all"], default="all", help="Pipeline execution mode")
+    args = parser.parse_args()
+
+    print(f"🚀 EPL 정규 시즌 파이프라인 시작 (Mode: {args.mode})", flush=True)
+    run_pipeline(mode=args.mode)

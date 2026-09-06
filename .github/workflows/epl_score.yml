@@ -1,17 +1,17 @@
-name: EPL Predict Pipeline
+name: EPL Score Pipeline
 
 on:
   schedule:
-    # 1) 예측 무인 자동 실행: 20:17 KST (1차) & 20:47 KST (2차 백업)
-    - cron: '17 11 * * *'
-    - cron: '47 11 * * *'
+    # 2) 경기 결과 무인 자동 채점: 06:17 KST (1차) & 06:47 KST (2차 백업)
+    - cron: '17 21 * * *'
+    - cron: '47 21 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  epl-predict:
+  epl-score:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,13 +28,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Predict Pipeline
+      - name: Run Score Pipeline
         run: |
-          python run_epl.py --mode predict
+          python run_epl.py --mode score
 
       - name: Commit and Push Changes to GitHub
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           git add epl_data.db app.py
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-predict epl_data.db via GitHub Actions" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-score epl_data.db via GitHub Actions" && git push)
