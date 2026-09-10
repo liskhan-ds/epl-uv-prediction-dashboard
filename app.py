@@ -72,14 +72,16 @@ from datetime import datetime
 # 1. Page Configuration and Unified Top Navigation
 # -----------------------------------------------------------------------------
 st.set_page_config(
+
+from common_nav import render_common_nav
+render_common_nav("EPL")
+
     page_title="EPL AI Match Predictor",
     page_icon="⚽",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-from common_nav import render_common_nav
-render_common_nav("EPL")
 
 
 
