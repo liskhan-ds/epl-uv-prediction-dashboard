@@ -30,71 +30,6 @@ def normalize_team_name(raw_name):
     return raw_name
 
 
-OFFICIAL_STATS = {
-    "Bukayo Saka": (7.75, 0.48), "Martin Ødegaard": (7.65, 0.35), "Declan Rice": (7.55, 0.20),
-    "William Saliba": (7.50, 0.05), "Gabriel Magalhães": (7.45, 0.10), "Viktor Gyökeres": (7.70, 0.65),
-    "Ben White": (7.30, 0.05), "David Raya": (7.25, 0.0), "Kai Havertz": (7.35, 0.38),
-    "Gabriel Martinelli": (7.30, 0.30), "Leandro Trossard": (7.25, 0.32), "Kepa Arrizabalaga": (7.10, 0.0),
-    "Erling Haaland": (7.85, 0.95), "Phil Foden": (7.65, 0.55), "Bernardo Silva": (7.45, 0.20),
-    "Rúben Dias": (7.45, 0.05), "Josko Gvardiol": (7.40, 0.12), "Kevin De Bruyne": (7.75, 0.40),
-    "Rodri": (7.60, 0.15), "Ederson": (7.25, 0.0), "Jérémy Doku": (7.30, 0.25), "Marc Guéhi": (7.35, 0.05),
-    "Rayan Aït-Nouri": (7.25, 0.08), "Gerónimo Rulli": (7.15, 0.0),
-    "Mohamed Salah": (7.80, 0.75), "Virgil van Dijk": (7.55, 0.08), "Trent Alexander-Arnold": (7.50, 0.12),
-    "Florian Wirtz": (7.70, 0.45), "Alexis Mac Allister": (7.35, 0.18), "Dominik Szoboszlai": (7.30, 0.22),
-    "Alisson Becker": (7.40, 0.0), "Luis Díaz": (7.35, 0.35), "Cody Gakpo": (7.25, 0.30),
-    "Cole Palmer": (7.80, 0.60), "Moisés Caicedo": (7.40, 0.05), "Enzo Fernández": (7.30, 0.15),
-    "Nicolas Jackson": (7.25, 0.40), "Pedro Neto": (7.20, 0.25), "Robert Sánchez": (7.15, 0.0),
-    "Bruno Fernandes": (7.55, 0.30), "Marcus Rashford": (7.25, 0.32), "Alejandro Garnacho": (7.20, 0.28),
-    "Kobbie Mainoo": (7.30, 0.15), "Matthijs de Ligt": (7.25, 0.08), "André Onana": (7.15, 0.0),
-    "Son Heung-Min": (7.60, 0.50), "James Maddison": (7.30, 0.28), "Dominic Solanke": (7.20, 0.40),
-    "Cristian Romero": (7.35, 0.10), "Micky van de Ven": (7.30, 0.08), "Guglielmo Vicario": (7.20, 0.0),
-    "Ollie Watkins": (7.35, 0.45), "John McGinn": (7.15, 0.15), "Emiliano Martínez": (7.35, 0.0),
-    "Alexander Isak": (7.45, 0.55), "Anthony Gordon": (7.25, 0.35), "Bruno Guimarães": (7.40, 0.15),
-    "Kaoru Mitoma": (7.15, 0.25), "Evan Ferguson": (7.05, 0.30), "Bart Verbruggen": (7.10, 0.0),
-    "Evanilson": (7.05, 0.35), "Justin Kluivert": (7.00, 0.25), "Fraser Forster": (7.00, 0.0),
-    "Yoane Wissa": (7.05, 0.38), "Bryan Mbeumo": (7.30, 0.42), "Caoimhín Kelleher": (7.10, 0.0),
-    "Jean-Philippe Mateta": (7.10, 0.42), "Eberechi Eze": (7.30, 0.30), "Dean Henderson": (7.10, 0.0),
-    "Jordan Pickford": (7.20, 0.0), "Dwight McNeil": (6.95, 0.15), "Jarrad Branthwaite": (7.20, 0.05),
-    "Bernd Leno": (7.15, 0.0), "Alex Iwobi": (7.00, 0.18), "Emile Smith Rowe": (7.10, 0.22),
-    "Chris Wood": (6.75, 0.32), "Morgan Gibbs-White": (7.15, 0.20), "Matz Sels": (7.00, 0.0),
-    "Liam Delap": (6.45, 0.10), "Arijanet Muric": (6.50, 0.0),
-    "Illan Meslier": (6.40, 0.0), "Daniel James": (6.45, 0.12),
-    "Haji Wright": (6.40, 0.10), "Oliver Dovin": (6.45, 0.0),
-    "Oscar Estupiñan": (6.35, 0.08), "Ivor Pandur": (6.40, 0.0),
-    "Wilson Isidor": (6.35, 0.08), "Anthony Patterson": (6.40, 0.0),
-}
-
-TEAM_CONCEDED_PER_GAME = {
-    "Arsenal": 0.8, "Manchester City": 0.9, "Liverpool": 1.0, "Chelsea": 1.2,
-    "Manchester United": 1.3, "Tottenham Hotspur": 1.35, "Aston Villa": 1.3,
-    "Newcastle United": 1.35, "Brighton & Hove Albion": 1.4, "AFC Bournemouth": 1.45,
-    "Brentford": 1.50, "Crystal Palace": 1.50, "Fulham": 1.55, "Everton": 1.60,
-    "Nottingham Forest": 1.65, "Ipswich Town": 1.75, "Leeds United": 1.80,
-    "Coventry City": 1.85, "Sunderland": 1.90, "Hull City": 1.95,
-}
-
-TEAM_GOALS_PER_GAME = {
-    "Arsenal": 2.2, "Manchester City": 2.3, "Liverpool": 2.1, "Chelsea": 1.8,
-    "Manchester United": 1.6, "Tottenham Hotspur": 1.7, "Aston Villa": 1.6,
-    "Newcastle United": 1.5, "Brighton & Hove Albion": 1.4, "AFC Bournemouth": 1.3,
-    "Brentford": 1.2, "Crystal Palace": 1.1, "Fulham": 1.15, "Everton": 1.0,
-    "Nottingham Forest": 1.05, "Ipswich Town": 0.95, "Leeds United": 0.90,
-    "Coventry City": 0.85, "Sunderland": 0.80, "Hull City": 0.75,
-}
-
-LOW_POSSESSION_TEAMS = ["Everton", "Nottingham Forest", "Ipswich Town", "Leeds United", "Coventry City", "Sunderland", "Hull City"]
-
-MATCHWEEK_1_ABSENCES = {
-    "Arsenal": ["William Saliba", "Jurriën Timber"],
-    "Chelsea": ["Wesley Fofana"],
-    "Fulham": ["Joachim Andersen"],
-    "Manchester United": ["Rasmus Højlund", "Tyrell Malacia"],
-    "Tottenham Hotspur": ["Richarlison"],
-    "Liverpool": ["Stefan Bajcetic"],
-    "Newcastle United": ["Sven Botman"],
-    "Aston Villa": ["Boubacar Kamara"],
-}
-
 def get_team_roster(team_name, absentees=None):
     if not os.path.exists("rosters_2026.json"):
         return {"starters": [], "subs": []}
@@ -106,7 +41,7 @@ def get_team_roster(team_name, absentees=None):
     plist = normalized_map.get(norm_tname, [])
     
     if absentees is None:
-        absentees = MATCHWEEK_1_ABSENCES.get(team_name, [])
+        absentees = []
         
     available = [p for p in plist if p.get("name") not in absentees]
     
@@ -143,10 +78,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-from common_nav import render_common_nav
 
 # Top Navigation Bar
-render_common_nav("EPL")
 
 st.divider()
 
