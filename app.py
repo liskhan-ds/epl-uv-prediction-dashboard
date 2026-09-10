@@ -73,14 +73,17 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 st.set_page_config(
 
-from common_nav import render_common_nav
-render_common_nav("EPL")
 
     page_title="EPL AI Match Predictor",
     page_icon="⚽",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+from common_nav import render_common_nav
+render_common_nav("EPL")
+
+
 
 
 
